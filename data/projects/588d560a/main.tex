@@ -1,0 +1,375 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=3.0cm,bottom=3.0cm,left=3.5cm,right=3.0cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0}
+}
+
+\onehalfspacing
+\setlength{\parindent}{1.0cm}
+\setlength{\parskip}{0pt}
+
+% Header and Footer matching template: page number at bottom center
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% ==================== PAGE 1: COVER ====================
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        {\bfseries\large
+            LAPORAN BULANAN\\[0.3em]
+            BULAN SEPTEMBER TAHUN 2026\\[0.3em]
+            MAGANG\\[0.3em]
+            IT Core Charging\\[0.3em]
+            PT XLSMART Telecom Sejahtera Tbk
+        }
+
+        \vspace{1.2cm}
+
+        {\normalsize
+            Monitoring Kegiatan\\[0.3em]
+            Program MBKM di Universitas Telkom
+        }
+
+        \vspace{3.5cm}
+
+        {\normalsize
+            oleh :\\[0.5em]
+            Daniandra Prayudisty Ilham/103012300052
+        }
+
+        \vspace{1.8cm}
+
+        \includegraphics[width=3.2cm]{telkom_logo.png}
+
+        \vspace{2.2cm}
+
+        {\bfseries\normalsize
+            S1 Informatika\\[0.3em]
+            Telkom University\\[0.3em]
+            2026
+        }
+    \end{center}
+\end{titlepage}
+
+% ==================== PAGE 2: LEMBAR PENGESAHAN (Hal 1) ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large LEMBAR PENGESAHAN\par}
+    \vspace{0.6cm}
+    {\bfseries\normalsize IT Core Charging\par}
+    {\bfseries\normalsize Di PT XLSMART Telecom Sejahtera Tbk\par}
+    \vspace{0.8cm}
+    {\normalsize Disusun Oleh :\par}
+    \vspace{0.2cm}
+    {\bfseries\normalsize Daniandra Prayudisty Ilham / 103012300052\par}
+    \vspace{0.8cm}
+    {\bfseries\normalsize Disetujui dan disahkan sebagai Laporan Bulanan\par}
+    {\bfseries\normalsize Bulan September Tahun 2026\par}
+    {\bfseries\normalsize Magang MBKM\par}
+\end{center}
+
+\vspace{5.0cm}
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Mengetahui,\par
+    Pembimbing Lapangan,\par
+    \vspace{3.0cm}
+    Yuni Prasetiyaning Mustika\par
+    NIP: 90007372
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Menyusun,\par
+    Mahasiswa,\par
+    \vspace{3.0cm}
+    Daniandra Prayudisty Ilham\par
+    NIM: 103012300052
+\end{minipage}
+
+% ==================== PAGE 3: RINGKASAN LAPORAN (Hal 2) ====================
+\clearpage
+\setcounter{page}{2}
+
+\begin{center}
+    {\bfseries\large Ringkasan Laporan\par}
+\end{center}
+\vspace{0.8cm}
+
+Bulan September 2026 merupakan periode penutup sekaligus puncak dari seluruh rangkaian kegiatan Praktik Kerja Magang MBKM bagi penulis pada unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk yang berlangsung hingga 15 September 2026. Fokus penugasan teknis pada periode pemungkas ini berpusat pada penjaminan mutu tiket rilis strategis awal September, validasi skema migrasi dan relokasi pelanggan (Changeplan Migration \& Relocation), pengujian paket inovasi kecerdasan buatan (Home Add-On Google Gemini), paket revamping FTTH Home 2026, penyesuaian teks tagihan bebas biaya (Invoice Wording Addon Speedboost Rp0), serta skema masa aktif panjang (Long Validity). Memasuki pekan kedua, penulis mendedikasikan kontribusi teknis pada penyusunan dokumentasi komprehensif berupa Buku Panduan Testing FTTH dan FWA sebagai artefak transfer pengetahuan bagi keberlanjutan operasional unit kerja, mengikuti sharing knowledge teknologi 5G Standalone, serta menyelesaikan pengujian paket retensi FTTH Home 200 Mbps Rp209K. Rangkaian program magang diakhiri secara resmi pada tanggal 15 September 2026 melalui presentasi pertanggungjawaban capaian kegiatan magang di hadapan manajemen dan mentor unit IT Core Charging, disusul dengan agenda perpisahan formal. Seluruh 10 hari kerja operasional terlaksana secara penuh dan tuntas di kantor (Work From Office / WFO).
+
+% ==================== PAGE 4: KATA PENGANTAR (Hal 3) ====================
+\clearpage
+\setcounter{page}{3}
+
+\begin{center}
+    {\bfseries\large Kata Pengantar\par}
+\end{center}
+\vspace{0.6cm}
+
+Puji syukur kehadirat Allah SWT atas segala limpahan rahmat dan karunia-Nya sehingga penulis dapat menyelesaikan seluruh rangkaian program Praktik Kerja Magang MBKM pada PT XLSMART Telecom Sejahtera Tbk dengan penempatan di unit IT Core Charging sejak 29 Juni 2026 hingga 15 September 2026. Laporan bulanan periode September 2026 ini merupakan laporan penutup yang mendokumentasikan progres penugasan akhir, penyerahan artefak buku panduan teknis, serta evaluasi menyeluruh terhadap pencapaian kompetensi industri yang telah diperoleh.
+
+Penyusunan laporan akhir ini dapat terlaksana dengan baik berkat bimbingan, arahan, dan kepercayaan penuh dari berbagai pihak. Penulis menyampaikan rasa hormat dan terima kasih yang mendalam kepada Ibu Yuni Prasetiyaning Mustika (NIP: 90007372) selaku Pembimbing Lapangan, rekan-rekan mentor pada unit IT Core Charging, serta dosen wali di lingkungan Telkom University atas transfer ilmu dan dukungan selama pelaksanaan magang.
+
+Penulis menyadari bahwa dalam laporan ini masih terdapat keterbatasan. Kiranya dokumentasi ini dapat memberikan manfaat nyata bagi pengembangan unit IT Core Charging serta menjadi tolok ukur implementasi program magang industri di masa mendatang.
+
+\vspace{1.2cm}
+\noindent
+\begin{flushright}
+    Bandung, 30 September 2026\\[2.0cm]
+    Daniandra Prayudisty Ilham
+\end{flushright}
+
+% ==================== PAGE 5: DAFTAR ISI (Hal 4) ====================
+\clearpage
+\setcounter{page}{4}
+
+\begin{center}
+    {\bfseries\large Daftar Isi\par}
+\end{center}
+\vspace{0.6cm}
+
+\noindent LEMBAR PENGESAHAN\dotfill i\par
+\noindent Ringkasan Laporan\dotfill ii\par
+\noindent Kata Pengantar\dotfill iii\par
+\noindent Daftar Isi\dotfill iv\par
+\noindent\textbf{BAB I}\dotfill \textbf{1}\par
+\noindent\textbf{PENDAHULUAN}\dotfill \textbf{1}\par
+\noindent 1.1 Latar belakang\dotfill 1\par
+\noindent 1.2 Ruang Lingkup\dotfill 1\par
+\noindent 1.3 Tujuan\dotfill 2\par
+\noindent\textbf{BAB II}\dotfill \textbf{3}\par
+\noindent\textbf{KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK}\dotfill \textbf{3}\par
+\noindent II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan September tahun 2026\dotfill 3\par
+\noindent II.2 Analisa hasil kegiatan\dotfill 6\par
+\noindent II.3 Hambatan dan upaya untuk mengatasinya\dotfill 7\par
+\noindent II.4 Rekomendasi\dotfill 8\par
+\noindent\textbf{BAB III}\dotfill \textbf{9}\par
+\noindent\textbf{PENUTUP}\dotfill \textbf{9}\par
+\noindent III.1 Kesimpulan\dotfill 9\par
+\noindent III.2 Saran\dotfill 9\par
+
+% ==================== BAB I ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large BAB I\par}
+    {\bfseries\large PENDAHULUAN\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries 1.1 Latar belakang\par}
+Bulan September 2026 menjadi fase pamungkas dalam implementasi program Magang MBKM penulis di unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk. Terhitung sejak awal masa penugasan pada 29 Juni 2026 hingga batas akhir masa magang pada 15 September 2026, penulis telah terlibat aktif dalam siklus penjaminan mutu sistem charging pasca penggabungan korporasi berskala nasional.
+
+Fase akhir magang ini tidak hanya difokuskan pada pengujian tiket rilis penawaran broadband XL SATU berfitur mutakhir (seperti integrasi kecerdasan buatan Google Gemini Add-on dan paket revamping FTTH 2026), tetapi juga diarahkan pada peletakan fondasi dokumentasi standar bagi unit kerja. Melalui inisiatif penyusunan Buku Panduan Testing FTTH dan FWA, seluruh pengetahuan praktis dan skenario uji yang telah divalidasi berhasil dibukukan menjadi aset transfer pengetahuan yang terstruktur. Rangkaian ini ditutup dengan sesi pemaparan capaian akhir kegiatan magang serta serah terima tanggung jawab pengujian kepada tim internal perusahaan.
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.2 Ruang Lingkup\par}
+Ruang lingkup aktivitas Magang MBKM pada unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk selama periode 1 s.d. 15 September 2026 meliputi:
+\begin{enumerate}[label=\arabic*),leftmargin=1.5em,itemsep=1pt,topsep=2pt]
+    \item Pengujian Tiket Rilis Strategis Awal September\\
+    Melaksanakan pengujian fungsional dan eligibilitas pada paket Home Add-On Google Gemini, New FTTH Home Revamp 2026 V2, produk bundling taktis V1, serta pemutakhiran Aurora SATU ON non-STB.
+    \item Validasi Skema Migrasi, Relokasi, dan Long Validity\\
+    Memvalidasi alur Changeplanount untuk skenario perpindahan paket (migration) dan relokasi lokasi pelanggan, skema Whitelist Discount, serta paket berdurasi panjang (Long Validity Phase 1 \& Phase 2).
+    \item Verifikasi Regulasi Tagihan \& Penyesuaian Harga\\
+    Menguji kebenaran redaksional teks faktur (Revise Invoice Wording Addon Speedboost Rp0), penyesuaian harga paket XL SATU 50 Mbps, dan penyesuaian tarif Singular OTT (termasuk paket Vidio Asian Games).
+    \item Penyusunan Buku Panduan Pengujian Standar FTTH/FWA\\
+    Mengompilasi panduan teknis langkah demi langkah (Standard Testing Manual) pengujian produk FTTH dan FWA sebagai dokumentasi acuan baku bagi tim QA internal.
+    \item Presentasi Akhir dan Serah Terima Program Magang\\
+    Menyusun bahan presentasi komprehensif, memaparkan evaluasi hasil kerja magang di hadapan tim Core Charging, serta menyelesaikan proses administrasi penutupan magang.
+\end{enumerate}
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.3 Tujuan\par}
+Tujuan pelaksanaan kegiatan Magang MBKM pada periode September 2026 adalah sebagai berikut:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Menuntaskan seluruh tiket penugasan penjaminan mutu produk rilis awal September pada sistem IT Core Charging dengan tingkat kelulusan uji 100\%.
+    \item Memvalidasi integritas data penagihan pada skema komersial nol rupiah (Speedboost Rp0) dan skema perubahan paket jangka panjang (Long Validity).
+    \item Menghasilkan artefak dokumentasi teknis berupa Buku Panduan Testing FTTH/FWA yang siap pakai guna mendukung operasional pengujian tim Core Charging.
+    \item Memperoleh wawasan arsitektur telekomunikasi masa depan melalui forum transfer pengetahuan teknologi 5G Standalone.
+    \item Menyampaikan pertanggungjawaban hasil kerja magang secara profesional dalam agenda presentasi penutup bersama manajemen dan mentor industri.
+\end{enumerate}
+
+% ==================== BAB II ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB II\par}
+    {\bfseries\large KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK\par}
+\end{center}
+\vspace{0.2cm}
+
+\noindent{\bfseries II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan September tahun 2026\par}
+\vspace{0.1cm}
+\noindent Rekap mingguan:
+
+\vspace{0.2cm}
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.0cm}|p{11.5cm}|}
+\hline
+\textbf{No} & \textbf{Minggu} & \textbf{Kegiatan} \\
+\hline
+1 & Pertama & Pengujian tiket rilis Retention XL Satu PV 20 Mbps, Aurora SATU ON non-STB Rev 2, FWA 50 Mbps, FTTH 300 Mbps, tiket 4 September (Google Gemini Add-on, FTTH Revamp 2026 V2, tactical bundling), serta rapat persiapan kegiatan Uncommon. \\
+\hline
+2 & Kedua & Perancangan skenario dan testing tiket 9 September (Changeplanount Migration \& Relocation, Whitelist Discount, Revise Invoice Wording Speedboost Rp0, Singular OTT Change Price, New Home FTTH Long Validity), pengujian Vidio Asian Games, penyusunan Buku Panduan Testing FTTH/FWA, dan sharing knowledge 5G Standalone. \\
+\hline
+3 & Ketiga & Eksekusi testing paket FTTH Home 50 \& 100 Mbps, Singular OTT Rev 1 OTC, FTTH Retention 200 Mbps Rp209K, Aurora SATU ON Rev 7 September, finalisasi Buku Panduan Testing FTTH/FWA, presentasi hasil kegiatan magang, dan seremoni perpisahan (Farewell). \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\clearpage
+\noindent Kegiatan yang telah dilaksanakan pada program Magang MBKM di PT XLSMART Telecom Sejahtera Tbk selama bulan September tahun 2026 (tanggal 1 s.d. 15 September 2026) adalah sebagai berikut:
+
+Pekan pertama diawali pada hari Selasa, 1 September 2026 dengan verifikasi tiket rilis perdana awal bulan, mencakup produk retensi XL Satu PV 20 Mbps Rp159K, pemutakhiran Aurora SATU ON non-STB Rev 2, FWA Monthly 50 Mbps, dan FTTH Internet 300 Mbps. Penulis kemudian merancang skenario dan melaksanakan pengujian untuk daftar rilis 4 September yang memuat paket terobosan New DRF Home Add-On Google Gemini, New FTTH Home Revamp 2026 V2, serta tiket Tactical Bundling Product V1. Pekan ini dilengkapi dengan kehadiran pada sesi rapat persiapan acara Uncommon tim internal.
+
+Pekan kedua difokuskan pada penanganan tiket-tiket arsitektur rilis 9 September. Penulis merancang skenario dan memvalidasi alur Changeplanount untuk perpindahan serta relokasi pelanggan, relasi Whitelist Discount, verifikasi teks tagihan pada tiket Revise Invoice Wording Addon Speedboost Rp0, tiket Singular OTT Change Price, serta tiket paket New Home FTTH 50 \& 100 Mbps skema Long Validity Phase 1 dan Phase 2. Penulis juga menguji revisi harga paket XL SATU 50 Mbps dan bundling Vidio Asian Games, serta mulai mengompilasi draf Buku Panduan Testing FTTH/FWA dan menghadiri sesi knowledge sharing bertema 5G Standalone.
+
+Pekan ketiga (14--15 September 2026) menjadi fase penyelesaian akhir program. Penulis menyelesaikan pengujian paket New FTTH Home 200 Mbps Rp209K Retention Product dan Aurora SATU ON revisi 7 September. Selanjutnya, penulis menuntaskan finalisasi Buku Panduan Testing FTTH/FWA, membawakan presentasi komprehensif terkait seluruh capaian teknis magang (Intern Program Activity Presentation) di hadapan mentor unit IT Core Charging, dan menghadiri seremoni perpisahan resmi sebagai penanda tuntasnya program magang MBKM.
+
+\vspace{0.4cm}
+\noindent Adapun rincian aktivitas harian beserta status kehadiran selama bulan September 2026 dapat dilihat pada tabel berikut:
+
+% ==================== TABEL LOGBOOK PART 1 ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+1 & Selasa, 1 September 2026 & WFO & Membuat skenario dan melakukan testing pada tiket: (1) NA -- Create product Retention XL Satu PV 20 Mbps Rp159K, (2) NA -- 27 August 2026 Aurora SATU ON non STB Rev 2, (3) NA -- XL SATU FWA MONTHLY NON PROMO 50MBPS, dan (4) NA -- NEW FTTH INTERNET 300 MBPS. \\
+\hline
+2 & Rabu, 2 September 2026 & WFO & Mempersiapkan scenario dan melakukan testing pada tiket List 4 September 2026: New DRF -- Home Add On Google Gemini 31 August 2026, DRF -- NEW FTTH HOME REVAMP 2026 V2, dan DRF -- create new bundling product (tactical) V1. \\
+\hline
+3 & Kamis, 3 September 2026 & WFO & Mengikuti rangkaian sesi Sharing Session dan rapat koordinasi persiapan kegiatan Uncommon tim internal. \\
+\hline
+4 & Senin, 7 September 2026 & WFO & Membuat Skenario dan melakukan testing pada tiket List 9 September 2026: DRF -- Changeplanount (Migration \& Relocation), WhiteList Discount, DRF -- Revise Invoice Wording Addon Speedboost Rp0, DRF SINGULAR OTT CHANGE PRICE, dan DRF -- NEW HOME FTTH 50 \& 100 \& LONG VALIDITY (Phase 1). \\
+\hline
+5 & Selasa, 8 September 2026 & WFO & Melanjutkan pengujian pada tiket List 9 September 2026: DRF -- Changeplan Relation V1 * Whitelist Discount, validasi alur Changeplanount (Migration \& Relocation), DRF -- Revise Invoice Wording Addon Speedboost Rp0, DRF SINGULAR OTT CHANGE PRICE, dan DRF -- NEW HOME FTTH 50 \& 100 \& LONG VALIDITY. \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+% ==================== TABEL LOGBOOK PART 2 + ANALISA ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+6 & Rabu, 9 September 2026 & WFO & Membuat skenario dan melakukan testing pada tiket: (1) NA -- NEW HOME FTTH 50 \& 100 \& LONG VALIDITY (Phase 2), (2) REVISE PRICE XL SATU 50 MBPS, dan (3) Vidio Asian Games. \\
+\hline
+7 & Kamis, 10 September 2026 & WFO & Menyusun dan mendokumentasikan buku panduan teknis pengujian FTTH dan FWA (Standard Testing Guide) untuk kebutuhan unit IT Core Charging. \\
+\hline
+8 & Jumat, 11 September 2026 & WFO & Mengikuti sesi transfer pengetahuan teknis (knowledge sharing) mengenai arsitektur dan kapabilitas jaringan generasi baru 5G Standalone. \\
+\hline
+9 & Senin, 14 September 2026 & WFO & Membuat skenario dan melakukan testing pada tiket: (1) NEW HOME FTTH 50MBPS \& 100MBPS, (2) Singular OTT change price -- 2 September 2026 (rev 1 OTC), (3) NEW FTTH HOME 200MBPS 209K RETENTION PRODUCT, dan (4) New DRF -- 7 September 2026 Aurora SATU ON non STB. \\
+\hline
+10 & Selasa, 15 September 2026 & WFO & Finalisasi Pembuatan buku panduan FTTH/FWA, penyampaian presentasi pertanggungjawaban kegiatan magang (Intern program activity presentation), dan agenda seremoni perpisahan (Farewell ending of the internship program). \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\vspace{0.2cm}
+\noindent Secara keseluruhan, jumlah hari kerja yang tercatat pada bulan September 2026 (periode 1 s.d. 15 September 2026 sebagai akhir resmi program magang MBKM) adalah 10 hari, seluruhnya berstatus Work From Office (WFO).
+
+\clearpage
+\noindent{\bfseries II.2 Analisa hasil kegiatan\par}
+\noindent 1) Verifikasi Inovasi Produk Cerdas (Home Add-On Google Gemini)\\
+Pengujian paket Home Add-On Google Gemini memperlihatkan integrasi inovatif antara infrastruktur fixed-broadband dan lisensi komputasi kecerdasan buatan. Pada unit IT Core Charging, penulis memvalidasi tata kelola otorisasi akun pengguna dan mekanisme penagihan tambahan agar lisensi Gemini terikat secara aman pada nomor induk pelanggan tanpa menimbulkan kegagalan provisioning.
+
+\vspace{0.2cm}
+\noindent 2) Presisi Aturan Tagihan Nol Rupiah dan Skema Long Validity\\
+Pengujian tiket Revise Invoice Wording Addon Speedboost Rp0 dan paket Long Validity menguji ketelitian akuntansi sistem charging. Penulis memastikan bahwa transaksi promosi berbiaya Rp0 tidak memicu invoice gantung ataupun pemotongan saldo anomali pada database tagihan, serta memastikan periode perpanjangan otomatis berjalan mulus sesuai siklus masa aktif panjang yang ditentukan.
+
+\vspace{0.2cm}
+\noindent 3) Validasi Alur Kompleks Changeplanount (Migration \& Relocation)\\
+Skenario migrasi jenis teknologi (misal HFC ke FTTH) dan pemindahan domisili layanan (relokasi) pelanggan menuntut integrasi aturan bisnis yang ketat. Pengujian memvalidasi bahwa proses pergantian paket mempertahankan riwayat pembayaran pelanggan, memetakan kembali nomor identitas perangkat (MAC/SN modem), serta menerapkan diskon whitelist yang berlaku secara akurat.
+
+\vspace{0.2cm}
+\noindent 4) Dokumentasi Baku Buku Panduan Testing FTTH/FWA\\
+Penyusunan Buku Panduan Pengujian FTTH dan FWA menjadi kontribusi nyata penulis dalam membakukan proses kerja QA. Buku panduan ini merangkum langkah konfigurasi lingkungan uji, struktur pembuatan skenario berbasis edge case, penanganan tiket penagihan, hingga tata cara pelaporan defect yang dapat direproduksi, sehingga mempercepat proses orientasi teknis bagi personil penguji baru.
+
+\vspace{0.2cm}
+\noindent 5) Pemahaman Komprehensif Siklus End-to-End Industri Telekomunikasi\\
+Melalui sesi pemaparan akhir dan diskusi bersama para mentor senior, penulis berhasil menyatukan seluruh pemahaman teknis yang diperoleh selama hampir tiga bulan masa magang. Penulis memahami bagaimana sebuah spesifikasi bisnis dikonversi menjadi aturan charging, diuji secara ketat, hingga dideploy ke sistem produksi berskala nasional.
+
+\clearpage
+\noindent{\bfseries II.3 Hambatan dan upaya untuk mengatasinya\par}
+\vspace{0.1cm}
+\noindent\textbf{Hambatan 1:}\\
+Keterbatasan Waktu dalam Menyusun Buku Panduan Pengujian Komprehensif di Tengah Padatnya Jadwal Eksekusi Tiket Rilis Awal September.\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis mengadopsi metode pencatatan modular harian, di mana setiap kali selesai mengeksekusi suatu jenis tiket pengujian (seperti FTTH, FWA, atau OTT), langkah-langkah uji dan tangkapan layar langsung dirangkum ke dalam bab terkait, sehingga proses kompilasi buku panduan dapat diselesaikan tepat waktu sebelum masa magang berakhir.
+
+\vspace{0.3cm}
+\noindent\textbf{Hambatan 2:}\\
+Validasi Ketat Rekonsiliasi Tagihan pada Tiket Promo Bebas Biaya (Speedboost Rp0) dan Perubahan Harga OTC Singular OTT.\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis melakukan verifikasi silang langsung pada tabel transaksi database charging melalui kueri DBeaver guna memastikan bahwa pencatatan nilai nol rupiah (Rp0) pada tagihan pelanggan diimbangi dengan kode jurnal transaksi subsidi promosi yang sah pada sistem akuntansi billing.
+
+\vspace{0.4cm}
+\noindent{\bfseries II.4 Rekomendasi\par}
+\vspace{0.1cm}
+\begin{itemize}[label=\textbullet,leftmargin=1.5em,itemsep=2pt,topsep=1pt]
+    \item Buku Panduan Testing FTTH/FWA yang telah disusun direkomendasikan untuk diunggah ke repository dokumentasi internal perusahaan (Confluence/SharePoint) dan diperbarui secara berkala setiap kali terjadi pemutakhiran arsitektur katalog.
+    \item Unit IT Core Charging disarankan mengembangkan skrip validasi otomatis (*automated assertion*) untuk pengecekan redaksional invoice tagihan guna meminimalkan pemeriksaan manual yang memakan waktu.
+    \item Pemberian akses lingkungan uji mandiri sejak hari pertama magang terbukti sangat efektif dan disarankan menjadi prosedur operasional standar bagi batch peserta magang berikutnya.
+    \item Program pendampingan mentor (mentorship) yang sangat intensif dan suportif di unit IT Core Charging patut dipertahankan dan diapresiasi sebagai model pembelajaran kerja terbaik.
+\end{itemize}
+
+% ==================== BAB III: PENUTUP ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB III\par}
+    {\bfseries\large PENUTUP\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries III.1 Kesimpulan\par}
+\vspace{0.2cm}
+Pelaksanaan program Praktik Kerja Magang MBKM penulis pada unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk selama periode 29 Juni 2026 hingga 15 September 2026 telah terlaksana secara sukses, tuntas, dan memberikan kontribusi nyata bagi perusahaan. Seluruh target pembelajaran dan penugasan profesional berhasil dicapai dengan ringkasan sebagai berikut:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Penyelesaian 100\% penugasan penjaminan mutu pada puluhan tiket rilis produk konvergensi broadband XL SATU (FTTH, FWA Outdoor, OTT Bundling, hingga paket cerdas Google Gemini).
+    \item Pemahaman mendalam mengenai arsitektur sistem charging telekomunikasi enterprise, mencakup pemisahan produk komersial dan teknis, aturan recurring billing, skema diskon PayXGetY, serta penanganan kompensasi denda.
+    \item Terwujudnya warisan teknis berupa Buku Panduan Testing FTTH/FWA sebagai artefak dokumentasi baku bagi operasional tim pengujian.
+    \item Keberhasilan pemaparan presentasi akhir di hadapan pimpinan dan mentor unit IT Core Charging dengan apresiasi tinggi terhadap dedikasi dan kualitas kerja yang ditunjukkan.
+\end{enumerate}
+
+\vspace{0.4cm}
+\noindent{\bfseries III.2 Saran\par}
+\vspace{0.2cm}
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Bagi Mahasiswa: Penulis berkomitmen untuk terus mengaplikasikan etos kerja profesional, ketelitian rekayasa perangkat lunak, serta penguasaan arsitektur cloud/charging yang diperoleh selama magang ke dalam penyelesaian tugas akhir perkuliahan.
+    \item Bagi Perusahaan: Unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk disarankan terus melanjutkan kemitraan strategis dengan Telkom University dalam menyerap talenta-talenta muda unggul melalui program magang industri yang terstruktur dan berdampak tinggi.
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,395 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=3.0cm,bottom=3.0cm,left=3.5cm,right=3.0cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0}
+}
+
+\onehalfspacing
+\setlength{\parindent}{1.0cm}
+\setlength{\parskip}{0pt}
+
+% Header and Footer matching template: page number at bottom center
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% ==================== PAGE 1: COVER ====================
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        {\bfseries\large
+            LAPORAN BULANAN\\[0.3em]
+            BULAN AGUSTUS TAHUN 2026\\[0.3em]
+            MAGANG\\[0.3em]
+            IT Core Charging\\[0.3em]
+            PT XLSMART Telecom Sejahtera Tbk
+        }
+
+        \vspace{1.2cm}
+
+        {\normalsize
+            Monitoring Kegiatan\\[0.3em]
+            Program MBKM di Universitas Telkom
+        }
+
+        \vspace{3.5cm}
+
+        {\normalsize
+            oleh :\\[0.5em]
+            Daniandra Prayudisty Ilham/103012300052
+        }
+
+        \vspace{1.8cm}
+
+        \includegraphics[width=3.2cm]{telkom_logo.png}
+
+        \vspace{2.2cm}
+
+        {\bfseries\normalsize
+            S1 Informatika\\[0.3em]
+            Telkom University\\[0.3em]
+            2026
+        }
+    \end{center}
+\end{titlepage}
+
+% ==================== PAGE 2: LEMBAR PENGESAHAN (Hal 1) ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large LEMBAR PENGESAHAN\par}
+    \vspace{0.6cm}
+    {\bfseries\normalsize IT Core Charging\par}
+    {\bfseries\normalsize Di PT XLSMART Telecom Sejahtera Tbk\par}
+    \vspace{0.8cm}
+    {\normalsize Disusun Oleh :\par}
+    \vspace{0.2cm}
+    {\bfseries\normalsize Daniandra Prayudisty Ilham / 103012300052\par}
+    \vspace{0.8cm}
+    {\bfseries\normalsize Disetujui dan disahkan sebagai Laporan Bulanan\par}
+    {\bfseries\normalsize Bulan Agustus Tahun 2026\par}
+    {\bfseries\normalsize Magang MBKM\par}
+\end{center}
+
+\vspace{5.0cm}
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Mengetahui,\par
+    Pembimbing Lapangan,\par
+    \vspace{3.0cm}
+    Yuni Prasetiyaning Mustika\par
+    NIP: 90007372
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Menyusun,\par
+    Mahasiswa,\par
+    \vspace{3.0cm}
+    Daniandra Prayudisty Ilham\par
+    NIM: 103012300052
+\end{minipage}
+
+% ==================== PAGE 3: RINGKASAN LAPORAN (Hal 2) ====================
+\clearpage
+\setcounter{page}{2}
+
+\begin{center}
+    {\bfseries\large Ringkasan Laporan\par}
+\end{center}
+\vspace{0.8cm}
+
+Bulan Agustus 2026 merupakan bulan kedua pelaksanaan kegiatan Praktik Kerja Magang MBKM bagi penulis pada unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk. Fokus penugasan teknis pada bulan ini berpusat pada penjaminan mutu dan verifikasi arsitektur produk Fixed Wireless Access (FWA) dan Fiber To The Home (FTTH) XL SATU, pengujian integrasi katalog penagihan pada platform Odoo dan Zsmart, serta validasi skema promosi dan retensi pelanggan. Penulis menangani perancangan matriks skenario uji dan eksekusi tiket-tiket strategis, meliputi pengujian varian XL SATU FWA 75--250 Mbps Outdoor berskema diskon, paket bundling OTT Vidio dan Aurora SATU ON non-STB, tata kelola kompensasi denda keterlambatan (DRF Late Fee Compensation), skema relasi Whitelist Discount \& Changeplan, serta validasi penawaran retensi Joy Series dan Plain Vanilla tanpa booster berkecepatan hingga 400 Mbps. Selain itu, penulis juga terlibat aktif dalam pendalaman konfigurasi otomasi Odoo untuk Salesforce Legacy, sistem voucher dan isi ulang (VOMS \& Eload), serta mekanisme Hyperbot OCS. Seluruh penugasan selama bulan Agustus 2026 terlaksana secara optimal melalui 16 hari kerja tatap muka di kantor (Work From Office / WFO) sesuai dengan ketentuan batas maksimal kehadiran unit bisnis perusahaan.
+
+% ==================== PAGE 4: KATA PENGANTAR (Hal 3) ====================
+\clearpage
+\setcounter{page}{3}
+
+\begin{center}
+    {\bfseries\large Kata Pengantar\par}
+\end{center}
+\vspace{0.6cm}
+
+Puji syukur kehadirat Allah SWT atas segala rahmat, karunia, serta petunjuk-Nya sehingga penulis dapat menyelesaikan laporan bulanan program Magang MBKM pada PT XLSMART Telecom Sejahtera Tbk dengan penempatan di unit IT Core Charging. Laporan ini disusun untuk memperlihatkan progres serta capaian yang telah penulis raih selama periode bulan Agustus 2026, serta menguraikan secara rinci kegiatan yang telah penulis laksanakan, hambatan yang penulis hadapi, dan langkah-langkah yang penulis ambil dalam mengatasi setiap kendala.
+
+Penyusunan laporan ini tidak terlepas dari dukungan, bimbingan, serta kerja sama berbagai pihak yang terlibat, baik secara langsung maupun tidak langsung. Penulis mengucapkan terima kasih yang sebesar-besarnya kepada pembimbing lapangan Ibu Yuni Prasetiyaning Mustika (NIP: 90007372), para mentor di lingkungan unit IT Core Charging, serta dosen wali yang telah memberikan arahan selama pelaksanaan program. 
+
+Akhir kata, penulis memohon maaf atas segala keterbatasan yang terdapat dalam laporan ini. Semoga laporan ini dapat memberikan manfaat dan menjadi bahan evaluasi yang bermanfaat bagi seluruh pihak yang terlibat.
+
+\vspace{1.2cm}
+\noindent
+\begin{flushright}
+    Bandung, 30 September 2026\\[2.0cm]
+    Daniandra Prayudisty Ilham
+\end{flushright}
+
+% ==================== PAGE 5: DAFTAR ISI (Hal 4) ====================
+\clearpage
+\setcounter{page}{4}
+
+\begin{center}
+    {\bfseries\large Daftar Isi\par}
+\end{center}
+\vspace{0.6cm}
+
+\noindent LEMBAR PENGESAHAN\dotfill i\par
+\noindent Ringkasan Laporan\dotfill ii\par
+\noindent Kata Pengantar\dotfill iii\par
+\noindent Daftar Isi\dotfill iv\par
+\noindent\textbf{BAB I}\dotfill \textbf{1}\par
+\noindent\textbf{PENDAHULUAN}\dotfill \textbf{1}\par
+\noindent 1.1 Latar belakang\dotfill 1\par
+\noindent 1.2 Ruang Lingkup\dotfill 1\par
+\noindent 1.3 Tujuan\dotfill 2\par
+\noindent\textbf{BAB II}\dotfill \textbf{3}\par
+\noindent\textbf{KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK}\dotfill \textbf{3}\par
+\noindent II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan Agustus tahun 2026\dotfill 3\par
+\noindent II.2 Analisa hasil kegiatan\dotfill 6\par
+\noindent II.3 Hambatan dan upaya untuk mengatasinya\dotfill 7\par
+\noindent II.4 Rekomendasi\dotfill 8\par
+\noindent\textbf{BAB III}\dotfill \textbf{9}\par
+\noindent\textbf{PENUTUP}\dotfill \textbf{9}\par
+\noindent III.1 Kesimpulan\dotfill 9\par
+\noindent III.2 Saran\dotfill 9\par
+
+% ==================== BAB I ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large BAB I\par}
+    {\bfseries\large PENDAHULUAN\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries 1.1 Latar belakang\par}
+Memasuki bulan Agustus 2026, kegiatan Praktik Kerja Magang MBKM penulis di PT XLSMART Telecom Sejahtera Tbk pada unit IT Core Charging berlanjut ke tahap pengujian yang lebih kompleks dan terintegrasi. Penggabungan entitas telekomunikasi yang telah berjalan menuntut keselarasan sistem inti penagihan (charging) dan pengelolaan katalog produk secara lintas platform, terutama dalam memfasilitasi peluncuran ragam paket konvergensi fixed-broadband XL SATU secara dinamis.
+
+Unit IT Core Charging memegang peranan krusial sebagai garda penjaminan mutu dalam memvalidasi kebenaran logika bisnis sebelum suatu produk dikomersialkan. Pada bulan Agustus ini, fokus pengujian diperluas ke ranah integrasi sistem operasional baru (Odoo dan Zsmart), pengujian mekanisme kompensasi denda (Late Fee Compensation), pengujian paket retensi pelanggan, serta validasi skema diskon bertingkat (Whitelist PayXGetY). Keterlibatan langsung ini memberikan pemahaman mendalam bagi penulis mengenai siklus verifikasi end-to-end pada ekosistem billing telekomunikasi modern skala enterprise.
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.2 Ruang Lingkup\par}
+Aktivitas Magang MBKM pada unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk selama bulan Agustus 2026 mencakup ruang lingkup sebagai berikut:
+\begin{enumerate}[label=\arabic*),leftmargin=1.5em,itemsep=1pt,topsep=2pt]
+    \item Pendalaman Arsitektur Billing \& Otomasi Katalog\\
+    Mengikuti sesi pendalaman implementasi Odoo dan Zsmart, pemahaman konfigurasi otomasi Odoo untuk Salesforce Legacy, serta mekanisme modul voucher dan reload (VOMS dan Eload).
+    \item Pengujian Produk Konvergensi FWA \& FTTH XL SATU\\
+    Merancang skenario dan melaksanakan pengujian fungsional pada paket XL SATU FWA Outdoor berskema diskon, Aurora SATU ON non-STB, paket bundling OTT Vidio, dan varian FTTH Internet hingga 400 Mbps.
+    \item Validasi Aturan Bisnis dan Regulasi Finansial\\
+    Melakukan verifikasi kompensasi denda keterlambatan (DRF Late Fee Compensation), validasi perubahan harga (Change Price DRF), penyesuaian invoice wording, serta pemutakhiran nama produk.
+    \item Pengujian Skema Promosi \& Retensi Pelanggan\\
+    Menguji relasi Whitelist Discount \& Changeplan, skema diskon PayXGetY antara Main Offer dan Additional Offer, paket retensi Joy Series, serta paket hemat XL Satu Plain Vanilla 20 Mbps.
+    \item Partisipasi Forum Teknis \& Uncommon Fridays\\
+    Terlibat dalam sesi sharing knowledge arsitektur Hyperbot OCS (Online Charging System) dan penyelarasan sprint mingguan bersama tim Core Charging.
+\end{enumerate}
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.3 Tujuan\par}
+Tujuan pelaksanaan kegiatan Magang MBKM pada bulan Agustus 2026 adalah sebagai berikut:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Meningkatkan kompetensi pengujian perangkat lunak pada sistem charging telekomunikasi melalui penanganan tiket rilis produk skala nasional.
+    \item Menguasai metodologi perancangan test scenario untuk skema promosi kompleks, termasuk relasi diskon bersyarat (PayXGetY) dan aturan retensi pelanggan.
+    \item Memahami arsitektur integrasi katalog produk modern menggunakan platform Odoo, Zsmart, serta sistem online charging Hyperbot OCS.
+    \item Memvalidasi kesesuaian penagihan finansial dan kompensasi denda pelanggan agar terbebas dari anomali pembukuan pada database operasional.
+    \item Mengembangkan profesionalisme, ketelitian analitis, dan kolaborasi teknis dalam tim penjaminan mutu teknologi informasi telekomunikasi.
+\end{enumerate}
+
+% ==================== BAB II ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB II\par}
+    {\bfseries\large KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK\par}
+\end{center}
+\vspace{0.2cm}
+
+\noindent{\bfseries II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan Agustus tahun 2026\par}
+\vspace{0.1cm}
+\noindent Rekap mingguan:
+
+\vspace{0.2cm}
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.0cm}|p{11.5cm}|}
+\hline
+\textbf{No} & \textbf{Minggu} & \textbf{Kegiatan} \\
+\hline
+1 & Pertama & Pengujian tiket XL SATU FWA Outdoor Discount, Hard Bundling PV with OTT, FWA Monthly Non-Promo, sharing session implementasi Odoo dan Zsmart, serta pengujian tiket Vidio Usage dan New DRF Aurora SATU ON non-STB. \\
+\hline
+2 & Kedua & Pembuatan skenario dan testing tiket DRF Whitelist Disc \& Changeplan Relation, DRF Late Fee Compensation, DRF FTTH 100 Mbps 3 Month 650K, serta implementasi testing paket FTTH Joy Series, PV Promo 4 Month, dan Addon STB Changeplan. \\
+\hline
+3 & Ketiga & Merancang skenario dan testing FTTH Late Fee Compensation, EMR New Customer Subsegment (Q7), Change Product Name \& Invoice Wording, sharing session Odoo automation for SF Legacy, VOMS \& Eload, serta testing XL SATU PV Without Booster 350 \& 400 Mbps. \\
+\hline
+4 & Keempat & Testing skema Whitelist Discount AO PL\_PAYXGETY\_3\_GET\_3\_DISC terhadap Main Offer Spark 100 FTTH/HFC, testing DRF XL SATU FTTH 100 Mbps 3 Month 650K Revisi Bundling, serta agenda Uncommon Fridays dan sharing session Hyperbot OCS. \\
+\hline
+5 & Kelima & Pembuatan skenario dan eksekusi testing tiket rilis 2 September (Retention XL Satu PV 20 Mbps Rp159K, Aurora SATU ON non-STB Rev 2, FWA Monthly Non-Promo 50 Mbps, dan FTTH Internet 300 Mbps). \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\clearpage
+\noindent Kegiatan yang telah dilaksanakan pada program Magang MBKM di PT XLSMART Telecom Sejahtera Tbk selama bulan Agustus tahun 2026 (tanggal 1 s.d. 31 Agustus 2026) adalah sebagai berikut:
+
+Pekan pertama diawali dengan pengujian varian produk broadband luar ruangan XL SATU FWA 75--250 Mbps Outdoor berskema diskon, verifikasi paket Hard Bundling XL Satu Plain Vanilla (PV) bersama layanan OTT, dan FWA Monthly Non-Promo. Penulis juga menghadiri sesi sharing knowledge implementasi platform Odoo dan Zsmart untuk katalog produk, serta merancang skenario uji untuk paket streaming Vidio Usage dan integrasi Aurora SATU ON non-STB.
+
+Pekan kedua difokuskan pada pengujian regulasi penagihan dan paket retensi FTTH. Penulis merancang skenario uji untuk tiket DRF Whitelist Discount \& Changeplan Relation, DRF Late Fee Compensation, dan DRF XL SATU FTTH 100 Mbps 3 Month 650K. Pengujian berlanjut ke eksekusi paket FTTH Joy Series, paket promo 4 bulan batch 1, varian PV tanpa booster, serta relasi changeplan Addon STB.
+
+Pekan ketiga diisi dengan pengujian validasi kompensasi denda (Late Fee Compensation), segmen pelanggan baru EMR Q7, dan penyesuaian teks invoice. Penulis juga mendalami mekanisme otomatisasi Odoo pada Salesforce Legacy, sistem voucher VOMS, dan platform isi ulang Eload, dilanjutkan pengujian performa throughput paket XL SATU Plain Vanilla kecepatan tinggi 350 Mbps dan 400 Mbps.
+
+Pekan keempat diwarnai dengan pengujian skema promosi kompleks Whitelist Discount PayXGetY (bayar 3 dapat 3) pada penawaran tambahan terhadap Main Offer Spark 100 FTTH dan HFC. Penulis juga memvalidasi revisi bundling FTTH 100 Mbps serta berpartisipasi dalam agenda Uncommon Fridays bertema arsitektur Online Charging System (Hyperbot OCS).
+
+Pekan kelima ditutup dengan perancangan skenario dan eksekusi menyeluruh terhadap daftar tiket rilis 2 September 2026, meliputi paket retensi hemat XL Satu PV 20 Mbps Rp159K, pemutakhiran Aurora SATU ON non-STB revisi 2, paket FWA 50 Mbps non-promo, serta varian baru FTTH 300 Mbps.
+
+\vspace{0.4cm}
+\noindent Adapun rincian aktivitas harian beserta status kehadiran selama bulan Agustus 2026 dapat dilihat pada tabel berikut:
+
+% ==================== TABEL LOGBOOK PART 1 ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+1 & Senin, 3 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket XL SATU FWA 75 Mbps -- 250 Mbps OUTDOOR (Discount), Hard Bundling XL Satu PV with OTT, dan XL SATU FWA MONTHLY NON PROMO. \\
+\hline
+2 & Selasa, 4 Agustus 2026 & WFO & Melakukan sharing session mengenai implementasi penggunaan Odoo dan Zsmart lebih lanjut untuk katalog produk charging. \\
+\hline
+3 & Rabu, 5 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket Vidio Usage, dan Aurora SATU ON non STB. \\
+\hline
+4 & Kamis, 6 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket New DRF Aurora SATU ON non STB. \\
+\hline
+5 & Senin, 10 Agustus 2026 & WFO & Melanjutkan pembuatan test scenario dan melakukan testing pada tiket DRF -- Whitelist Disc \& Changeplan Relation, DRF Late Fee Compensation, dan DRF -- XL SATU FTTH 100 MBPS 3 MONTH 650K. \\
+\hline
+6 & Selasa, 11 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket Late Fee Compensation. \\
+\hline
+7 & Rabu, 12 Agustus 2026 & WFO & Membuat skenario testing pada tiket FTTH: NA -- Retention Product (Joy Series), NA -- XL SATU PV 75 MBPS \& 250 MBPS \& PROMO 4 MONTH (BATCH 1), NA -- XL SATU PLAIN VANILLA WITHOUT BOOSTER, dan NA -- ADDON STB \& CHANGE PLAN RELATION. \\
+\hline
+8 & Kamis, 13 Agustus 2026 & WFO & Implementasi skenario melakukan testing pada tiket FTTH: NA -- Retention Product (Joy Series), NA -- XL SATU PV 75 MBPS \& 250 MBPS \& PROMO 4 MONTH (BATCH 1), NA -- XL SATU PLAIN VANILLA WITHOUT BOOSTER, dan NA -- ADDON STB \& CHANGE PLAN RELATION. \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+% ==================== TABEL LOGBOOK PART 2 + ANALISA ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+9 & Jumat, 14 Agustus 2026 & WFO & Melakukan testing pada FTTH: NA -- Retention Product (Joy Series), NA -- XL SATU PV 75 MBPS \& 250 MBPS \& PROMO 4 MONTH (BATCH 1), dan NA -- ADDON STB \& CHANGE PLAN RELATION. \\
+\hline
+10 & Kamis, 20 Agustus 2026 & WFO & Membuat skenario dan melakukan testing FTTH: (1) NA -- DRF Late Fee Compensation, (2) NA -- EMR New Customer Subsegment (Q7), (3) NA -- Change Product name \& Invoice wording; sharing session konfigurasi otomasi Odoo untuk SF Legacy, serta sharing session VOMS dan Eload. \\
+\hline
+11 & Jumat, 21 Agustus 2026 & WFO & Melakukan testing pada tiket XL SATU PLAIN VANILLA WITHOUT BOOSTER 350 Mbps \& 400 Mbps. \\
+\hline
+12 & Senin, 24 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada test WhiteList Discount untuk AO PL\_PAYXGETY\_3\_GET\_3\_DISC terhadap 2 Main Offer (PL\_FTTH\_IO\_SPARK\_100\_TCRV dan PL\_HFC\_IO\_SPARK\_100\_TCRV), serta MO PO\_PAYXGETY\_3\_GET\_3 terhadap AO PO\_FTTH\_IO\_SPARK\_100\_TCRV \& PL\_HFC\_IO\_SPARK\_100\_TCRV. \\
+\hline
+13 & Rabu, 26 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket DRF -- XL SATU FTTH 100 MBPS 3 MONTH 650K (REVISEE BUNDLING). \\
+\hline
+14 & Kamis, 27 Agustus 2026 & WFO & Mengikuti kegiatan Uncommon Fridays dan sharing session Hyperbot OCS. \\
+\hline
+15 & Jumat, 28 Agustus 2026 & WFO & Membuat skenario dan melakukan testing pada tiket persiapan rilis 2 September 2026: DRF Create product Retention XL Satu PV 20 Mbps Rp159K, New DRF Aurora SATU ON non STB Rev 2, DRF -- XL SATU FWA MONTHLY NON PROMO 50MBPS, dan DRF -- NEW FTTH INTERNET 300 MBPS. \\
+\hline
+16 & Senin, 31 Agustus 2026 & WFO & Melakukan finalisasi testing verifikasi recurring, integrasi provisioning, dan regresi pada tiket persiapan rilis 2 September 2026 (Retention PV 20 Mbps, Aurora SATU ON Rev 2, FWA 50 Mbps, dan FTTH 300 Mbps). \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\vspace{0.2cm}
+\noindent Secara keseluruhan, jumlah hari kerja yang tercatat pada bulan Agustus 2026 adalah 16 hari, seluruhnya berstatus Work From Office (WFO), sesuai dengan ketentuan batas kehadiran maksimal 16 hari tatap muka pada unit bisnis PT XLSMART Telecom Sejahtera Tbk.
+
+\clearpage
+\noindent{\bfseries II.2 Analisa hasil kegiatan\par}
+\noindent 1) Evaluasi Otomasi Katalog Produk Berbasis Odoo dan Zsmart\\
+Integrasi antara platform Odoo dan Zsmart membuka paradigma baru dalam manajemen katalog produk telekomunikasi. Pada unit IT Core Charging, pengujian difokuskan untuk memvalidasi bahwa parameter produk yang didefinisikan pada Odoo secara otomatis terpropagasi dengan benar ke dalam Zsmart tanpa mengalami anomali pemetaan atribut harga maupun aturan charging.
+
+\vspace{0.2cm}
+\noindent 2) Rigoritas Validasi Kebijakan Late Fee Compensation\\
+Pengujian kompensasi denda keterlambatan (Late Fee Compensation) menuntut kehati-hatian matematis tinggi. Penulis memastikan bahwa formula penalti dan restitusi terhitung secara proporsional sesuai masa tunggakan pelanggan, serta memastikan invoice wording yang tercetak di tagihan selaras dengan regulasi perlindungan konsumen dan kebijakan internal perusahaan.
+
+\vspace{0.2cm}
+\noindent 3) Validasi Logika Diskon Bertingkat (Whitelist PayXGetY \& Spark 100)\\
+Skema promosi bersyarat seperti PayXGetY (Pay 3 Get 3) yang diterapkan pada Additional Offer terhadap Main Offer Spark 100 FTTH dan HFC memiliki kompleksitas relasi tinggi. Penulis berhasil memvalidasi dependensi penawaran ganda tersebut sehingga potongan harga hanya aktif apabila pelanggan memenuhi seluruh kriteria eligibilitas whitelist yang telah ditentukan.
+
+\vspace{0.2cm}
+\noindent 4) Pengujian Strategi Retensi Pelanggan (Joy Series \& Plain Vanilla)\\
+Sebagai respons terhadap dinamika pasar, tiket retensi seperti Joy Series dan varian hemat XL Satu PV 20 Mbps Rp159K menjadi fokus penting. Pengujian memvalidasi bahwa skema penurunan paket (downgrade) atau perpanjangan loyalitas tidak memicu kegagalan konfigurasi pada perangkat keras pelanggan (STB dan modem router).
+
+\vspace{0.2cm}
+\noindent 5) Pemahaman Arsitektur Online Charging Hyperbot OCS dan VOMS\\
+Pemahaman mengenai mekanisme Hyperbot OCS dan sistem voucher VOMS/Eload memperkaya wawasan penulis terkait penanganan transaksi pulsa dan kuota berkecepatan tinggi. Sesi teknis ini memperlihatkan bagaimana arsitektur konvergensi menangani jutaan transaksi secara real-time dengan latensi rendah.
+
+\clearpage
+\noindent{\bfseries II.3 Hambatan dan upaya untuk mengatasinya\par}
+\vspace{0.1cm}
+\noindent\textbf{Hambatan 1:}\\
+Kompleksitas Relasi Dependensi Antara Main Offer dan Additional Offer pada Skema PayXGetY, di mana terdapat multitafsir logika penagihan diskon ketika diaplikasikan secara silang antara jaringan FTTH dan HFC.\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis menyusun tabel kebenaran (*truth table*) yang memetakan seluruh kombinasi aktivasi Main Offer dan Additional Offer, kemudian mendiskusikan hasil simulasi bersama mentor charging sebelum pengujian dieksekusi di lingkungan uji.
+
+\vspace{0.3cm}
+\noindent\textbf{Hambatan 2:}\\
+Tantangan Sinkronisasi Skrip Otomasi Odoo untuk Lingkungan Salesforce Legacy, di mana perbedaan struktur data antara sistem lama dan antarmuka Odoo sempat menimbulkan galat saat migrasi konfigurasi penawaran.\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis secara intensif berpartisipasi dalam knowledge sharing session internal mengenai konfigurasi otomasi Odoo, mendokumentasikan langkah perbaikan, serta melakukan validasi manual pada database staging sebelum eksekusi skrip otomatisasi dijalankan.
+
+\vspace{0.4cm}
+\noindent{\bfseries II.4 Rekomendasi\par}
+\vspace{0.1cm}
+\begin{itemize}[label=\textbullet,leftmargin=1.5em,itemsep=2pt,topsep=1pt]
+    \item Disarankan membangun lingkungan uji khusus (*sandbox*) untuk validasi integrasi Odoo--Zsmart agar pengujian propagasi katalog dapat dilakukan secara terisolasi tanpa mengganggu data antrian pengujian tim lain.
+    \item Standarisasi kamus data (*data dictionary*) untuk penamaan kode offer (seperti Main Offer Spark 100 dan Additional Offer PayXGetY) perlu didokumentasikan secara terpusat guna meminimalkan risiko kesalahan konfigurasi lintas modul.
+    \item Penyiapan script pengujian otomatis untuk validasi skenario Late Fee Compensation dan tagihan recurring disarankan mulai diintegrasikan ke dalam pipeline CI/CD pengujian produk.
+    \item Sesi knowledge sharing berkala mengenai arsitektur OCS dan sistem penagihan inti (seperti Hyperbot OCS dan VOMS) sebaiknya terus dijadwalkan secara rutin untuk mempercepat pemahaman teknologi anggota tim magang baru.
+\end{itemize}
+
+% ==================== BAB III: PENUTUP ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB III\par}
+    {\bfseries\large PENUTUP\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries III.1 Kesimpulan\par}
+\vspace{0.2cm}
+Pelaksanaan program Magang MBKM pada bulan Agustus 2026 di unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk telah terselenggara dengan sangat baik dan produktif. Seluruh 16 hari kerja tatap muka (WFO) yang tercatat dalam logbook resmi berhasil dimaksimalkan dengan capaian:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Keberhasilan pemahaman dan pengujian integrasi katalog penagihan modern berbasis platform Odoo dan Zsmart.
+    \item Penyusunan skenario dan eksekusi penjaminan mutu pada tiket-tiket strategis broadband XL SATU (FWA Outdoor, Aurora SATU ON non-STB, Vidio bundling, dan Plain Vanilla high-speed 400 Mbps).
+    \item Ketelitian validasi pada aturan bisnis penagihan berdampak finansial tinggi, meliputi DRF Late Fee Compensation, DRF Change Price, serta skema Whitelist Discount PayXGetY.
+    \item Keberhasilan verifikasi paket retensi pelanggan (Joy Series dan PV 20 Mbps) guna mendukung keberlanjutan basis pelanggan pasca integrasi korporat.
+\end{enumerate}
+
+\vspace{0.4cm}
+\noindent{\bfseries III.2 Saran\par}
+\vspace{0.2cm}
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Bagi Mahasiswa: Disarankan untuk terus memperkuat keahlian otomasi pengujian katalog produk dan memperdalam pemahaman logika query transaksi charging pada arsitektur OCS.
+    \item Bagi Perusahaan: Manajemen unit IT Core Charging diharapkan terus memberikan ruang eksplorasi dan bimbingan teknis yang suportif, serta membuka peluang keterlibatan magang dalam inisiatif arsitektur cloud charging masa depan.
+\end{enumerate}
+
+\end{document}

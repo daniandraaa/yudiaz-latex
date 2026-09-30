@@ -1,0 +1,73 @@
+\documentclass[10pt,journal,compsoc]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Hierarchical Transformer Architectures for Multilead Biomedical Signal Localization}
+
+\author{Daniandra Prayudisty,~\IEEEmembership{Member,~IEEE}
+\thanks{Daniandra Prayudisty is with Yudiaz Creative Studio and School of Computing, Telkom University, Bandung, Indonesia.}
+}
+
+\markboth{Journal of Biomedical and Health Informatics,~Vol.~XX, No.~X, \today}%
+{Prayudisty: Hierarchical Transformer Architectures}
+
+\IEEEtitleabstractindextext{%
+\begin{abstract}
+Precise anatomical localization of focal cardiac arrhythmias from standard 12-lead electrocardiograms (ECG) plays a critical role in pre-procedural planning for radiofrequency catheter ablation. In this work, we propose a leak-free, patient-wise validated deep learning framework integrating convolutional feature representation with hierarchical transformer networks. Experimental evaluation on patient-held-out validation demonstrates robust macro-F1 improvements across anatomical subregions.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Arrhythmia localization, 12-lead ECG, Transformer, Catheter ablation, Patient-wise validation.
+\end{IEEEkeywords}}
+
+\maketitle
+\IEEEdisplaynontitleabstractindextext
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+\IEEEPARstart{F}{ocal} ventricular arrhythmias originating from outflow tracts present diagnostic challenges in non-invasive clinical mapping. Traditional manual algorithmic criteria suffer from inter-observer variability and limited generalization across heterogeneous cardiac morphologies.
+
+\section{Methodology}
+\subsection{Signal Preprocessing}
+Standard 12-lead ECG records are sampled and denoised using discrete wavelet transform (DWT). Signal normalization is conducted strictly within inner training folds to eliminate data leakage.
+
+\begin{equation}
+y(t) = \sum_{k} c_k \psi_{j,k}(t) + \sum_{k} d_k \phi_{j,k}(t)
+\end{equation}
+
+\subsection{Architecture Overview}
+The network comprises spatial-temporal convolutional feature extractors followed by hierarchical self-attention heads:
+\begin{equation}
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+
+\section{Results and Discussion}
+Table~\ref{tab:results} summarizes validation metrics across patient-wise stratified evaluations.
+
+\begin{table}[h]
+\caption{Cross-Validation Performance Comparison}
+\label{tab:results}
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model Architecture} & \textbf{Accuracy} & \textbf{Macro-F1} & \textbf{AUC} \\ \midrule
+Baseline CNN & 64.2\% & 63.8\% & 0.741 \\
+Transformer Encoder & 68.5\% & 67.9\% & 0.785 \\
+Hierarchical Transformer & \textbf{72.5\%} & \textbf{72.1\%} & \textbf{0.824} \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+The proposed hierarchical approach provides high fidelity localization while preserving strict patient-level boundary validation.
+
+\begin{thebibliography}{00}
+\bibitem{ref1} D. Prayudisty, ``Deep Learning Frameworks for Arrhythmia Localization,'' \emph{IEEE Trans. Biomed. Eng.}, vol. 71, pp. 110--122, 2026.
+\end{thebibliography}
+
+\end{document}

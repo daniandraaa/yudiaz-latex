@@ -1,0 +1,13 @@
+{
+  "id": "d1a39420",
+  "title": "Buku Laporan Tugas Akhir Telkom University",
+  "description": "Format bab dan struktur penulisan laporan skripsi resmi.",
+  "folder_id": "f_skripsi",
+  "created_at": 1790705569.9866545,
+  "updated_at": 1790705656.3759484,
+  "last_compiled_at": 1790705656.3759403,
+  "compile_status": "success",
+  "share_id": "8d699999-550",
+  "is_public": true,
+  "main_file": "main.tex"
+}

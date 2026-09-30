@@ -1,0 +1,409 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=3.0cm,bottom=3.0cm,left=3.5cm,right=3.0cm]{geometry}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=false,
+    pdfborder={0 0 0}
+}
+
+\onehalfspacing
+\setlength{\parindent}{1.0cm}
+\setlength{\parskip}{0pt}
+
+% Header and Footer matching Azziz template: page number at bottom center
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% ==================== PAGE 1: COVER ====================
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        {\bfseries\large
+            LAPORAN BULANAN\\[0.3em]
+            BULAN JULI TAHUN 2026\\[0.3em]
+            MAGANG\\[0.3em]
+            IT Core Charging\\[0.3em]
+            PT XLSMART Telecom Sejahtera Tbk
+        }
+
+        \vspace{1.2cm}
+
+        {\normalsize
+            Monitoring Kegiatan\\[0.3em]
+            Program MBKM di Universitas Telkom
+        }
+
+        \vspace{3.5cm}
+
+        {\normalsize
+            oleh :\\[0.5em]
+            Daniandra Prayudisty Ilham/103012300052
+        }
+
+        \vspace{1.8cm}
+
+        \includegraphics[width=3.2cm]{telkom_logo.png}
+
+        \vspace{2.2cm}
+
+        {\bfseries\normalsize
+            S1 Informatika\\[0.3em]
+            Telkom University\\[0.3em]
+            2026
+        }
+    \end{center}
+\end{titlepage}
+
+% ==================== PAGE 2: LEMBAR PENGESAHAN (Hal 1) ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large LEMBAR PENGESAHAN\par}
+    \vspace{0.6cm}
+    {\bfseries\normalsize IT Core Charging\par}
+    {\bfseries\normalsize Di PT XLSMART Telecom Sejahtera Tbk\par}
+    \vspace{0.8cm}
+    {\normalsize Disusun Oleh :\par}
+    \vspace{0.2cm}
+    {\bfseries\normalsize Daniandra Prayudisty Ilham / 103012300052\par}
+    \vspace{0.8cm}
+    {\bfseries\normalsize Disetujui dan disahkan sebagai Laporan Bulanan\par}
+    {\bfseries\normalsize Bulan Juli Tahun 2026\par}
+    {\bfseries\normalsize Magang MBKM\par}
+\end{center}
+
+\vspace{5.0cm}
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Mengetahui,\par
+    Pembimbing Lapangan,\par
+    \vspace{3.0cm}
+    Yuni Prasetiyaning Mustika\par
+    NIP: 90007372
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \centering
+    Bandung, 30 September 2026\par
+    Menyusun,\par
+    Mahasiswa,\par
+    \vspace{3.0cm}
+    Daniandra Prayudisty Ilham\par
+    NIM: 103012300052
+\end{minipage}
+
+% ==================== PAGE 3: RINGKASAN LAPORAN (Hal 2) ====================
+\clearpage
+\setcounter{page}{2}
+
+\begin{center}
+    {\bfseries\large Ringkasan Laporan\par}
+\end{center}
+\vspace{0.8cm}
+
+Bulan Juli 2026 merupakan bulan pertama bagi penulis dalam menjalankan penugasan teknis secara penuh di unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk. Kegiatan diawali dengan pembekalan konsep produk telekomunikasi (seperti produk Business As Usual / BAU, relasi dependensi antarkomponen, serta diferensiasi antara Technical Product dan Commercial Product), penyiapan prosedur registrasi identitas Saviynt, serta konfigurasi akses VPN korporat dan perkakas kerja seperti Postman, DBeaver, dan Katalon Studio. Memasuki fase operasional teknis, penulis dipercaya merancang matriks skenario uji dan mengeksekusi penugasan tiket rilis produk komersial pada ekosistem broadband XL SATU, meliputi pengujian tiket FTTH Addon Upsell Speedbooster V1, skema Whitelist Discount \& Changeplan, integrasi bundling layanan OTT Catchplay SVOD/TVOD pada layanan FTTH dan FWA, promo Tebus Murah, hingga tiket penawaran khusus FWA Pilot 1 Month. Paruh akhir bulan difokuskan pada pengujian varian XL SATU FWA Outdoor berkecepatan tinggi, validasi perubahan harga DRF, serta verifikasi mekanisme penagihan berulang (recurring billing) dan provisioning Real MDN. Seluruh rangkaian 23 hari kerja terlaksana penuh secara langsung di kantor (Work From Office / WFO) dengan pemenuhan target pengujian tiket sesuai standar mutu unit IT Core Charging.
+
+% ==================== PAGE 4: KATA PENGANTAR (Hal 3) ====================
+\clearpage
+\setcounter{page}{3}
+
+\begin{center}
+    {\bfseries\large Kata Pengantar\par}
+\end{center}
+\vspace{0.6cm}
+
+Puji syukur kehadirat Allah SWT atas segala rahmat, karunia, serta petunjuk-Nya sehingga penulis dapat menyelesaikan laporan bulanan program Magang MBKM pada PT XLSMART Telecom Sejahtera Tbk dengan penempatan di unit IT Core Charging. Laporan ini disusun untuk memperlihatkan progres serta capaian yang telah penulis raih selama periode bulan Juli 2026, serta menguraikan secara rinci kegiatan yang telah penulis laksanakan, hambatan yang penulis hadapi, dan langkah-langkah yang penulis ambil dalam mengatasi setiap kendala.
+
+Penyusunan laporan ini tidak terlepas dari dukungan, bimbingan, serta kerja sama berbagai pihak yang terlibat, baik secara langsung maupun tidak langsung. Penulis mengucapkan terima kasih yang sebesar-besarnya kepada pembimbing lapangan Ibu Yuni Prasetiyaning Mustika (NIP: 90007372), para mentor di lingkungan unit IT Core Charging, serta dosen wali yang telah memberikan arahan selama pelaksanaan program. 
+
+Akhir kata, penulis memohon maaf atas segala keterbatasan yang terdapat dalam laporan ini. Semoga laporan ini dapat memberikan manfaat dan menjadi bahan evaluasi yang bermanfaat bagi seluruh pihak yang terlibat.
+
+\vspace{1.2cm}
+\noindent
+\begin{flushright}
+    Bandung, 30 September 2026\\[2.0cm]
+    Daniandra Prayudisty Ilham
+\end{flushright}
+
+% ==================== PAGE 5: DAFTAR ISI (Hal 4) ====================
+\clearpage
+\setcounter{page}{4}
+
+\begin{center}
+    {\bfseries\large Daftar Isi\par}
+\end{center}
+\vspace{0.6cm}
+
+\noindent LEMBAR PENGESAHAN\dotfill i\par
+\noindent Ringkasan Laporan\dotfill ii\par
+\noindent Kata Pengantar\dotfill iii\par
+\noindent Daftar Isi\dotfill iv\par
+\noindent\textbf{BAB I}\dotfill \textbf{1}\par
+\noindent\textbf{PENDAHULUAN}\dotfill \textbf{1}\par
+\noindent 1.1 Latar belakang\dotfill 1\par
+\noindent 1.2 Ruang Lingkup\dotfill 1\par
+\noindent 1.3 Tujuan\dotfill 2\par
+\noindent\textbf{BAB II}\dotfill \textbf{3}\par
+\noindent\textbf{KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK}\dotfill \textbf{3}\par
+\noindent II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan Juli tahun 2026\dotfill 3\par
+\noindent II.2 Analisa hasil kegiatan\dotfill 6\par
+\noindent II.3 Hambatan dan upaya untuk mengatasinya\dotfill 7\par
+\noindent II.4 Rekomendasi\dotfill 8\par
+\noindent\textbf{BAB III}\dotfill \textbf{9}\par
+\noindent\textbf{PENUTUP}\dotfill \textbf{9}\par
+\noindent III.1 Kesimpulan\dotfill 9\par
+\noindent III.2 Saran\dotfill 9\par
+
+% ==================== BAB I ====================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\begin{center}
+    {\bfseries\large BAB I\par}
+    {\bfseries\large PENDAHULUAN\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries 1.1 Latar belakang\par}
+Program Magang MBKM pada PT XLSMART Telecom Sejahtera Tbk merupakan kegiatan pembelajaran berbasis praktik kerja industri di bidang teknologi informasi dan penjaminan mutu sistem telekomunikasi. PT XLSMART Telecom Sejahtera Tbk sendiri merupakan perusahaan telekomunikasi hasil penggabungan PT XL Axiata Tbk, PT Smartfren Telecom Tbk, dan PT Smart Telecom yang resmi berlaku sejak 16 April 2025. Proses penggabungan tersebut menuntut integrasi sejumlah sistem digital yang sebelumnya berjalan terpisah, sehingga kebutuhan akan pengujian keandalan sistem charging dan katalog produk menjadi sangat tinggi.
+
+Penulis ditempatkan pada unit IT Core Charging. Unit ini menangani sistem inti yang berkaitan dengan proses charging, penagihan, serta konfigurasi katalog produk bagi pelanggan. Setiap perubahan skema penawaran maupun paket data baru harus melewati pengujian verifikasi menyeluruh sebelum dinyatakan layak rilis ke sistem produksi. Melalui penempatan ini, penulis memperoleh kesempatan untuk terlibat langsung dalam siklus pengujian produk skala nasional, mulai dari pemahaman spesifikasi bisnis, penyusunan skenario uji, pelaksanaan pengujian tiket broadband (FWA dan FTTH XL SATU), hingga validasi penagihan berulang (recurring).
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.2 Ruang Lingkup\par}
+Aktivitas MBKM pada program Magang di PT XLSMART Telecom Sejahtera Tbk pada unit IT Core Charging mencakup beberapa ruang lingkup, antara lain:
+\begin{enumerate}[label=\arabic*),leftmargin=1.5em,itemsep=1pt,topsep=2pt]
+    \item Dokumentasi Teknis dan Akses Sistem\\
+    Pengaturan akses identitas melalui Saviynt, konfigurasi jaringan aman VPN perusahaan, konfigurasi proxy internal, serta penyiapan perangkat kerja database dan API (Postman, DBeaver, Katalon Studio).
+    \item Analisis Hierarki dan Spesifikasi Produk\\
+    Pemahaman relasi arsitektural produk katalog, mencakup dekomposisi produk komersial (Commercial Product), produk teknis (Technical Product), relasi ketergantungan (dependency), dan aturan produk operasional harian (Business As Usual / BAU).
+    \item Perancangan Skenario Uji\\
+    Penyusunan dan revisi test scenario serta test case berdasarkan tiket penugasan produk baru, mencakup alur normal, alur negatif, dan kondisi batas (edge cases).
+    \item Pelaksanaan Pengujian Produk FWA \& FTTH\\
+    Pelaksanaan pengujian fungsional end-to-end pada produk Fixed Wireless Access (FWA) dan Fiber To The Home (FTTH) XL SATU, verifikasi provisioning Real MDN, pengujian modul Speedbooster, promo Tebus Murah, hingga penawaran Pilot.
+    \item Koordinasi dan Pelaporan\\
+    Keterlibatan pada meeting sharing session bersama mentor dan tim terkait untuk melaporkan progres pengujian, menerima arahan, serta menyelaraskan prioritas rilis tiket.
+\end{enumerate}
+
+\vspace{0.3cm}
+\noindent{\bfseries 1.3 Tujuan\par}
+Program Magang MBKM ini bertujuan untuk membekali peserta dengan kompetensi praktis yang sesuai dengan kebutuhan industri. Adapun tujuan pelaksanaan program adalah sebagai berikut:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Menerapkan pengetahuan rekayasa perangkat lunak yang diperoleh di bangku kuliah pada lingkungan kerja industri telekomunikasi yang nyata.
+    \item Menguasai siklus pengujian produk secara menyeluruh pada unit IT Core Charging, mulai dari analisis kebutuhan, penyusunan skenario uji, pelaksanaan pengujian, hingga pelaporan hasil.
+    \item Menguasai penggunaan perkakas kerja yang lazim dipakai di industri, khususnya Postman, DBeaver, Katalon Studio, CPC Manager, dan sistem VPN korporat.
+    \item Memahami arsitektur konvergensi produk broadband modern (Fixed Wireless Access dan Fiber To The Home) serta mekanisme penagihan berulang (recurring billing).
+    \item Membangun kemampuan kerja sama, komunikasi lintas peran, dan etika profesional dalam tim kerja yang menangani produk berskala nasional.
+\end{enumerate}
+
+% ==================== BAB II ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB II\par}
+    {\bfseries\large KEGIATAN MAGANG DI PT XLSMART TELECOM SEJAHTERA TBK\par}
+\end{center}
+\vspace{0.2cm}
+
+\noindent{\bfseries II.1 Rincian Kegiatan Magang di PT XLSMART Telecom Sejahtera Tbk pada bulan Juli tahun 2026\par}
+\vspace{0.1cm}
+\noindent Rekap mingguan:
+
+\vspace{0.2cm}
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.0cm}|p{11.5cm}|}
+\hline
+\textbf{No} & \textbf{Minggu} & \textbf{Kegiatan} \\
+\hline
+1 & Pertama & Onboarding unit IT Core Charging, pengenalan konsep produk (BAU, Dependency, Technical Product, Commercial Product), hierarki produk telekomunikasi, registrasi Saviynt, konfigurasi VPN, instalasi Katalon Studio, Postman, DBeaver, dan peluncuran ``XLSMART FutureReady''. \\
+\hline
+2 & Kedua & Knowledge sharing Salesforce (SF) FWA dan FTTH, verifikasi aktivasi VPN, pengerjaan tiket pengujian perdana FTTH ADDON UPSELL SPEEDBOOSTER V1, serta perancangan skenario FTTH Whitelist Discount \& Changeplan. \\
+\hline
+3 & Ketiga & Pengujian recurring Speedbooster, perancangan skenario dan validasi tiket bundling OTT Catchplay SVOD \& TVOD (FTTH \& FWA), pengenalan konsep BAU, skenario promo Tebus Murah, order entry, dan CPC Manager. \\
+\hline
+4 & Keempat & Testing produk Tebus Murah V01, validasi Change Price DRF, pengujian Speedbooster 150 Mbps Open Eligibility, perancangan skenario dan testing FWA Create Special Offer 1 Month Pilot, serta sesi pemahaman provisioning Real MDN FWA. \\
+\hline
+5 & Kelima & Pengujian tiket Special Offer 1 Month Pilot V3, implementasi produk BAU, perancangan skenario dan eksekusi testing XL SATU FWA 100 Mbps 3 Month 650K, varian Outdoor berskema diskon, konsep recurring, serta Hard Bundling XL Satu PV with OTT. \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\vspace{0.3cm}
+\noindent Kegiatan yang telah dilaksanakan pada program Magang MBKM di PT XLSMART Telecom Sejahtera Tbk, tepatnya pada bulan Juli tahun 2026 (tanggal 1 s.d. 31 Juli 2026), adalah sebagai berikut:
+
+Pada pekan pertama Juli 2026, penulis memulai penugasan di unit IT Core Charging dengan mengikuti sesi pembekalan konsep produk telekomunikasi. Penulis mempelajari klasifikasi produk Business As Usual (BAU), relasi dependensi antarkomponen, serta pemisahan tegas antara Technical Product dan Commercial Product. Penulis juga menyelesaikan registrasi akun identitas pada Saviynt, konfigurasi sertifikat VPN korporat, penyiapan klien Postman dan DBeaver, pengenalan Katalon Studio, serta menghadiri agenda peluncuran inovasi perusahaan ``XLSMART FutureReady''.
+
+Pekan kedua diawali dengan pendalaman modul Salesforce (SF) untuk stream layanan Fixed Wireless Access (FWA) dan Fiber To The Home (FTTH). Setelah akses VPN terkonfirmasi aktif, penulis mulai mengerjakan tiket pengujian perdana: FTTH ADDON UPSELL SPEEDBOOSTER V1 untuk memverifikasi penambahan kuota kecepatan pada pelanggan aktif. Selain itu, penulis merancang matriks skenario komprehensif pada tiket FTTH Whitelist Discount \& Changeplan guna menjamin akurasi skema diskon dan pergantian paket.
+
+Memasuki pekan ketiga, penulis melakukan validasi pengujian siklus penagihan berkala (Recurring Test) pada Speedbooster, dilanjutkan perancangan skenario dan eksekusi testing tiket bundling OTT Catchplay SVOD \& TVOD pada stream FTTH dan FWA. Penulis juga mempelajari alur Order Entry dan CPC Manager, serta merancang skenario pengujian untuk program promosi Tebus Murah.
+
+Pada pekan keempat, penulis mengeksekusi pengujian pada produk Tebus Murah V01, memvalidasi perubahan harga pada dokumen Change Price DRF, serta menguji tiket Speedbooster 150 Mbps Open Eligibility. Penulis juga menangani tiket promo FWA Create Special Offer 1 Month Pilot serta mendalami alur provisioning Real MDN pada perangkat router nirkabel.
+
+Pekan kelima diisi dengan verifikasi ulang tiket promo Create Special Offer 1 Month Pilot V3 dan pengerjaan penyesuaian produk BAU. Penulis kemudian merancang skenario dan mengeksekusi pengujian paket broadband utama XL SATU FWA 100 Mbps 3 Month 650K, varian antena luar XL SATU FWA Outdoor berkecepatan 75--250 Mbps berskema diskon, konsep penagihan recurring, serta paket Hard Bundling XL Satu PV with OTT.
+
+\vspace{0.4cm}
+\noindent Adapun rincian aktivitas harian beserta status kehadiran selama bulan Juli 2026 dapat dilihat pada tabel berikut:
+
+% ==================== TABEL LOGBOOK PART 1 ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+1 & Rabu, 1 Juli 2026 & WFO & Meeting sharing item dengan tim Core Charging, pengenalan konsep produk (BAU, Dependency, Technical Product, Commercial Product), hierarki produk telekomunikasi, registrasi akun identitas XLSMART pada Saviynt, dan pengajuan akses VPN korporat. \\
+\hline
+2 & Kamis, 2 Juli 2026 & WFO & Konfigurasi dan setup koneksi VPN, instalasi dan pembelajaran awal Katalon Studio untuk QA Automation Product, serta menghadiri agenda peluncuran inovasi perusahaan ``XLSMART FutureReady''. \\
+\hline
+3 & Jumat, 3 Juli 2026 & WFO & Pendalaman penggunaan Katalon Studio, meeting checkpoint progress automation, konfigurasi lingkungan uji QA Salesforce Product (Wifi internal, pengaturan proxy, Postman collection, DBeaver database client), dan pembelajaran hierarki creation. \\
+\hline
+4 & Senin, 6 Juli 2026 & WFO & Mengikuti sesi Knowledge Sharing mengenai Fixed Wireless Access (FWA) pada lingkungan Salesforce (SF). \\
+\hline
+5 & Selasa, 7 Juli 2026 & WFO & Mengikuti sesi Knowledge Sharing mengenai arsitektur Fiber To The Home (FTTH) pada lingkungan Salesforce (SF). \\
+\hline
+6 & Rabu, 8 Juli 2026 & WFO & Meeting sharing item mingguan, verifikasi aktivasi akun VPN, pengujian penggunaan VPN untuk akses server internal. \\
+\hline
+7 & Kamis, 9 Juli 2026 & WFO & Mengerjakan penugasan tiket pengujian produk FTTH ADDON UPSELL SPEEDBOOSTER V1. \\
+\hline
+8 & Jumat, 10 Juli 2026 & WFO & Menyiapkan matriks skenario testing komprehensif pada tiket FTTH Whitelist Discount \& Changeplan. \\
+\hline
+9 & Senin, 13 Juli 2026 & WFO & Sesi sharing knowledge lanjutan mengenai FWA, dilanjutkan pelaksanaan testing produk ADDON UPSELL SPEEDBOOSTER V1. \\
+\hline
+10 & Selasa, 14 Juli 2026 & WFO & Melakukan validasi pengujian siklus penagihan berkala (Recurring Test) dan Complete Test pada tiket ADDON UPSELL SPEEDBOOSTER V1. \\
+\hline
+11 & Rabu, 15 Juli 2026 & WFO & Persiapan dan pembuatan skenario testing pada tiket CATCHPLAY SVOD \& TVOD, serta analisis Create Product For Change plan V2. \\
+\hline
+12 & Kamis, 16 Juli 2026 & WFO & Eksekusi testing produk Catchplay SVOD \& TVOD pada stream layanan FTTH dan FWA, serta sesi sharing knowledge FWA. \\
+\hline
+13 & Jumat, 17 Juli 2026 & WFO & Sharing knowledge proses bisnis produk BAU, pembuatan skenario testing produk TEBUS MURAH, testing konfigurasi Config DRF OTT XLSATU, serta pembelajaran alur Order Entry dan CPC Manager. \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+% ==================== TABEL LOGBOOK PART 2 + ANALISA ====================
+\clearpage
+\begin{singlespace}
+\noindent
+\begin{tabular}{|c|p{2.6cm}|c|p{9.8cm}|}
+\hline
+\textbf{No} & \textbf{Hari, Tanggal} & \textbf{Status} & \textbf{Uraian Kegiatan} \\
+\hline
+14 & Senin, 20 Juli 2026 & WFO & Testing produk TEBUS MURAH V01, validasi Change Price DRF (acuan surel subjek 19 Juni 2026), serta pengujian tiket Add On Speedbooster 150 Mbps \& Open Eligibility. \\
+\hline
+15 & Selasa, 21 Juli 2026 & WFO & Meeting sharing session ekosistem produk XL SATU dan tata cara verifikasi teknis pada additional offer. \\
+\hline
+16 & Rabu, 22 Juli 2026 & WFO & Menyiapkan matriks skenario testing pada tiket promo FWA CREATE SPECIAL OFFER 1 MONTH Pilot. \\
+\hline
+17 & Kamis, 23 Juli 2026 & WFO & Melaksanakan eksekusi pengujian fungsional dan eligibilitas pada tiket FWA CREATE SPECIAL OFFER 1 MONTH Pilot. \\
+\hline
+18 & Jumat, 24 Juli 2026 & WFO & Sesi sharing session mengenai metodologi provisioning Real MDN pada layanan FWA dan penyiapan test case untuk tiket rilis berikutnya. \\
+\hline
+19 & Senin, 27 Juli 2026 & WFO & Pengerjaan, verifikasi ulang, dan validasi tiket promo CREATE SPECIAL OFFER 1 MONTH Pilot V3. \\
+\hline
+20 & Selasa, 28 Juli 2026 & WFO & Sesi sharing session mengenai lanjutan tata kelola Real MDN, pendalaman operasional produk BAU, serta pengerjaan penyesuaian produk BAU. \\
+\hline
+21 & Rabu, 29 Juli 2026 & WFO & Membuat skenario dan melakukan testing pada tiket XL SATU FWA 100 MBPS 3 MONTH 650K, serta varian XL SATU FWA 75 MBPS -- 250 MBPS OUTDOOR. \\
+\hline
+22 & Kamis, 30 Juli 2026 & WFO & Mengikuti sesi sharing session mendalam mengenai konsep perhitungan dan penagihan recurring pada produk FWA dan FTTH. \\
+\hline
+23 & Jumat, 31 Juli 2026 & WFO & Merancang test scenario dan mengeksekusi pengujian pada tiket XL SATU FWA 750 MBPS 250 MBPS OUTDOOR (Discount), Hard Bundling XL Satu PV with OTT, dan XL SATU FWA MONTHLY NON PROMO. \\
+\hline
+\end{tabular}
+\end{singlespace}
+
+\vspace{0.2cm}
+\noindent Secara keseluruhan, jumlah hari kerja yang tercatat pada bulan Juli 2026 adalah 23 hari, seluruhnya berstatus Work From Office (WFO).
+
+\vspace{0.3cm}
+\noindent{\bfseries II.2 Analisa hasil kegiatan\par}
+\noindent 1) Penguasaan Dekomposisi Produk Telekomunikasi sebagai Fondasi Uji\\
+Pemahaman mendalam mengenai pemisahan antara Commercial Product dan Technical Product terbukti menjadi faktor krusial. Pada unit IT Core Charging, pengujian tidak hanya memverifikasi tampilan penawaran di sisi pengguna, melainkan harus memvalidasi relasi dependensi teknis di database (melalui DBeaver dan CPC Manager) guna mencegah kesalahan provisioning pada level jaringan.
+
+\clearpage
+\noindent 2) Verifikasi Rigoritas Ekosistem XL SATU (FWA \& FTTH)\\
+Karakteristik teknis antara layanan nirkabel FWA dan kabel serat optik FTTH memiliki parameter aktivasi yang berbeda. Pada FWA, keberadaan validasi Real MDN sangat menentukan keberhasilan registrasi modem router, sedangkan pada FTTH, pemetaan port dan kapasitas bandwidth menjadi tumpuan utama. Pengujian yang dilakukan penulis berhasil memastikan kedua stream tersebut memiliki konsistensi aturan bisnis.
+
+\vspace{0.2cm}
+\noindent 3) Ketelitian Pengujian Mekanisme Recurring dan Diskon\\
+Fitur penagihan berkala (recurring billing) dan skema potongan harga (whitelist discount) merupakan area dengan risiko finansial tinggi. Pengujian tiket Speedbooster dan Special Offer Pilot menuntut verifikasi teliti pada tanggal jatuh tempo, perpanjangan otomatis kuota, pemotongan saldo/invoicing, serta pemulihan kecepatan normal apabila masa aktif paket berakhir.
+
+\vspace{0.2cm}
+\noindent 4) Validasi Kemitraan Digital (Value-Added OTT Bundling)\\
+Pengujian produk bundling Catchplay SVOD \& TVOD memperluas wawasan penulis mengenai integrasi API lintas platform pihak ketiga. Penulis berhasil memvalidasi bahwa setiap pembelian paket bundling internet XL SATU secara otomatis menerbitkan token otorisasi langganan video yang dapat diakses langsung oleh pelanggan tanpa hambatan otentikasi.
+
+\vspace{0.2cm}
+\noindent 5) Penerapan Siklus Penjaminan Mutu Berkelanjutan\\
+Keterlibatan dalam perancangan skenario hingga eksekusi pengujian melatih kedisiplinan pencatatan hasil uji secara sistematis, pelaporan defect yang dapat direproduksi (reproducible bug), serta penyampaian rekomendasi teknis yang konstruktif sebelum tiket dinyatakan siap rilis (Ready for Deployment).
+
+\vspace{0.3cm}
+\noindent{\bfseries II.3 Hambatan dan upaya untuk mengatasinya\par}
+\vspace{0.1cm}
+\noindent\textbf{Hambatan 1:}\\
+Ketergantungan Akses Identitas dan Stabilitas Jaringan VPN Korporat pada pekan pertama, di mana proses verifikasi akun pada Saviynt Identity Management dan sertifikat VPN membutuhkan tahapan persetujuan keamanan berjenjang.\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis mendahulukan pekerjaan yang tidak bergantung pada akses VPN secara penuh, seperti mempelajari dokumentasi arsitektur produk, materi presentasi sistem, dan pedoman produk BAU. Penulis juga berkoordinasi aktif dengan mentor pembimbing sehingga proses aktivasi VPN tuntas sebelum pekan kedua.
+
+\clearpage
+\noindent\textbf{Hambatan 2:}\\
+Kompleksitas Matriks Skenario Uji pada Tiket Bundling Berdiskon, di mana produk berskema kombinasi rumit (bundling XL SATU Outdoor dengan diskon khusus dan OTT) memiliki banyak permutasi kondisi batas (edge cases).\par
+\vspace{0.1cm}
+\noindent\textbf{Upaya Mengatasi:}\\
+Penulis membangun tabel matriks skenario uji (decision table) yang terstruktur sebelum pengujian dimulai dan aktif berkonsultasi dalam sesi sharing harian bersama mentor untuk memverifikasi alur logika sistem.
+
+\vspace{0.4cm}
+\noindent{\bfseries II.4 Rekomendasi\par}
+\vspace{0.1cm}
+\begin{itemize}[label=\textbullet,leftmargin=1.5em,itemsep=2pt,topsep=1pt]
+    \item Permintaan akses repository dan perangkat kerja pendukung sebaiknya diajukan bersamaan dengan pemberian penugasan agar waktu tunggu tidak memotong waktu pengerjaan pengujian.
+    \item Unit IT Core Charging disarankan menyusun repositori template skenario uji standar untuk produk turunan broadband (Addon, Speedbooster, Promo Pilot) agar pengujian tiket baru memiliki acuan konsisten dan memangkas waktu penyusunan skenario dari nol.
+    \item Penyiapan Test Data Management (TDM) mandiri berupa penyediaan bank data akun uji dan nomor uji (Test MDN) yang siap pakai di lingkungan staging sangat direkomendasikan guna mempercepat proses pengujian tanpa harus menunggu pembuatan nomor dummy secara manual.
+    \item Skenario pengujian yang bersifat rutin dan berulang (seperti verifikasi harga paket dan skema changeplan standar) direkomendasikan untuk secara bertahap dialihkan ke pengujian otomatis menggunakan Katalon Studio guna meningkatkan efisiensi sprint.
+\end{itemize}
+
+% ==================== BAB III: PENUTUP ====================
+\clearpage
+\begin{center}
+    {\bfseries\large BAB III\par}
+    {\bfseries\large PENUTUP\par}
+\end{center}
+\vspace{0.3cm}
+
+\noindent{\bfseries III.1 Kesimpulan\par}
+\vspace{0.2cm}
+Pelaksanaan program Magang MBKM pada bulan Juli 2026 di unit IT Core Charging PT XLSMART Telecom Sejahtera Tbk telah berjalan dengan lancar dan sukses. Seluruh rangkaian penugasan teknis yang tercatat pada 23 hari kerja WFO berhasil diselesaikan dengan baik, mencakup:
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Keberhasilan onboarding dan penyiapan infrastruktur pengujian (Saviynt, VPN, Postman, DBeaver, Katalon).
+    \item Penguasaan konsep hierarki produk telekomunikasi (Commercial vs Technical Product, dependency, BAU).
+    \item Perancangan skenario dan eksekusi pengujian fungsional pada tiket-tiket strategis broadband XL SATU (FTTH Addon Speedbooster, Whitelist Discount, Catchplay SVOD/TVOD bundling, Tebus Murah, FWA Special Offer Pilot 1 Month, dan varian Outdoor).
+    \item Pemahaman mendalam mengenai alur order entry, CPC Manager, alokasi Real MDN, serta validasi penagihan berulang (recurring billing).
+\end{enumerate}
+
+\vspace{0.4cm}
+\noindent{\bfseries III.2 Saran\par}
+\vspace{0.2cm}
+\begin{enumerate}[label=\arabic*.,leftmargin=1.5em,itemsep=2pt,topsep=2pt]
+    \item Bagi Mahasiswa: Diharapkan terus memperdalam integrasi antara pengujian fungsional manual dan otomasi skrip (Katalon), serta memperkuat kemampuan kueri basis data pada tabel transaksi charging untuk validasi backend yang lebih mendalam.
+    \item Bagi Perusahaan: Kerjasama yang telah terjalin sangat baik antara mentor unit IT Core Charging dan peserta magang diharapkan terus dipertahankan, terutama melalui keterlibatan langsung mahasiswa dalam proyek-proyek rilis sistem baru yang menantang.
+\end{enumerate}
+
+\end{document}

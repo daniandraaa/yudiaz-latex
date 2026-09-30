@@ -1,0 +1,33 @@
+[Unit]
+Description=Yudiaz LaTeX Studio - Enterprise Cloud LaTeX Workspace and Realtime Compiler
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=daniilham
+Group=daniilham
+WorkingDirectory=/home/daniilham/yudiaz-latex
+
+Environment="PYTHONUNBUFFERED=1"
+Environment="LATEX_HOST=127.0.0.1"
+Environment="LATEX_PORT=9559"
+Environment="PATH=/home/daniilham/yudiaz-latex/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+
+ExecStart=/home/daniilham/yudiaz-latex/.venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 9559 --workers 1 --log-level info
+
+Restart=always
+RestartSec=5s
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/daniilham/yudiaz-latex /tmp
+
+MemoryHigh=1G
+MemoryMax=3G
+CPUQuota=200%
+
+[Install]
+WantedBy=multi-user.target

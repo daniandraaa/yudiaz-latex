@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Yudiaz LaTeX Studio — Executive Workspace & Compiler</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    
+    <!-- Ace Editor CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/mode-latex.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/theme-one_dark.js" crossorigin="anonymous"></script>
+    
+    <!-- PDF.js Multi-Page Continuous Engine -->
+    <script src="/static/vendor/pdf.min.js"></script>
+    <script src="/static/pdf-viewer.js?v=1.0.5"></script>
+
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/style.css?v=1.0.5">
+</head>
+<body>
+    <!-- Main Top Navigation -->
+    <header class="app-header">
+        <div class="header-left">
+            <!-- Mobile Menu Toggle Button -->
+            <button class="mobile-menu-btn mobile-only" id="mobile-menu-btn" onclick="app.toggleMobileDrawer()" aria-label="Buka Folder">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+
+            <div class="brand" onclick="app.showDashboard()">
+                <div class="brand-icon">Y</div>
+                <div class="brand-text">
+                    <span class="brand-name">Yudiaz <span class="gold-text">LaTeX Studio</span></span>
+                    <span class="brand-sub desktop-only">Executive Cloud Workspace</span>
+                </div>
+            </div>
+            
+            <div id="breadcrumb-container" class="breadcrumb" style="display: none;">
+                <span class="crumb-separator">/</span>
+                <span id="crumb-folder" class="crumb-folder desktop-only">Workspace</span>
+                <span class="crumb-separator desktop-only">/</span>
+                <span id="crumb-project" class="crumb-title">Dokumen</span>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box" id="search-box-wrapper">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-input" placeholder="Cari dokumen..." oninput="app.onSearchInput(this.value)">
+            </div>
+            
+            <!-- Editor Top Actions (Desktop) -->
+            <div id="editor-nav-actions" style="display: none;" class="editor-nav-group desktop-only">
+                <div id="save-status-indicator" class="status-indicator">
+                    <span class="dot green"></span> <span id="save-status-text">Tersimpan</span>
+                </div>
+                <button class="btn btn-compile" onclick="app.compileCurrentProject()" id="btn-compile">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Kompilasi (Ctrl+Enter)</span>
+                </button>
+                <button class="btn btn-secondary" onclick="app.openShareModal()" title="Bagikan link preview online">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    <span>Share</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div id="dashboard-nav-actions" class="dashboard-actions">
+                <button class="btn btn-secondary desktop-only" onclick="app.openFolderModal()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+                    <span>Folder Baru</span>
+                </button>
+                <button class="btn btn-primary" onclick="app.openProjectModal()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span><span class="desktop-only-inline">Buat </span>Dokumen</span>
+                </button>
+            </div>
+            
+            <div id="editor-nav-downloads" style="display: none;" class="editor-actions">
+                <button class="btn btn-icon mobile-only" onclick="app.openShareModal()" title="Share Link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                </button>
+                <button class="btn btn-icon" onclick="app.downloadCurrentPdf()" title="Download PDF">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </button>
+                <button class="btn btn-icon desktop-only" onclick="app.downloadCurrentZip()" title="Download Source ZIP">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                </button>
+                <button class="btn btn-secondary btn-back-dashboard" onclick="app.showDashboard()">
+                    <span>← <span class="desktop-only-inline">Workspace</span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Quick Folder Filter Bar (Dashboard only) -->
+    <div id="mobile-folder-bar" class="mobile-folder-bar mobile-only">
+        <!-- Rendered dynamically -->
+    </div>
+
+    <!-- Mobile Drawer Backdrop for Folders (strictly controlled by .active) -->
+    <div id="mobile-drawer-backdrop" class="drawer-backdrop" onclick="app.toggleMobileDrawer(false)"></div>
+
+    <!-- Main View Area -->
+    <main id="app-container" class="app-container">
+        <!-- 1. DASHBOARD VIEW -->
+        <div id="dashboard-view" class="view-panel dashboard-layout">
+            <!-- Sidebar: Folders Tree -->
+            <aside class="folders-sidebar" id="folders-sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Folder Workspace</span>
+                    <div style="display: flex; gap: 0.35rem;">
+                        <button class="icon-btn-sm" onclick="app.openFolderModal()" title="Buat folder">+ Folder</button>
+                        <button class="icon-btn-sm mobile-only" onclick="app.toggleMobileDrawer(false)" title="Tutup">✕</button>
+                    </div>
+                </div>
+                
+                <div class="folder-tree-list">
+                    <div class="tree-item active" id="folder-all" onclick="app.selectFolder(null)">
+                        <div class="tree-content">
+                            <span class="folder-icon">📂</span>
+                            <span class="tree-label">Semua Dokumen</span>
+                        </div>
+                        <span class="badge" id="count-all">0</span>
+                    </div>
+                    
+                    <div class="tree-item" id="folder-root" onclick="app.selectFolder('root')">
+                        <div class="tree-content">
+                            <span class="folder-icon">📁</span>
+                            <span class="tree-label">Tanpa Folder (Root)</span>
+                        </div>
+                        <span class="badge" id="count-root">0</span>
+                    </div>
+
+                    <div class="sidebar-divider"></div>
+                    <div class="folder-tree-category">KATEGORI & UNIT KERJA</div>
+
+                    <div id="custom-folders-container">
+                        <!-- Dynamic Folders Hierarchy injected here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="studio-badge">
+                        <span class="badge-dot"></span>
+                        <span>Yudiaz Creative Studio</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content: Project Cards Grid -->
+            <section class="dashboard-content">
+                <div class="content-header">
+                    <div>
+                        <h2 id="active-folder-title" class="content-title">Semua Dokumen</h2>
+                        <p id="active-folder-desc" class="content-subtitle">Daftar seluruh dokumen dan draft LaTeX aktif.</p>
+                    </div>
+                    <div class="content-tools desktop-only">
+                        <button class="btn btn-primary" onclick="app.openProjectModal()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <span>Dokumen Baru</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="projects-grid" class="projects-grid">
+                    <!-- Project Cards injected here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. EDITOR VIEW -->
+        <div id="editor-view" class="view-panel editor-layout" style="display: none;">
+            <!-- Mobile Segmented Tab Switcher (Files / Editor / Preview) -->
+            <div class="mobile-editor-tabs mobile-only">
+                <button class="tab-btn" id="tab-btn-files" onclick="app.setMobileEditorTab('files')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    <span>Struktur</span>
+                </button>
+                <button class="tab-btn active" id="tab-btn-editor" onclick="app.setMobileEditorTab('editor')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    <span>Kode LaTeX</span>
+                </button>
+                <button class="tab-btn" id="tab-btn-preview" onclick="app.setMobileEditorTab('preview')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span>Pratinjau PDF</span>
+                </button>
+            </div>
+
+            <!-- File Explorer Sidebar inside Project -->
+            <aside class="project-files-sidebar" id="pane-files">
+                <div class="files-header">
+                    <span class="files-title">Struktur File Proyek</span>
+                    <div class="files-actions">
+                        <button class="icon-btn-sm" onclick="app.openNewFileModal()" title="Buat File Baru">+ File</button>
+                        <button class="icon-btn-sm" onclick="document.getElementById('asset-upload-input').click()" title="Unggah Gambar / Aset">Upload</button>
+                        <input type="file" id="asset-upload-input" style="display: none;" onchange="app.handleAssetUpload(this.files[0])">
+                    </div>
+                </div>
+                <div id="project-files-list" class="files-list">
+                    <!-- Files injected here -->
+                </div>
+                
+                <div class="editor-info-box">
+                    <div class="info-row">
+                        <span class="info-label">File Aktif:</span>
+                        <span id="active-filename" class="info-val">main.tex</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Folder:</span>
+                        <span id="active-project-folder-name" class="info-val">Root</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center: Code Editor Area -->
+            <section class="editor-pane" id="pane-editor">
+                <div class="editor-toolbar">
+                    <div class="active-tab">
+                        <span class="tab-icon">📄</span>
+                        <span id="tab-filename">main.tex</span>
+                    </div>
+                    <div class="editor-toolbar-right">
+                        <div id="mobile-save-status" class="status-indicator mobile-only">
+                            <span class="dot green"></span>
+                        </div>
+                        <button class="btn-tool" onclick="app.toggleLogDrawer()" id="btn-toggle-log" title="Lihat Log Kompilasi">
+                            <span>Log</span>
+                            <span id="log-status-badge" class="badge-mini green">Siap</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="ace-editor" class="ace-editor-container"></div>
+
+                <!-- Bottom Drawer: Compile Logs & Errors -->
+                <div id="log-drawer" class="log-drawer" style="display: none;">
+                    <div class="log-header">
+                        <div class="log-header-title">
+                            <span>Output Log & Diagnostik</span>
+                            <span id="compile-duration-text" class="text-muted"></span>
+                        </div>
+                        <button class="icon-btn-sm" onclick="app.toggleLogDrawer()">✕ Tutup</button>
+                    </div>
+                    <div id="log-errors-summary" class="log-errors-list"></div>
+                    <pre id="log-console" class="log-console"></pre>
+                </div>
+            </section>
+
+            <!-- Right: Live PDF Preview -->
+            <section class="preview-pane" id="pane-preview">
+                <div class="preview-toolbar">
+                    <div class="preview-title-wrap">
+                        <span class="preview-heading">Pratinjau PDF Online</span>
+                        <span id="pdf-updated-time" class="text-muted">Live</span>
+                    </div>
+                    <div class="preview-actions">
+                        <button class="btn-tool" onclick="app.refreshPdfPreview()" title="Segarkan PDF">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        </button>
+                        <button class="btn-tool" onclick="app.openPdfInNewTab()" title="Buka PDF di Tab Baru">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="pdf-wrapper">
+                    <div id="pdf-loading-overlay" class="pdf-loading-overlay" style="display: none;">
+                        <div class="spinner"></div>
+                        <span>Mengompilasi dokumen LaTeX...</span>
+                    </div>
+                    <div id="pdf-viewer-container" style="width: 100%; height: 100%;"></div>
+                </div>
+            </section>
+
+            <!-- Mobile Floating Action Bar (Jempol-Friendly) -->
+            <div class="mobile-floating-bar mobile-only">
+                <button class="btn btn-compile mobile-fab-compile" onclick="app.compileCurrentProject()" id="btn-compile-mobile">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span>Kompilasi PDF</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- 1. New Project Modal -->
+    <div id="modal-project" class="modal-backdrop" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Buat Dokumen LaTeX Baru</h3>
+                <button class="modal-close" onclick="app.closeModal('modal-project')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Judul Dokumen</label>
+                    <input type="text" id="new-project-title" placeholder="Contoh: Proposal Pengembangan Soetahills Q4" required>
+                </div>
+                <div class="form-group">
+                    <label>Folder Penyimpanan (Folderisasi)</label>
+                    <select id="new-project-folder"></select>
+                </div>
+                <div class="form-group">
+                    <label>Pilih Template Awal</label>
+                    <div class="template-selector" id="template-options-container">
+                        <!-- Templates injected here -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi Singkat (Opsional)</label>
+                    <input type="text" id="new-project-desc" placeholder="Catatan atau tujuan dokumen...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="app.closeModal('modal-project')">Batal</button>
+                <button class="btn btn-primary" onclick="app.submitCreateProject()">Buat Dokumen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. New Folder Modal -->
+    <div id="modal-folder" class="modal-backdrop" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Buat Folder Baru</h3>
+                <button class="modal-close" onclick="app.closeModal('modal-folder')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nama Folder</label>
+                    <input type="text" id="new-folder-name" placeholder="Contoh: Riset Skripsi" required>
+                </div>
+                <div class="form-group">
+                    <label>Parent Folder (Opsional untuk Subfolder)</label>
+                    <select id="new-folder-parent">
+                        <option value="">-- Root (Folder Utama) --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Aksen Warna</label>
+                    <div class="color-picker-row">
+                        <label><input type="radio" name="folder-color" value="#d4af37" checked> <span class="color-dot" style="background:#d4af37"></span> Gold</label>
+                        <label><input type="radio" name="folder-color" value="#10b981"> <span class="color-dot" style="background:#10b981"></span> Emerald</label>
+                        <label><input type="radio" name="folder-color" value="#3b82f6"> <span class="color-dot" style="background:#3b82f6"></span> Blue</label>
+                        <label><input type="radio" name="folder-color" value="#8b5cf6"> <span class="color-dot" style="background:#8b5cf6"></span> Purple</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="app.closeModal('modal-folder')">Batal</button>
+                <button class="btn btn-primary" onclick="app.submitCreateFolder()">Simpan Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Share Modal -->
+    <div id="modal-share" class="modal-backdrop" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Pratinjau Online & Share Link</h3>
+                <button class="modal-close" onclick="app.closeModal('modal-share')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Bagikan link ini kepada klien, mitra, atau tim untuk melihat dokumen PDF secara langsung di browser tanpa perlu login.</p>
+                <div class="share-url-box">
+                    <input type="text" id="share-link-input" readonly>
+                    <button class="btn btn-primary" onclick="app.copyShareLink()">Salin</button>
+                </div>
+                <div class="share-toggle-row">
+                    <label class="switch-label">
+                        <input type="checkbox" id="share-public-toggle" onchange="app.toggleSharePublic()">
+                        <span class="switch-slider"></span>
+                        <span>Akses Publik Aktif</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="app.openSharePreviewTab()">Buka Tab</button>
+                <button class="btn btn-primary" onclick="app.closeModal('modal-share')">Selesai</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. New File Modal -->
+    <div id="modal-file" class="modal-backdrop" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Buat File Baru di Proyek</h3>
+                <button class="modal-close" onclick="app.closeModal('modal-file')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nama File (dengan ekstensi .tex, .bib, dsb.)</label>
+                    <input type="text" id="new-file-path" placeholder="contoh: sections/metodologi.tex" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="app.closeModal('modal-file')">Batal</button>
+                <button class="btn btn-primary" onclick="app.submitCreateFile()">Buat File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/app.js?v=1.0.5"></script>
+</body>
+</html>
