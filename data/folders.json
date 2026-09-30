@@ -40,5 +40,12 @@
     "parent_id": "f_akademik",
     "created_at": 1790706940.2272801,
     "color": "#3b82f6"
+  },
+  {
+    "id": "f_kp",
+    "name": "Laporan Kerja Praktik",
+    "parent_id": "f_akademik",
+    "created_at": 1790737000.0,
+    "color": "#3b82f6"
   }
 ]
