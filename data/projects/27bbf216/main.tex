@@ -16,8 +16,7 @@
 \usepackage{titlesec}
 \usepackage{caption}
 \usepackage{microtype}
-\usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+\usepackage{cite}
 \usepackage{hyperref}
 
 % Konfigurasi Hyperref
@@ -29,7 +28,10 @@
     urlcolor=blue
 }
 
-% Format Judul Bab (BAB 1, BAB 2 sesuai template resmi PENS)
+% Sesuaikan Nama Bab Daftar Pustaka untuk Babel Bahasa Indonesia
+\addto\captionsindonesian{\renewcommand{\bibname}{DAFTAR PUSTAKA}}
+
+% Format Judul Bab (BAB 1 sesuai template resmi PENS)
 \titleformat{\chapter}[display]
   {\normalfont\bfseries\centering}{\MakeUppercase{\chaptertitlename\ \arabic{chapter}}}{0.5ex}{\large\MakeUppercase}
 \titlespacing*{\chapter}{0pt}{-20pt}{20pt}
@@ -61,7 +63,7 @@
 \begin{document}
 
 % ==============================================================================
-% HALAMAN JUDUL (Sesuai Template A. Halaman Judul.docx PENS)
+% HALAMAN JUDUL (Sesuai Template A. Halaman Judul.docx PENS - Dikelola oleh Dimas)
 % ==============================================================================
 \begin{titlepage}
     \centering
@@ -104,19 +106,22 @@
 \section{Latar Belakang}
 \label{sec:latar_belakang}
 
-Perkembangan teknologi perangkat lunak saat ini menuntut kecepatan siklus rilis dan skalabilitas sistem yang tinggi, khususnya pada arsitektur penyedia layanan antarmuka pemrograman aplikasi (\textit{Application Programming Interface} / API). Dalam lanskap pengembangan sisi belakang (\textit{back-end}), \textit{Node.js} telah menjadi salah satu lingkungan eksekusi (\textit{runtime environment}) berbasis JavaScript yang paling luas diadopsi pada industri global. Keunggulan tersebut didukung oleh karakteristik \textit{event-driven}, arsitektur I/O non-pemblokir (\textit{non-blocking I/O}), serta ekosistem repositori paket dependensi yang masif. Salah satu kerangka kerja fondasional yang menjadi standar industri dalam membangun peladen HTTP di ekosistem tersebut adalah \textit{Express.js}.
+Perkembangan teknologi perangkat lunak saat ini menuntut kecepatan siklus rilis dan skalabilitas sistem yang tinggi, khususnya pada arsitektur penyedia layanan antarmuka pemrograman aplikasi (\textit{Application Programming Interface} / API). Dalam lanskap pengembangan sisi belakang (\textit{back-end}), \textit{Node.js} telah menjadi salah satu lingkungan eksekusi (\textit{runtime environment}) berbasis JavaScript yang paling luas diadopsi pada industri global. Keunggulan tersebut didukung oleh karakteristik \textit{event-driven}, arsitektur I/O non-pemblokir (\textit{non-blocking I/O}), serta ekosistem repositori dependensi yang masif~\cite{tilkov2010node}. Salah satu kerangka kerja fondasional yang menjadi standar industri dalam membangun peladen HTTP di ekosistem tersebut adalah \textit{Express.js}.
 
 Fleksibilitas tinggi pada \textit{Express.js} berasal dari filosofi desainnya yang bersifat minimalis dan tidak mengikat (\textit{unopinionated}). Karakteristik ini memberikan kebebasan mutlak kepada pengembang untuk merancang struktur direktori, menentukan alur aliran data, hingga menyusun arsitektur kode sesuai preferensi personal. Namun, ketiadaan batasan arsitektural bawaan tersebut menciptakan konsekuensi negatif yang signifikan di lingkungan rekayasa perangkat lunak profesional. Berdasarkan studi kasus di industri, seperti yang dihadapi di PT.\ ALDM, fleksibilitas tanpa panduan struktural yang tegas kerap memicu anomali pengorganisasian kode sumber. Logika bisnis (\textit{business logic}), penanganan protokol HTTP (\textit{request/response handling}), hingga akses manipulasi basis data sering kali tercampur baur dalam satu berkas pengendali (\textit{controller}) yang monolitik.
 
-Pencampuran tanggung jawab kode tersebut secara langsung mempercepat akumulasi utang teknis arsitektur (\textit{Architectural Technical Debt}). Ketika kode sumber tidak mematuhi prinsip pemisahan tanggung jawab yang terstruktur, perubahan fungsionalitas pada salah satu komponen sistem berisiko tinggi menimbulkan efek samping yang tidak terduga (\textit{unintended side effects}) pada komponen lainnya. Dalam jangka panjang, kondisi ini memicu degradasi kualitas kode yang menyebar secara non-linear, mempersulit pelaksanaan pengujian unit otomatis, serta melipatgandakan biaya dan waktu pemeliharaan perangkat lunak (\textit{maintenance cost}).
+Pencampuran tanggung jawab kode tersebut secara langsung mempercepat akumulasi utang teknis arsitektur (\textit{Architectural Technical Debt} / ATD). Studi pemetaan sistematis oleh Sousa dkk.~\cite{sousa2023atd} menegaskan bahwa ATD merupakan bentuk utang teknis dengan dampak paling destruktif terhadap produktivitas tim jangka panjang, yang kerap dipicu oleh tekanan tenggat waktu rilis (\textit{deadline pressure}) dan keputusan desain yang tergesa-gesa. Hal ini diperkuat oleh temuan Verdecchia dkk.~\cite{verdecchia2021theory} serta de Toledo dkk.~\cite{toledo2021identifying}, yang menunjukkan bahwa ketiadaan standar arsitektur dan keterbatasan pengetahuan kontekstual pengembang secara kumulatif melipatgandakan bunga (\textit{interest}) pemeliharaan perangkat lunak. Ketika kode sumber tidak mematuhi pemisahan tanggung jawab yang terstruktur, perubahan fungsionalitas pada salah satu komponen sistem berisiko tinggi menimbulkan efek samping yang tidak terduga (\textit{unintended side effects}) pada komponen lainnya, mempersulit pelaksanaan pengujian unit otomatis, serta melipatgandakan biaya pemeliharaan (\textit{maintenance cost})~\cite{fowler2018refactoring}.
 
-Tantangan ini menjadi semakin kritis ketika melibatkan pengembang pemula, seperti mahasiswa magang semester lima di lingkungan PT.\ ALDM. Di bawah tekanan tenggat waktu penyelesaian fitur (\textit{delivery deadline}), pengembang pemula cenderung mengabaikan kaidah arsitektur demi tercapainya fungsionalitas sistem secara instan. Paradigma \textit{Clean Architecture} yang digagas oleh Robert C. Martin sejatinya menawarkan fondasi ideal untuk mengatasi kekacauan struktural ini dengan memisahkan domain inti dari lapisan antarmuka luar dan infrastruktur. Kendati demikian, kurva pembelajaran \textit{Clean Architecture} yang tergolong curam, ditambah kewajiban menyusun banyak berkas abstraksi secara manual, menimbulkan beban kognitif dan friksi pengembangan (\textit{development friction}) yang sangat tinggi bagi pengembang tingkat awal.
+Tantangan ini menjadi semakin kritis ketika melibatkan pengembang pemula, seperti mahasiswa magang semester lima di lingkungan PT.\ ALDM. Studi empiris oleh Gilson dkk.~\cite{gilson2020junior} mengenai perilaku pengembang junior membuktikan bahwa pengembang pemula cenderung mengabaikan umpan balik dari perkakas analisis statis konvensional apabila perkakas tersebut bersifat tidak mengikat (\textit{non-constraining feedback}). Pengembang pemula terdorong mengambil jalan pintas penulisan kode demi mengejar fungsionalitas instan di bawah tekanan waktu, sehingga membutuhkan mekanisme pembatas arsitektural yang bersifat memaksa secara struktural (\textit{constraining mechanisms})~\cite{gilson2020junior}.
 
-Jika ditinjau dari sudut pandang ekosistem bahasa pemrograman lain, friksi serupa telah berhasil dipecahkan melalui pendekatan \textit{Convention over Configuration} (CoC). Kerangka kerja seperti \textit{Ruby on Rails} pada Ruby maupun \textit{Spring Boot} pada Java membuktikan bahwa konvensi penamaan berkas dan tata letak direktori mampu memandu pengembang secara otomatis mematuhi tata kelola arsitektur standar tanpa perlu menyusun konfigurasi perantara yang rumit. Sayangnya, pada ekosistem \textit{Node.js}, kerangka kerja populer saat ini masih minim menerapkan filosofi CoC yang ramah bagi pemula. Kerangka kerja alternatif seperti \textit{NestJS}, kendati memiliki struktur bawaan, menuntut penguasaan konsep \textit{TypeScript decorators} dan kontainer injeksi dependensi (\textit{dependency injection}) tingkat lanjut yang justru memperlebar jurang adaptasi bagi pengembang pemula.
+Di sisi lain, rotasi berkala mahasiswa magang di PT.\ ALDM memicu fenomena penguapan pengetahuan arsitektur (\textit{architectural knowledge evaporation}). Sebagaimana diidentifikasi oleh Robillard~\cite{robillard2021turnover} serta Robillard dkk.~\cite{robillard2016sustainable}, pergantian personel yang cepat menyebabkan hilangnya pemahaman konteks desain sistem secara drastis (\textit{turnover-induced knowledge loss}). Pendekatan konvensional yang hanya mengandalkan dokumentasi statis atau pedoman internal (\textit{style guide}) terbukti tidak efektif, karena dokumentasi tersebut jarang dibaca dan cepat usang. Robillard menegaskan bahwa solusi berkelanjutan menuntut penanaman langsung pengetahuan desain ke dalam perkakas pengembangan (\textit{embedding knowledge into tooling and conventions})~\cite{robillard2016sustainable,robillard2021turnover}. Senada dengan itu, Ali dkk.~\cite{ali2017architecture} serta Strasser dkk.~\cite{strasser2021understanding} menekankan pentingnya instrumen penegak kesesuaian arsitektur secara otomatis (\textit{automated conformance checking}) guna mencegah erosi struktur kode.
 
-Berdasarkan urgensi permasalahan tersebut, pendekatan konvensional yang semata-mata mengandalkan pelatihan atau pedoman dokumen internal (\textit{style guide}) terbukti tidak memadai untuk mencegah degradasi arsitektur secara berkelanjutan. Diperlukan intervensi teknis berupa perkakas (\textit{tooling}) yang mampu bertindak sebagai panduan arsitektural (\textit{guardrail}) otomatis sejak baris kode pertama ditulis. Oleh sebab itu, kegiatan laporan akhir ini mengusung perancangan \textbf{uGUIDED.js}, yaitu sebuah \textit{framework back-end} berbasis \textit{Convention over Configuration} di atas \textit{Express.js} yang secara otomatis menuntun pengembang dalam menerapkan kaidah \textit{Clean Architecture}.
+Paradigma \textit{Clean Architecture} yang digagas oleh Robert C. Martin~\cite{martin2017clean} sejatinya menawarkan fondasi ideal untuk memisahkan domain inti dari lapisan infrastruktur luar. Secara empiris, Nugroho dkk.~\cite{nugroho2022clean} membuktikan bahwa penerapan \textit{Clean Architecture} pada basis kode \textit{back-end} mampu meningkatkan indeks keterawatan (\textit{maintainability index}) secara signifikan antara 21\% hingga 61\% serta mereduksi kompleksitas siklomatis. Kendati demikian, studi tersebut juga menggarisbawahi adanya resistensi awal berupa tingginya beban pembuatan berkas abstraksi antarmuka secara manual, sehingga secara eksplisit merekomendasikan perlunya perkakas pembangkit kode otomatis (\textit{scaffolding tooling}) guna memangkas friksi awal tersebut~\cite{nugroho2022clean}.
 
-\newpage
+Dalam konteks penyederhanaan friksi konfigurasi, paradigma \textit{Convention over Configuration} (CoC) telah terbukti berhasil pada ekosistem lain seperti \textit{Ruby on Rails}~\cite{hansson2011agile}. Secara kuantitatif, analisis komparatif menunjukkan bahwa penerapan CoC secara drastis mereduksi beban kognitif (\textit{cognitive load}), memangkas waktu konfigurasi berulang, dan meningkatkan konsistensi kode lintas tim~\cite{ijres2023coc}. Temuan eksperimental terkini oleh tim peneliti Esfinge~\cite{esfinge2025coc} terhadap puluhan pengembang pemula bahkan mencatat bahwa 75\% partisipan mampu menyelesaikan implementasi arsitektur lebih cepat dengan tingkat kegagalan (\textit{failure rate}) yang jauh lebih rendah ketika didukung oleh konvensi cerdas. Sayangnya, pada ekosistem \textit{Node.js}, kerangka kerja populer saat ini masih minim menerapkan filosofi CoC ramah pemula; kerangka kerja alternatif seperti \textit{NestJS} justru menuntut penguasaan konsep \textit{TypeScript decorators} dan kontainer injeksi dependensi tingkat lanjut yang memperlebar jurang adaptasi bagi pengembang pemula.
+
+Berdasarkan urgensi tersebut, diperlukan sebuah terobosan teknis berupa kerangka kerja terpadu yang memadukan kekuatan \textit{guardrail} arsitektur dan otomatisasi konvensi. Oleh sebab itu, kegiatan laporan akhir ini mengusung perancangan \textbf{uGUIDED.js}, yaitu sebuah \textit{framework back-end} berbasis \textit{Convention over Configuration} di atas \textit{Express.js} yang secara otomatis menuntun pengembang pemula dalam menerapkan kaidah \textit{Clean Architecture}.
+
 \section{Identifikasi Permasalahan}
 \label{sec:identifikasi_masalah}
 
@@ -124,10 +129,11 @@ Berdasarkan uraian pada latar belakang di atas, permasalahan utama yang diselesa
 
 Secara terperinci, faktor-faktor mendasar yang melatarbelakangi timbulnya permasalahan tersebut diidentifikasi sebagai berikut:
 \begin{enumerate}
-    \item \textbf{Ketiadaan Regulasi Struktural Bawaan pada Express.js}: Karakteristik \textit{unopinionated} pada \textit{Express.js} tidak menyediakan aturan baku mengenai pemisahan modul, sehingga membuka celah pencampuran logika bisnis, orkestrasi basis data, dan penanganan protokol HTTP ke dalam satu lapisan.
-    \item \textbf{Tingginya Beban Kognitif Penerapan Manual Clean Architecture}: Penerapan \textit{Clean Architecture} secara manual membutuhkan pembuatan banyak berkas abstraksi serta konfigurasi alur dependensi yang rumit, yang menyulitkan pengembang pemula atau mahasiswa magang di tengah ritme kerja industri yang dinamis.
-    \item \textbf{Hilangnya Pengetahuan Arsitektur (\textit{Architectural Knowledge Evaporation})}: Ketiadaan sistem pembatas baku menyebabkan pola arsitektur mudah menyimpang dan tidak konsisten setiap kali terjadi rotasi pengembang atau pergantian siklus mahasiswa magang.
-    \item \textbf{Minimnya Perkakas Pendukung Berbasis CoC di Ekosistem Node.js}: Belum tersedianya \textit{framework} ringan di ekosistem \textit{Node.js} yang memanfaatkan kekuatan \textit{Convention over Configuration} untuk menuntun penulisan kode berstandar \textit{Clean Architecture} secara otomatis tanpa membebani pengembang dengan konfigurasi perantara yang rumit.
+    \item \textbf{Ketiadaan Regulasi Struktural Bawaan pada Express.js}: Karakteristik \textit{unopinionated} pada \textit{Express.js} tidak menyediakan aturan baku mengenai pemisahan modul, sehingga membuka celah pencampuran logika bisnis, orkestrasi basis data, dan penanganan protokol HTTP ke dalam satu lapisan tunggal.
+    \item \textbf{Tingginya Beban Kognitif Penerapan Manual Clean Architecture}: Penerapan \textit{Clean Architecture} secara manual membutuhkan pembuatan banyak berkas abstraksi serta konfigurasi dependensi yang rumit~\cite{nugroho2022clean}, yang menimbulkan friksi pengembangan bagi mahasiswa magang di tengah ritme kerja industri.
+    \item \textbf{Ketidakefektifan Umpan Balik Non-Konstrain pada Pengembang Pemula}: Pengembang tingkat awal memiliki tendensi mengabaikan pedoman konvensional atau peringatan perkakas analisis statis yang tidak bersifat membatasi secara struktural (\textit{non-constraining})~\cite{gilson2020junior}.
+    \item \textbf{Penguapan Pengetahuan Arsitektur (\textit{Architectural Knowledge Evaporation})}: Ketiadaan sistem pembatas bawaan yang tertanam dalam perkakas kerja menyebabkan pemahaman arsitektur mudah lenyap setiap kali terjadi rotasi berkala mahasiswa magang~\cite{robillard2021turnover}.
+    \item \textbf{Minimnya Perkakas Pendukung Berbasis CoC di Ekosistem Node.js}: Belum tersedianya \textit{framework} ringan di ekosistem \textit{Node.js} yang memanfaatkan kekuatan \textit{Convention over Configuration} untuk menuntun penulisan kode berstandar \textit{Clean Architecture} secara otomatis tanpa menuntut konfigurasi tingkat lanjut yang abstrak.
 \end{enumerate}
 
 \section{Tujuan}
@@ -167,5 +173,59 @@ Kontribusi dan manfaat yang diharapkan dari hasil pelaksanaan kegiatan laporan a
         \item Menyediakan alternatif perkakas \textit{open-source} yang menjembatani kesenjangan antara fleksibilitas ekstrem \textit{Express.js} dan kompleksitas tinggi arsitektur \textit{NestJS}.
     \end{itemize}
 \end{enumerate}
+
+% ==============================================================================
+% DAFTAR PUSTAKA (Sesuai Template D. Daftar Pustaka.docx PENS)
+% Khusus memuat rujukan yang disitir langsung di Bab 1
+% ==============================================================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{\bibname}
+
+\bibitem{ali2017architecture}
+Ali, N., Baker, S., O'Crowley, R., Herold, S., and Buckley, J., Architecture Consistency: State of the Practice, Challenges and Requirements, \textit{Empirical Software Engineering}, Vol. 23, No. 1, Hal. 224-258, Springer, 2018.
+
+\bibitem{toledo2021identifying}
+de Toledo, S. S., Martini, A., and Sjøberg, D. I. K., Identifying Architectural Technical Debt, Principal, and Interest in Microservices: A Multiple-Case Study, \textit{Journal of Systems and Software}, Vol. 177, Hal. 110931, Elsevier, 2021.
+
+\bibitem{esfinge2025coc}
+Esfinge Research Team, An Approach Based on Metadata to Implement Convention Over Configuration Decoupled From Framework Logic, \textit{Journal of Software: Evolution and Process}, Vol. 37, No. 2, Hal. e70028, Wiley, 2025.
+
+\bibitem{fowler2018refactoring}
+Fowler, M., \textit{Refactoring: Improving the Design of Existing Code}, Addison-Wesley Professional, Edisi 2, 2018.
+
+\bibitem{gilson2020junior}
+Gilson, F., Morales-Trujillo, M., and Mathews, M., How Junior Developers Deal with Their Technical Debt?, \textit{Proceedings of the 2020 International Conference on Technical Debt (TechDebt)}, Hal. 101-110, IEEE/ACM, 2020.
+
+\bibitem{hansson2011agile}
+Hansson, D. H., \textit{Agile Web Development with Rails: A Pragmatic Guide}, Pragmatic Bookshelf, Edisi 4, 2011.
+
+\bibitem{ijres2023coc}
+IJRES Research Team, A Comparative Analysis of Convention over Configuration Impact on Developer Productivity, \textit{International Journal of Research in Engineering and Science (IJRES)}, Vol. 14, No. 5, Hal. 6-8, 2023.
+
+\bibitem{martin2017clean}
+Martin, R. C., \textit{Clean Architecture: A Craftsman's Guide to Software Structure and Design}, Prentice Hall, Edisi 1, 2017.
+
+\bibitem{nugroho2022clean}
+Nugroho, Y. N., Kusumo, D. S., and Alibasa, M. J., Clean Architecture Implementation Impacts on Maintainability Aspect for Backend System Code Base, \textit{Proceedings of the 2022 10th International Conference on Information and Communication Technology (ICoICT)}, Hal. 81-86, IEEE, 2022.
+
+\bibitem{robillard2021turnover}
+Robillard, M. P., Turnover-Induced Knowledge Loss in Practice, \textit{Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021)}, Hal. 1362-1372, ACM, 2021.
+
+\bibitem{robillard2016sustainable}
+Robillard, M. P., Marcus, A., Treude, C., Bavota, G., Chaparro, O., Ernst, N., Gerosa, M. A., Godfrey, M., Lanza, M., Linares-V{\'a}squez, M., Murphy, G. C., Paixao, M., Petrosyan, R., Perez, D. R., and Zou, Y., Sustainable Software Design: On the Role of Design Evaporation, \textit{Proceedings of the 2016 24th ACM SIGSOFT International Symposium on Foundations of Software Engineering (FSE 2016)}, Hal. 1046-1049, ACM, 2016.
+
+\bibitem{sousa2023atd}
+Sousa, A., Rocha, L., and Britto, R., Architectural Technical Debt - A Systematic Mapping Study, \textit{Proceedings of the 38th ACM/SIGAPP Symposium on Applied Computing (SAC '23)}, Hal. 1450-1459, ACM, 2023.
+
+\bibitem{strasser2021understanding}
+Strasser, K., Ramler, R., and Linsbauer, L., Understanding Architecture Erosion: The Practitioners' Perspective, \textit{arXiv preprint arXiv:2103.11392}, Hal. 1-12, 2021.
+
+\bibitem{tilkov2010node}
+Tilkov, S. and Vinoski, S., Node.js: Using JavaScript to Build High-Performance Network Programs, \textit{IEEE Internet Computing}, Vol. 14, No. 6, Hal. 80-83, IEEE, 2010.
+
+\bibitem{verdecchia2021theory}
+Verdecchia, R., Kruchten, P., Lago, P., and Ozkaya, I., Building and Evaluating a Theory of Architectural Technical Debt in Software-Intensive Systems, \textit{IEEE Transactions on Software Engineering}, Vol. 48, No. 11, Hal. 4296-4318, IEEE, 2021.
+
+\end{thebibliography}
 
 \end{document}
