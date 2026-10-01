@@ -1,45 +1,192 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper,oneside]{report}
+
 \usepackage[utf8]{inputenc}
-% \usepackage[bahasai]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[indonesian]{babel}
 \usepackage[top=4cm,left=4cm,bottom=3cm,right=3cm]{geometry}
 \usepackage{setspace}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{caption}
 \usepackage{hyperref}
+
+% Konfigurasi Hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=blue
+}
+
+% Format Judul Bab dan Subbab
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\centering}{\MakeUppercase{\chaptertitlename\ \Roman{chapter}}}{1ex}{\large\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+\titleformat{\section}
+  {\normalfont\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+% Pengaturan Jarak Itemize / Enumerate
+\setlist[enumerate]{topsep=2pt,partopsep=0pt,itemsep=3pt,parsep=2pt,leftmargin=1.5em}
+\setlist[itemize]{topsep=2pt,partopsep=0pt,itemsep=3pt,parsep=2pt,leftmargin=1.5em}
 
 \onehalfspacing
 
 \begin{document}
 
-\title{\textbf{PENGEMBANGAN SISTEM DETEKSI DAN LOKALISASI PRESISE BERBASIS DEEP LEARNING}\\
-\vspace{1cm}
-\large{TUGAS AKHIR}}
-\author{Dimas\\NIM: Mahasiswa}
-\date{Bandung\\2026}
+% --- HALAMAN SAMPUL PROPOSAL ---
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+    {\large\bfseries PROPOSAL TUGAS AKHIR\par}
+    \vspace{2.5cm}
+    {\Large\bfseries PERANCANGAN uGUIDED.js: FRAMEWORK BERBASIS CONVENTION OVER CONFIGURATION UNTUK PENERAPAN CLEAN ARCHITECTURE\par}
+    \vspace{3.5cm}
+    {\normalsize Disusun Oleh:\par}
+    \vspace{0.5cm}
+    {\large\bfseries DIMAS DEO REZKIDYO\par}
+    {\normalsize NRP. 3124521041\par}
+    \vfill
+    {\bfseries PROGRAM STUDI D4 TEKNIK INFORMATIKA\par}
+    {\bfseries DEPARTEMEN TEKNIK INFORMATIKA DAN KOMPUTER\par}
+    {\bfseries POLITEKNIK ELEKTRONIKA NEGERI SURABAYA\par}
+    {\bfseries 2026\par}
+\end{titlepage}
 
-\maketitle
+% --- DAFTAR ISI ---
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+
+% --- ISI PROPOSAL ---
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \chapter{PENDAHULUAN}
-\section{Latar Belakang}
-Perkembangan kecerdasan buatan pada ranah pemrosesan sinyal biomedis telah membuka peluang baru dalam percepatan diagnosis medis. Tugas akhir ini berfokus pada perancangan arsitektur deep learning yang robust dan bebas data leakage.
+\label{chap:pendahuluan}
 
-\section{Rumusan Masalah}
-Berdasarkan latar belakang tersebut, rumusan masalah dalam penelitian ini adalah:
+\section{Latar Belakang}
+\label{sec:latar_belakang}
+
+Perkembangan teknologi perangkat lunak saat ini menuntut kecepatan siklus rilis dan skalabilitas sistem yang tinggi, khususnya pada arsitektur penyedia layanan antarmuka pemrograman aplikasi (\textit{Application Programming Interface} / API). Dalam lanskap pengembangan sisi belakang (\textit{back-end}), \textit{Node.js} telah menjadi salah satu lingkungan eksekusi (\textit{runtime environment}) berbasis JavaScript yang paling luas diadopsi pada industri global. Keunggulan tersebut didukung oleh karakteristik \textit{event-driven}, arsitektur I/O non-pemblokir (\textit{non-blocking I/O}), serta ekosistem repositori paket dependensi yang masif. Salah satu kerangka kerja fondasional yang menjadi standar \textit{de facto} dalam membangun peladen HTTP di ekosistem tersebut adalah \textit{Express.js}.
+
+Fleksibilitas tinggi pada \textit{Express.js} berasal dari filosofi desainnya yang bersifat minimalis dan tidak mengikat (\textit{unopinionated}). Karakteristik ini memberikan kebebasan mutlak kepada pengembang perangkat lunak untuk merancang struktur direktori, menentukan alur aliran data, hingga menyusun arsitektur kode sesuai preferensi personal. Namun, ketiadaan batasan arsitektural bawaan tersebut menciptakan konsekuensi negatif yang signifikan di lingkungan rekayasa perangkat lunak profesional. Berdasarkan observasi di industri, seperti yang dihadapi di PT.\ ALDM, fleksibilitas tanpa panduan struktural yang tegas kerap memicu anomali pengorganisasian kode sumber. Logika bisnis (\textit{business logic}), penanganan protokol HTTP (\textit{request/response handling}), hingga akses manipulasi basis data sering kali tercampur baur dalam satu berkas atau satu lapisan pengendali (\textit{controller}) yang monolitik.
+
+Pencampuran tanggung jawab kode tersebut secara langsung mempercepat akumulasi utang teknis arsitektur (\textit{Architectural Technical Debt}). Ketika kode sumber tidak mematuhi prinsip pemisahan tanggung jawab yang terstruktur, perubahan fungsionalitas pada salah satu komponen sistem berisiko tinggi menimbulkan efek samping yang tidak terduga (\textit{unintended side effects}) pada komponen lainnya. Dalam jangka panjang, kondisi ini memicu degradasi stabilitas sistem yang menyebar secara non-linear, mempersulit pelaksanaan pengujian unit otomatis, serta melipatgandakan biaya dan waktu pemeliharaan perangkat lunak (\textit{maintenance cost}).
+
+Tantangan ini menjadi semakin kritis ketika melibatkan pengembang pemula, seperti mahasiswa magang semester lima di lingkungan PT.\ ALDM. Di bawah tekanan tenggat waktu penyelesaian fitur (\textit{delivery deadline}), pengembang junior memiliki kecenderungan mengabaikan kaidah arsitektur dan kualitas kode demi tercapainya fungsionalitas sistem secara kilat. Paradigma \textit{Clean Architecture} yang digagas oleh Robert C. Martin sejatinya menawarkan fondasi ideal untuk mengatasi kekacauan struktural ini dengan memisahkan domain inti dari lapisan antarmuka luar dan mekanisme teknis infrastruktur. Kendati demikian, kurva pembelajaran \textit{Clean Architecture} yang tergolong curam, ditambah kewajiban menyusun banyak berkas abstraksi antarmuka secara manual, menimbulkan beban kognitif dan friksi pengembangan (\textit{development friction}) yang sangat tinggi bagi pengembang tingkat awal.
+
+Jika ditinjau dari sudut pandang ekosistem bahasa pemrograman lain, friksi serupa telah berhasil dipecahkan melalui pendekatan \textit{Convention over Configuration} (CoC). Kerangka kerja seperti \textit{Ruby on Rails} pada Ruby maupun \textit{Spring Boot} pada Java membuktikan bahwa konvensi penamaan berkas dan tata letak direktori mampu memandu pengembang secara otomatis mematuhi tata kelola arsitektur standar tanpa perlu menyusun konfigurasi perantara yang rumit. Sayangnya, pada ekosistem \textit{Node.js}, kerangka kerja populer saat ini masih minim menerapkan filosofi CoC yang ramah bagi pemula. Kerangka kerja alternatif seperti \textit{NestJS}, kendati memiliki struktur bawaan, menuntut penguasaan konsep \textit{TypeScript decorators} dan kontainer injeksi dependensi (\textit{dependency injection}) tingkat lanjut yang justru memperlebar jurang adaptasi bagi pengembang pemula.
+
+Berdasarkan urgensi permasalahan tersebut, pendekatan konvensional yang semata-mata mengandalkan pelatihan atau pedoman dokumen internal (\textit{style guide}) terbukti tidak memadai untuk mencegah degradasi arsitektur secara berkelanjutan. Diperlukan intervensi teknis berupa perkakas (\textit{tooling}) yang mampu bertindak sebagai panduan arsitektural (\textit{guardrail}) otomatis sejak baris kode pertama ditulis. Oleh sebab itu, penelitian tugas akhir ini mengusung perancangan \textbf{uGUIDED.js}, yaitu sebuah \textit{framework back-end} berbasis \textit{Convention over Configuration} di atas \textit{Express.js} yang secara otomatis menuntun pengembang dalam menerapkan kaidah \textit{Clean Architecture}.
+
+\section{Identifikasi Permasalahan}
+\label{sec:identifikasi_masalah}
+
+Berdasarkan uraian pada latar belakang di atas, permasalahan utama yang diselesaikan dalam penelitian tugas akhir ini adalah rendahnya kepatuhan pemisahan tanggung jawab arsitektural dan tingginya akumulasi \textit{Architectural Technical Debt} pada kode sumber yang dikembangkan oleh pengembang pemula di lingkungan industri, khususnya di PT.\ ALDM. 
+
+Secara terperinci, faktor-faktor mendasar yang melatarbelakangi timbulnya permasalahan tersebut diidentifikasi sebagai berikut:
 \begin{enumerate}
-    \item Bagaimana merancang arsitektur model yang mampu mengekstraksi fitur spasial dan temporal sinyal secara simultan?
-    \item Bagaimana menjamin evaluasi performa bebas bias melalui skema patient-wise validation?
+    \item \textbf{Ketiadaan Regulasi Struktural Bawaan pada Express.js}: Karakteristik \textit{unopinionated} pada \textit{Express.js} tidak menyediakan aturan baku mengenai pemisahan modul, sehingga membuka celah pencampuran logika bisnis, orkestrasi basis data, dan penanganan protokol HTTP ke dalam satu lapisan.
+    \item \textbf{Tingginya Beban Kognitif Penerapan Manual Clean Architecture}: Penerapan \textit{Clean Architecture} secara manual membutuhkan pembuatan banyak berkas abstraksi serta konfigurasi alur dependensi yang rumit, yang menyulitkan pengembang pemula atau mahasiswa magang di tengah ritme kerja industri yang dinamis.
+    \item \textbf{Hilangnya Pengetahuan Arsitektur (\textit{Architectural Knowledge Evaporation})}: Ketiadaan sistem pembatas baku menyebabkan pola arsitektur mudah menyimpang dan tidak konsisten setiap kali terjadi rotasi pengembang atau pergantian siklus mahasiswa magang.
+    \item \textbf{Minimnya Perkakas Pendukung Berbasis CoC di Ekosistem Node.js}: Belum tersedianya \textit{framework} ringan di ekosistem \textit{Node.js} yang memanfaatkan kekuatan \textit{Convention over Configuration} untuk menuntun penulisan kode berstandar \textit{Clean Architecture} secara otomatis tanpa membebani pengembang dengan konfigurasi perantara yang rumit.
 \end{enumerate}
 
-\section{Tujuan Penelitian}
-Tujuan dari penelitian ini adalah menghasilkan pipeline komputasi yang terverifikasi secara metodologis dan dapat dipertanggungjawabkan pada pengujian data independen.
+\section{Tujuan}
+\label{sec:tujuan}
+
+Kegiatan laporan akhir ini membangun suatu \textit{framework back-end} bernama \textbf{uGUIDED.js} untuk mengatasi permasalahan percampuran logika arsitektural, tingginya friksi penulisan kode terstruktur, dan akumulasi \textit{Architectural Technical Debt} pada pengembang pemula di lingkungan PT.\ ALDM. 
+
+Untuk merealisasikan solusi tersebut, fitur-fitur teknis dan sasaran perancangan yang ditawarkan meliputi:
+\begin{enumerate}
+    \item Menyediakan antarmuka baris perintah (\textit{Command Line Interface} / CLI) untuk mempermudah inisialisasi proyek dan pembangkitan cetak biru (\textit{boilerplate scaffolding}) yang mematuhi pembagian lapisan \textit{Clean Architecture}.
+    \item Menerapkan mekanisme pemetaan rute otomatis dan resolusi dependensi berbasis konvensi direktori (\textit{Convention over Configuration}) sebagai lapisan pembungkus (\textit{wrapper}) di atas \textit{Express.js}, sehingga meminimalkan konfigurasi manual rute HTTP.
+    \item Menjamin isolasi dan pemisahan lapisan entitas domain, kasus penggunaan (\textit{use case}), pengendali antarmuka (\textit{interface adapters/controllers}), serta infrastruktur secara konsisten melalui struktur direktori bawaan.
+    \item Melakukan validasi kelayakan arsitektur oleh ahli rekayasa perangkat lunak, evaluasi fungsionalitas sistem melalui \textit{black-box testing}, serta pengujian kepraktisan dan kemudahan penggunaan oleh target pengguna melalui kuesioner \textit{System Usability Scale} (SUS).
+\end{enumerate}
+
+\section{Manfaat}
+\label{sec:manfaat}
+
+Kontribusi dan manfaat yang diharapkan dari hasil pelaksanaan kegiatan tugas akhir ini dijabarkan ke dalam beberapa aspek berikut:
+\begin{enumerate}
+    \item \textbf{Bagi Mahasiswa Magang dan Pengembang Pemula}:
+    \begin{itemize}
+        \item Membantu mempercepat adaptasi terhadap standar rekayasa perangkat lunak industri tanpa terhambat oleh kurva belajar arsitektur yang curam.
+        \item Memberikan panduan praktis dan otomatis dalam menulis kode yang terpisah secara modular, bersih, dan mudah dirawat sejak awal pengembangan.
+    \end{itemize}
+
+    \item \textbf{Bagi PT.\ ALDM dan Industri Perangkat Lunak}:
+    \begin{itemize}
+        \item Mencegah terjadinya \textit{Architectural Technical Debt} sejak fase awal pengembangan fitur oleh tim pengembang atau pemagang.
+        \item Mengurangi waktu dan beban supervisi pada proses peninjauan kode (\textit{code review}) oleh pengembang senior berkat konsistensi konvensi berkas.
+        \item Mencegah terjadinya \textit{architectural knowledge evaporation} sehingga integritas struktur kode sumber tetap terjaga kendati terjadi pergantian personel proyek.
+    \end{itemize}
+
+    \item \textbf{Bagi Pengembangan Ilmu Pengetahuan dan Ekosistem Open-Source}:
+    \begin{itemize}
+        \item Memberikan sumbangsih literatur empiris mengenai implementasi paradigma \textit{Convention over Configuration} pada ekosistem JavaScript/\textit{Node.js}.
+        \item Menyediakan alternatif perkakas \textit{open-source} yang menjembatani kesenjangan antara fleksibilitas ekstrem \textit{Express.js} dan kompleksitas tinggi arsitektur \textit{NestJS}.
+    \end{itemize}
+\end{enumerate}
+
+\section{Batasan Masalah}
+\label{sec:batasan_masalah}
+
+Agar perancangan dan evaluasi sistem tetap terarah serta fokus pada pencapaian tujuan utama, batasan masalah pada kegiatan tugas akhir ini ditetapkan sebagai berikut:
+\begin{enumerate}
+    \item \textit{Framework} yang dikembangkan berfokus secara eksklusif pada pengembangan sisi \textit{back-end} untuk penyediaan layanan REST API.
+    \item \textit{Framework} berjalan pada lingkungan eksekusi \textit{Node.js} dengan arsitektur lapisan perantara (\textit{wrapper}) yang berdiri di atas pustaka \textit{Express.js}.
+    \item Penyediaan antarmuka baris perintah (CLI) difokuskan pada fungsi inisialisasi proyek dan pembuatan cetak biru komponen arsitektur (\textit{entities}, \textit{use cases}, \textit{controllers}, dan \textit{routes}).
+    \item Sasaran pengujian dan evaluasi pengguna awal difokuskan pada mahasiswa magang di PT.\ ALDM serta pengembang perangkat lunak tingkat pemula.
+\end{enumerate}
 
 \chapter{TINJAUAN PUSTAKA}
-\section{Transformasi Wavelet Diskrit}
-Transformasi Wavelet Diskrit (DWT) digunakan untuk memisahkan noise frekuensi tinggi dari komponen gelombang utama tanpa merusak morfologi sinyal.
+\label{chap:tinjauan_pustaka}
+
+\section{Node.js dan Karakteristik Express.js}
+\textit{Node.js} merupakan lingkungan waktu proses JavaScript lintas platform berbasis mesin V8 Google. Sifat dasar \textit{Express.js} yang bersifat \textit{unopinionated} memberikan fleksibilitas perancangan namun memerlukan disiplin arsitektural eksternal agar kode tidak terdegradasi.
+
+\section{Konsep Convention over Configuration (CoC)}
+Paradigma \textit{Convention over Configuration} memprioritaskan pengurangan keputusan konfigurasi eksplisit dengan menetapkan aturan penamaan dan struktur berkas standar yang diinterpretasikan secara otomatis oleh kerangka kerja.
+
+\section{Prinsip Clean Architecture}
+Arsitektur Bersih (\textit{Clean Architecture}) membagi sistem ke dalam lingkaran konsentris dengan aturan ketergantungan (\textit{Dependency Rule}) yang mengarah ke dalam, di mana lapisan domain tidak bergantung pada detail antarmuka, basis data, atau kerangka kerja eksternal.
+
+\section{Model Pengembangan ADDIE}
+Penelitian ini mengadopsi model \textit{Research and Development} (R\&D) ADDIE yang mencakup lima fase terstruktur: \textit{Analysis}, \textit{Design}, \textit{Development}, \textit{Implementation}, dan \textit{Evaluation}.
 
 \chapter{METODOLOGI PENELITIAN}
-\section{Tahapan Eksperimen}
-Eksperimen dilakukan dalam beberapa tahapan utama, mulai dari pra-pemrosesan data, pembagian cohort berbasis pasien (Stratified Group K-Fold), hingga pelatihan arsitektur neural network.
+\label{chap:metodologi}
+
+\section{Tahapan Model ADDIE}
+Pelaksanaan tugas akhir ini dirancang mengikuti tahapan model ADDIE:
+\begin{enumerate}
+    \item \textbf{Analysis}: Analisis kebutuhan struktur arsitektur pada studi kasus PT.\ ALDM dan identifikasi friksi pengembang pemula.
+    \item \textbf{Design}: Perancangan tata letak konvensi berkas, mekanisme \textit{auto-routing}, pemetaan dependensi, dan sintaks baris perintah CLI.
+    \item \textbf{Development}: Pembangunan modul inti \textit{wrapper} uGUIDED.js dan utilitas generator CLI berbasis JavaScript/Node.js.
+    \item \textbf{Implementation}: Uji coba penerapan \textit{framework} uGUIDED.js oleh mahasiswa magang di PT.\ ALDM dalam menyusun layanan REST API.
+    \item \textbf{Evaluation}: Pengujian fungsional \textit{black-box}, validasi kelayakan arsitektur oleh pakar rekayasa perangkat lunak, serta penyebaran kuesioner \textit{System Usability Scale} (SUS).
+\end{enumerate}
+
+\section{Metode Evaluasi dan Pengujian}
+Pengujian sistem dilakukan melalui tiga pendekatan terukur:
+\begin{enumerate}
+    \item \textbf{Validasi Ahli Perangkat Lunak}: Menguji kepatuhan struktur terhadap kaidah \textit{Clean Architecture}.
+    \item \textbf{Black-Box Testing}: Memverifikasi seluruh fungsionalitas perintah CLI dan ketepatan pemetaan rute API otomatis.
+    \item \textbf{System Usability Scale (SUS)}: Mengukur tingkat kemudahan penggunaan dan persepsi kepraktisan oleh mahasiswa magang.
+\end{enumerate}
 
 \end{document}
