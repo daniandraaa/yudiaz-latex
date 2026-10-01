@@ -1,0 +1,45 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+% \usepackage[bahasai]{babel}
+\usepackage[top=4cm,left=4cm,bottom=3cm,right=3cm]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\onehalfspacing
+
+\begin{document}
+
+\title{\textbf{PENGEMBANGAN SISTEM DETEKSI DAN LOKALISASI PRESISE BERBASIS DEEP LEARNING}\\
+\vspace{1cm}
+\large{TUGAS AKHIR}}
+\author{Dimas\\NIM: Mahasiswa}
+\date{Bandung\\2026}
+
+\maketitle
+
+\chapter{PENDAHULUAN}
+\section{Latar Belakang}
+Perkembangan kecerdasan buatan pada ranah pemrosesan sinyal biomedis telah membuka peluang baru dalam percepatan diagnosis medis. Tugas akhir ini berfokus pada perancangan arsitektur deep learning yang robust dan bebas data leakage.
+
+\section{Rumusan Masalah}
+Berdasarkan latar belakang tersebut, rumusan masalah dalam penelitian ini adalah:
+\begin{enumerate}
+    \item Bagaimana merancang arsitektur model yang mampu mengekstraksi fitur spasial dan temporal sinyal secara simultan?
+    \item Bagaimana menjamin evaluasi performa bebas bias melalui skema patient-wise validation?
+\end{enumerate}
+
+\section{Tujuan Penelitian}
+Tujuan dari penelitian ini adalah menghasilkan pipeline komputasi yang terverifikasi secara metodologis dan dapat dipertanggungjawabkan pada pengujian data independen.
+
+\chapter{TINJAUAN PUSTAKA}
+\section{Transformasi Wavelet Diskrit}
+Transformasi Wavelet Diskrit (DWT) digunakan untuk memisahkan noise frekuensi tinggi dari komponen gelombang utama tanpa merusak morfologi sinyal.
+
+\chapter{METODOLOGI PENELITIAN}
+\section{Tahapan Eksperimen}
+Eksperimen dilakukan dalam beberapa tahapan utama, mulai dari pra-pemrosesan data, pembagian cohort berbasis pasien (Stratified Group K-Fold), hingga pelatihan arsitektur neural network.
+
+\end{document}
