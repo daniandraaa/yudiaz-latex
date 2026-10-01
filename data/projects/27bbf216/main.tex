@@ -37,19 +37,24 @@
 % Format Judul Subbab & Seksi (Sesuai gaya penulisan template PENS)
 \titleformat{\section}
   {\normalfont\bfseries}{\thesection}{1em}{\MakeUppercase}
-\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\section}{0pt}{12pt}{4pt}
 
 \titleformat{\subsection}
   {\normalfont\bfseries}{\thesubsection}{1em}{}
-\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
 
 % Konfigurasi Keterangan Gambar dan Tabel sesuai Standar PENS (Bold, Rata Tengah, Pemisah Titik)
 \captionsetup[figure]{labelsep=period, justification=centering, font=bf, name=Gambar}
 \captionsetup[table]{labelsep=period, justification=centering, font=bf, name=Tabel}
 
 % Pengaturan Jarak List
-\setlist[enumerate]{topsep=2pt,partopsep=0pt,itemsep=3pt,parsep=2pt,leftmargin=1.8em}
-\setlist[itemize]{topsep=2pt,partopsep=0pt,itemsep=3pt,parsep=2pt,leftmargin=1.8em}
+\setlist[enumerate]{topsep=2pt,partopsep=0pt,itemsep=1.5pt,parsep=0.5pt,leftmargin=1.8em}
+\setlist[itemize]{topsep=1pt,partopsep=0pt,itemsep=1pt,parsep=0.5pt,leftmargin=1.8em}
+
+% Pencegahan Baris Yatim (Orphan / Widow)
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 
 \onehalfspacing
 
@@ -111,6 +116,7 @@ Jika ditinjau dari sudut pandang ekosistem bahasa pemrograman lain, friksi serup
 
 Berdasarkan urgensi permasalahan tersebut, pendekatan konvensional yang semata-mata mengandalkan pelatihan atau pedoman dokumen internal (\textit{style guide}) terbukti tidak memadai untuk mencegah degradasi arsitektur secara berkelanjutan. Diperlukan intervensi teknis berupa perkakas (\textit{tooling}) yang mampu bertindak sebagai panduan arsitektural (\textit{guardrail}) otomatis sejak baris kode pertama ditulis. Oleh sebab itu, kegiatan laporan akhir ini mengusung perancangan \textbf{uGUIDED.js}, yaitu sebuah \textit{framework back-end} berbasis \textit{Convention over Configuration} di atas \textit{Express.js} yang secara otomatis menuntun pengembang dalam menerapkan kaidah \textit{Clean Architecture}.
 
+\newpage
 \section{Identifikasi Permasalahan}
 \label{sec:identifikasi_masalah}
 
