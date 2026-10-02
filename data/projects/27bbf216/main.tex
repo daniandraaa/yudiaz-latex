@@ -15,6 +15,29 @@
 \usepackage{tabularx}
 \usepackage{enumitem}
 \usepackage{titlesec}
+\usepackage{titletoc}
+
+% Konfigurasi Khusus Tampilan Daftar Isi
+\titlecontents{chapter}
+  [0pt]
+  {\addvspace{4pt}\bfseries}
+  {\MakeUppercase{\chaptername}\ \thecontentslabel\quad}
+  {}
+  {\titlerule*[0.5pc]{.}\contentspage}
+
+\titlecontents{section}
+  [2.2em]
+  {\addvspace{1.5pt}}
+  {\thecontentslabel\quad}
+  {}
+  {\titlerule*[0.5pc]{.}\contentspage}
+
+\titlecontents{subsection}
+  [4.5em]
+  {\addvspace{1pt}}
+  {\thecontentslabel\quad}
+  {}
+  {\titlerule*[0.5pc]{.}\contentspage}
 \usepackage{caption}
 \usepackage{microtype}
 \usepackage{cite}
@@ -139,9 +162,14 @@ The viability and practical effectiveness of the framework are evaluated through
 
 \newpage
 
-% --- DAFTAR ISI ---
+% --- DAFTAR ISI (Penyesuaian jarak baris dan antarbagian khusus halaman ini) ---
+\newpage
 \addcontentsline{toc}{chapter}{\contentsname}
-\tableofcontents
+{
+  \singlespacing
+  \setlength{\parskip}{0pt}
+  \tableofcontents
+}
 \newpage
 
 % ==============================================================================
