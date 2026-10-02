@@ -1,17 +1,219 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
-\usepackage{amsmath,amssymb}
-\usepackage{hyperref}
+\usepackage[left=1.2cm,right=1.2cm,top=0.9cm,bottom=0.9cm]{geometry}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
 
-\title{Dokumen Baru}
-\author{Daniandra Prayudisty}
-\date{\today}
+\pagestyle{empty}
+
+% Base 6-column grid calculation: mathematical precision for 2-column & 3-column splits
+\newlength{\tableW}
+\setlength{\tableW}{\textwidth - 16pt}
+\newlength{\baseW}
+\setlength{\baseW}{(\tableW - 12\tabcolsep - 7\arrayrulewidth) / 6}
+
+\newlength{\colTwo}   % 1/3 of table (spans 2 base columns)
+\setlength{\colTwo}{\baseW * 2 + 2\tabcolsep + \arrayrulewidth}
+
+\newlength{\colThree} % 1/2 of table (spans 3 base columns)
+\setlength{\colThree}{\baseW * 3 + 4\tabcolsep + 2\arrayrulewidth}
+
+\newlength{\colFour}  % 2/3 of table (spans 4 base columns)
+\setlength{\colFour}{\baseW * 4 + 6\tabcolsep + 3\arrayrulewidth}
+
+\newlength{\colSix}   % full width (spans 6 base columns)
+\setlength{\colSix}{\tableW - 2\tabcolsep - 2\arrayrulewidth}
+
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.15}
 
 \begin{document}
-\maketitle
 
-\section{Pendahuluan}
-Mulai menulis dokumen LaTeX Anda di sini.
+\noindent
+\begin{tabular}{|p{\baseW}|p{\baseW}|p{\baseW}|p{\baseW}|p{\baseW}|p{\baseW}|}
+\hline
+% ROW 1: Header (3 Kolom: Logo Telkom | Form Peminjaman Fasilitas | Logo Organisasi/Fakultas)
+\multicolumn{2}{|p{\colTwo}|}{
+\begin{minipage}[c][2.6cm][c]{\colTwo}
+\centering
+\includegraphics[height=1.5cm,keepaspectratio]{telkom_logo.png}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[c][2.6cm][c]{\colTwo}
+\raggedright
+\vspace{2pt}
+{\large\textbf{Form Peminjaman Fasilitas}}\\[8pt]
+\begin{tabular}{@{}l@{\hspace{6pt}}c@{\hspace{6pt}}p{2.8cm}@{}}
+\textbf{No} & \textbf{:} & \dotfill\\[4pt]
+\textbf{Tanggal} & \textbf{:} & \dotfill
+\end{tabular}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[c][2.6cm][c]{\colTwo}
+\centering
+\vspace{2pt}
+{\large\textbf{Logo}}\\[4pt]
+{\textbf{\large Organisasi / Fakultas}}
+\end{minipage}
+} \\
+\hline
+% ROW 2: Kepada & Penyelenggara (4 + 2)
+\multicolumn{4}{|p{\colFour}|}{
+\begin{minipage}[c][2.2cm][c]{\colFour}
+\vspace{4pt}
+\textbf{Kepada :}\\[4pt]
+\textbf{Kepala Bagian Pengendalian dan Pemanfaatan Aset}\\[4pt]
+\textbf{Telkom University}
+\vspace{4pt}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[c][2.2cm][c]{\colTwo}
+\textbf{Penyelenggara :}\\[8pt]
+\makebox[\colTwo-16pt]{\dotfill}\\[8pt]
+\makebox[\colTwo-16pt]{\dotfill}
+\end{minipage}
+} \\
+\hline
+% ROW 3: Tanggal, Waktu, Tempat Kegiatan (2 + 2 + 2)
+\multicolumn{2}{|p{\colTwo}|}{
+\begin{minipage}[t][2.2cm][t]{\colTwo}
+\vspace{6pt}
+\textbf{Tanggal Kegiatan :}\\[8pt]
+\makebox[\colTwo-16pt]{\dotfill}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[t][2.2cm][t]{\colTwo}
+\vspace{6pt}
+\textbf{Waktu Kegiatan :}\\[8pt]
+\makebox[\colTwo-16pt]{\dotfill}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[t][2.2cm][t]{\colTwo}
+\vspace{6pt}
+\textbf{Tempat Kegiatan :}\\[8pt]
+\makebox[\colTwo-16pt]{\dotfill}
+\end{minipage}
+} \\
+\hline
+% ROW 4: Rincian Kegiatan (Full 6 Kolom)
+\multicolumn{6}{|p{\colSix}|}{
+\begin{minipage}[t][5.2cm][t]{\colSix}
+\vspace{6pt}
+{\large\textbf{Rincian Kegiatan :}}
+\end{minipage}
+} \\
+\hline
+% ROW 5: Keterangan Tata Tertib (Full 6 Kolom)
+\multicolumn{6}{|p{\colSix}|}{
+\begin{minipage}[c][1.0cm][c]{\colSix}
+\textbf{\large Keterangan : Untuk tata tertib penggunaan fasilitas terlampir}
+\end{minipage}
+} \\
+\hline
+% ROW 6: Persetujuan Tahap 1 (2 + 2 + 2)
+\multicolumn{2}{|p{\colTwo}|}{
+\begin{minipage}[t][3.7cm][t]{\colTwo}
+\vspace{6pt}
+\centering
+\textbf{Menyetujui Kegiatan}\\[3pt]
+Ditmawa / Kemahasiswaan Fakultas\\[2pt]
+\vfill
+( \makebox[4.0cm]{\dotfill} )\\[3pt]
+{\footnotesize NIP/NIDN. \makebox[2.4cm]{\dotfill}}
+\vspace{2pt}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[t][3.7cm][t]{\colTwo}
+\vspace{6pt}
+\centering
+\textbf{Menyetujui Kegiatan}\\[3pt]
+Ka Prodi / Pembina Ormawa\\[2pt]
+\vfill
+( \makebox[4.0cm]{\dotfill} )\\[3pt]
+{\footnotesize NIP/NIDN. \makebox[2.4cm]{\dotfill}}
+\vspace{2pt}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[t][3.7cm][t]{\colTwo}
+\vspace{6pt}
+\centering
+Bandung, \makebox[2.4cm]{\dotfill}\\[3pt]
+\textbf{Pemohon}\\[2pt]
+\vfill
+( \makebox[4.0cm]{\dotfill} )\\[3pt]
+{\footnotesize NIM. \makebox[2.8cm]{\dotfill}}
+\vspace{2pt}
+\end{minipage}
+} \\
+\hline
+% ROW 7: Nomor Telepon Pemohon / PIC (4 + 2)
+\multicolumn{4}{|>{\raggedleft\arraybackslash}p{\colFour}|}{
+\begin{minipage}[c][1.0cm][c]{\colFour}
+\raggedleft
+\textbf{Nomor Telepon Pemohon atau PIC Kegiatan :}\hspace{10pt}
+\end{minipage}
+}
+&
+\multicolumn{2}{p{\colTwo}|}{
+\begin{minipage}[c][1.0cm][c]{\colTwo}
+\centering
+\makebox[\colTwo-16pt]{\dotfill}
+\end{minipage}
+} \\
+\hline
+% ROW 8: Persetujuan Tahap 2 (3 + 3 Simetris 50% : 50%)
+\multicolumn{3}{|p{\colThree}|}{
+\begin{minipage}[t][3.8cm][t]{\colThree}
+\vspace{6pt}
+\centering
+\textbf{Menyetujui Tempat / Fasilitas}\\[3pt]
+Kaur Sumber Daya Fakultas\\[2pt]
+\vfill
+( \makebox[4.0cm]{\dotfill} )\\[3pt]
+{\footnotesize NIP/NIK. \makebox[2.8cm]{\dotfill}}
+\vspace{2pt}
+\end{minipage}
+}
+&
+\multicolumn{3}{p{\colThree}|}{
+\begin{minipage}[t][3.8cm][t]{\colThree}
+\vspace{6pt}
+\centering
+\textbf{Menyetujui Tempat / Fasilitas}\\[3pt]
+Bagian Aset Telkom University\\[2pt]
+\vfill
+( \makebox[4.0cm]{\dotfill} )\\[3pt]
+{\footnotesize NIP/NIK. \makebox[2.8cm]{\dotfill}}
+\vspace{2pt}
+\end{minipage}
+} \\
+\hline
+\end{tabular}
+
+\vspace{8pt}
+\noindent
+\makebox[\tableW][s]{%
+\footnotesize\textit{Form B -- Pengendalian \& Pemanfaatan Fasilitas Telkom University}%
+\hfill%
+\footnotesize\textit{Dokumen Resmi Administrasi Kampus}%
+}
 
 \end{document}
