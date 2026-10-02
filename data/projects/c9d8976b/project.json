@@ -1,0 +1,13 @@
+{
+  "id": "c9d8976b",
+  "title": "Form B - Peminjaman Fasilitas Telkom University",
+  "description": "Formulir resmi peminjaman fasilitas aula dan sarana prasarana Telkom University",
+  "folder_id": "f_akademik",
+  "created_at": 1790927793.4313295,
+  "updated_at": 1790927793.4313297,
+  "last_compiled_at": null,
+  "compile_status": "never",
+  "share_id": "a6eebe06-01a",
+  "is_public": true,
+  "main_file": "main.tex"
+}
