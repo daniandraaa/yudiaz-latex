@@ -54,5 +54,12 @@
     "parent_id": "f_akademik",
     "created_at": 1790786000.0,
     "color": "#06b6d4"
+  },
+  {
+    "id": "18668623",
+    "name": "Dokumen & Administrasi - Karina",
+    "parent_id": null,
+    "created_at": 1791128382.1958234,
+    "color": "#ec4899"
   }
 ]
