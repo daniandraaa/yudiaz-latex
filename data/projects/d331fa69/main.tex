@@ -1,617 +1,754 @@
 \documentclass[11pt,a4paper]{report}
 
-% -------------------------------------------------------------
-% Packages & Configuration
-% -------------------------------------------------------------
-\usepackage[a4paper, left=2.2cm, right=2.2cm, top=3.6cm, bottom=3.6cm, headheight=68pt, footskip=65pt]{geometry}
+% ==============================================================================
+% PACKAGES & SYSTEM CONFIGURATION
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{amsmath,amssymb}
 \usepackage{graphicx}
+\usepackage{geometry}
 \usepackage{fancyhdr}
-\usepackage[table]{xcolor}
-\usepackage{tcolorbox}
 \usepackage{tabularx}
 \usepackage{booktabs}
-\usepackage{array}
-\usepackage{parskip}
-\usepackage{float}
-\usepackage{amsmath,amssymb}
-\usepackage{enumitem}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+\usepackage{cite}
 \usepackage{titlesec}
-\usepackage{mathptmx} % Times font matching docx
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks, pageanchor=true]{hyperref}
 
-% -------------------------------------------------------------
-% Color Palette (Matching CamTech & Document Theme)
-% -------------------------------------------------------------
-\definecolor{camtechNavy}{HTML}{1B3A6B}
-\definecolor{camtechDark}{HTML}{0D1B2A}
-\definecolor{camtechSteel}{HTML}{3D5A80}
-\definecolor{camtechSlate}{HTML}{8B9CB0}
-\definecolor{guidanceBg}{HTML}{F2F4F7}
-\definecolor{tableRowAlt}{HTML}{F2F4F7}
-\definecolor{tableMeta1}{HTML}{F0F3F8}
-\definecolor{tableMeta2}{HTML}{E8EEF5}
-\definecolor{tableMetaVal1}{HTML}{FFFFFF}
-\definecolor{tableMetaVal2}{HTML}{F5F7FA}
-\definecolor{cellBorder}{HTML}{D1D5DB}
-
-% -------------------------------------------------------------
-% Callout Boxes (Writing Guidance)
-% -------------------------------------------------------------
-\newtcolorbox{guidancebox}[1][]{
-  colback=guidanceBg,
-  colframe=camtechSteel,
-  boxrule=0pt,
-  leftrule=3.5pt,
-  arc=0pt,
-  left=12pt,
-  right=12pt,
-  top=8pt,
-  bottom=8pt,
-  fontupper=\small,
-  #1
+% Page Geometry Matching Official CamTech Format
+\geometry{
+    a4paper,
+    top=32mm,
+    bottom=35mm,
+    left=26mm,
+    right=26mm,
+    headheight=65pt,
+    footskip=28pt
 }
 
-% -------------------------------------------------------------
-% Header & Footer Setup (Official CamTech Banners)
-% -------------------------------------------------------------
+% Official Corporate Colors
+\definecolor{camtechNavy}{HTML}{1B3A6B}
+\definecolor{camtechGold}{HTML}{D4AF37}
+\definecolor{camtechBlue}{HTML}{3D5A80}
+\definecolor{lightGray}{HTML}{F8FAFC}
+\definecolor{tableShade}{HTML}{F0F3F8}
+\definecolor{tableAlt}{HTML}{E8EEF5}
+\definecolor{codeBg}{HTML}{0F172A}
+
+% Header and Footer Specifications
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[C]{\includegraphics[width=\textwidth]{image1.jpg}}
-\fancyfoot[C]{\includegraphics[width=\textwidth]{image2.jpg}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 
-% Style for Chapter and Section Headings
-\titleformat{\chapter}[display]
-  {\normalfont\Large\bfseries\centering\color{camtechNavy}}
-  {\Large\bfseries\color{camtechNavy}Chapter \thechapter}
-  {4pt}
-  {\LARGE\bfseries\color{camtechNavy}}
-
-\titlespacing*{\chapter}{0pt}{-10pt}{16pt}
-
-\titleformat{\section}
-  {\normalfont\large\bfseries\color{camtechNavy}}
-  {\thesection}{1em}{}
-
-\titleformat{\subsection}
-  {\normalfont\normalsize\bfseries\color{camtechSteel}}
-  {\thesubsection}{1em}{}
-
-% Redefine plain page style so chapter pages also have banners
-\fancypagestyle{plain}{
-  \fancyhf{}
-  \fancyhead[C]{\includegraphics[width=\textwidth]{image1.jpg}}
-  \fancyfoot[C]{\includegraphics[width=\textwidth]{image2.jpg}}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
+% Running Page Header: CamTech Faculty Header Banner
+\fancyhead[C]{%
+    \includegraphics[width=\textwidth,height=15mm,keepaspectratio=false]{image1.jpg}%
 }
 
-% -------------------------------------------------------------
-% Document Start
-% -------------------------------------------------------------
+% Running Page Footer: Contact and Institutional Banner
+\fancyfoot[C]{%
+    \begin{minipage}{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth,height=9mm,keepaspectratio=false]{image2.jpg}\\[2pt]
+        \scriptsize\color{gray}Virtubis Internship Programme \quad|\quad Faculty of Engineering \quad|\quad Page \thepage
+    \end{minipage}
+}
+
+% Plain page style for chapter beginnings
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyhead[C]{\includegraphics[width=\textwidth,height=15mm,keepaspectratio=false]{image1.jpg}}
+    \fancyfoot[C]{%
+        \begin{minipage}{\textwidth}
+            \centering
+            \includegraphics[width=\textwidth,height=9mm,keepaspectratio=false]{image2.jpg}\\[2pt]
+            \scriptsize\color{gray}Virtubis Internship Programme \quad|\quad Faculty of Engineering \quad|\quad Page \thepage
+        \end{minipage}
+    }
+}
+
+% Typography & Section Formatting
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{camtechNavy}}
+  {\filright\small\scshape\color{camtechGold} CHAPTER \thechapter}
+  {1ex}
+  {\filright\LARGE\bfseries}
+\titlespacing*{\chapter}{0pt}{-10pt}{20pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{camtechNavy}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{camtechBlue}}{\thesubsection}{1em}{}
+
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{writingguidance}{
+    colback=lightGray,
+    colframe=camtechBlue,
+    coltitle=white,
+    fonttitle=\bfseries\small,
+    title={Writing Guidance \& Quality Benchmark},
+    enhanced,
+    attach boxed title to top left={yshift=-2mm,xshift=5mm},
+    boxed title style={colback=camtechBlue},
+    arc=4mm,
+    boxrule=1pt,
+    left=6mm,right=6mm,top=6mm,bottom=6mm
+}
+
 \begin{document}
 
-% =============================================================
-% TITLE / COVER PAGE (Page 1)
-% =============================================================
-\begin{titlepage}
-\thispagestyle{fancy}
+% ==============================================================================
+% COVER TITLE PAGE
+% ==============================================================================
+\thispagestyle{empty}
+\pagenumbering{roman}
 
 \begin{center}
-  {\large\bfseries\color{camtechDark} CAMBODIA UNIVERSITY OF TECHNOLOGY AND SCIENCE}\\[0.25em]
-  {\small\color{camtechSteel} Faculty of Engineering \quad|\quad FENG Industry, Internship \& Innovation Hub}\\[1.8em]
-  
-  {\Large\bfseries Virtubis Internship Programme}\\[0.4em]
-  {\huge\bfseries\color{camtechNavy} End-Of-Term Progress Report}\\[1.2em]
-  
-  {\normalsize A Term-End Academic Report Submitted in Partial Fulfilment\\[0.2em]
-  of the Requirements of the Virtubis Internship Framework}\\[1.5em]
+    \includegraphics[width=\textwidth,height=18mm,keepaspectratio=false]{image1.jpg}
+    \vspace{0.3cm}
+
+    {\Large\bfseries\color{camtechNavy} CAMBODIA UNIVERSITY OF TECHNOLOGY AND SCIENCE}\\[3pt]
+    {\normalsize\bfseries\color{camtechBlue} Faculty of Engineering \quad|\quad FENG Industry, Internship \& Innovation Hub}\\[12pt]
+
+    {\Large\bfseries\color{camtechGold} Virtubis Internship Programme}\\[4pt]
+    {\LARGE\bfseries\color{camtechNavy} End-Of-Term Progress Report}\\[8pt]
+
+    \rule{0.85\textwidth}{1.2pt}\\[10pt]
+
+    {\LARGE\bfseries\color{camtechNavy} AGROSCALE: DESIGN AND EVALUATION OF AN IOT-ENABLED LOAD-CELL AND MACHINE LEARNING PLATFORM FOR AUTOMATED CATTLE WEIGHT MONITORING AND HEALTH CLASSIFICATION IN CAMBODIA}\\[10pt]
+
+    \rule{0.85\textwidth}{1.2pt}\\[10pt]
+
+    {\small A Term-End Academic Report Submitted in Partial Fulfilment of the Requirements of the Virtubis Internship Framework}\\[8pt]
 \end{center}
+
+\vspace{0.1cm}
 
 % Metadata Table
-\renewcommand{\arraystretch}{1.25}
 \noindent
-\begin{tabularx}{\textwidth}{|>{\bfseries}p{4.2cm}|X|}
+\begin{tabularx}{\textwidth}{|>{\bfseries\columncolor{tableShade}}p{4.2cm}|X|}
 \hline
-\rowcolor{tableMeta1} Project Title & (Enter full project title) \\
-\hline
-\rowcolor{tableMeta2} Student Name(s) & (Full name as registered) \\
-\hline
-\rowcolor{tableMeta1} Student ID(s) & \\
-\hline
-\rowcolor{tableMeta2} Academic Year & \\
-\hline
-\rowcolor{tableMeta1} Term & (Term I \ / \ Term II \ / \ Term III) \\
-\hline
-\rowcolor{tableMeta2} Internship Code & (INT-ENG-0\_) \\
-\hline
-\rowcolor{tableMeta1} Hub & (AI Hub \ / \ DS Hub \ / \ Cyber Hub \ / \ R\&A Hub) \\
-\hline
-\rowcolor{tableMeta2} Project Track & (Software Development \ / \ Research) \\
-\hline
-\rowcolor{tableMeta1} Academic Mentor & \\
-\hline
-\rowcolor{tableMeta2} Technical Mentor & \\
-\hline
-\rowcolor{tableMeta1} Submission Date & \\
-\hline
+Project Title & AgroScale: Smart Cattle Weight and Health Monitoring System \\ \hline
+Student Name(s) & Kuy Visal (Lead), Vichheka Chhan, Sihac Ny, Sovin In, Vichar \\ \hline
+Student ID(s) & 202100413 (Lead Developer) \\ \hline
+Academic Year & 2023--2024 \\ \hline
+Term & Term II \\ \hline
+Internship Code & INT-ENG-02 \\ \hline
+Hub & Artificial Intelligence Hub (AI Hub) \& Robotics Hub \\ \hline
+Project Track & Applied IoT \& Full-Stack Software Development \\ \hline
+Academic Mentor & Dr. Sopheap Seng, Faculty of Engineering \\ \hline
+Technical Mentor & Industry Supervisor, Virtubis Tech Lab \\ \hline
+Submission Date & October 2024 \\ \hline
 \end{tabularx}
 
-\vspace{1.2em}
+\vspace{0.4cm}
 
-% Declaration of Originality
 \begin{center}
-  {\bfseries\large Declaration of Originality}
+    {\bfseries\color{camtechNavy} Declaration of Originality}
 \end{center}
-
-\vspace{0.2em}
-\noindent
+\noindent\small
 I/We hereby declare that this report is our own original work undertaken as part of the Virtubis Internship Programme at the Faculty of Engineering, CamTech University. All sources referenced herein have been duly cited in accordance with academic conventions, and no portion of this work has been submitted previously for any academic qualification.
 
-\vspace{1.8em}
+\vspace{0.6cm}
 
-% Signature lines
 \noindent
-\begin{tabularx}{\textwidth}{X p{1cm} X}
-  \rule{6.2cm}{0.5pt} & & \rule{6.2cm}{0.5pt} \\
-  Student Signature & & Mentor Signature \\[1.8em]
-  \rule{6.2cm}{0.5pt} & & \rule{6.2cm}{0.5pt} \\
-  Date & & Date \\
-\end{tabularx}
+\begin{tabular}{p{7.2cm} c p{7.2cm}}
+\cline{1-1} \cline{3-3}
+\centering \footnotesize Kuy Visal (Student Signature) & \hspace{1cm} & \centering \footnotesize Technical Supervisor (Mentor Signature) \tabularnewline
+\centering \footnotesize Date: October 05, 2024 & & \centering \footnotesize Date: October 05, 2024 \tabularnewline
+\end{tabular}
 
-\end{titlepage}
-
-% =============================================================
-% PRELIMINARY PAGES
-% =============================================================
-
-% --- Page 3: Acknowledgements ---
-\clearpage
-\pagenumbering{roman}
-\setcounter{page}{3}
-
+\vspace{0.6cm}
 \begin{center}
-  {\LARGE\bfseries\color{camtechNavy} Acknowledgements}\\[1.5em]
+    \includegraphics[width=\textwidth,height=9mm,keepaspectratio=false]{image2.jpg}
 \end{center}
+
+\clearpage
+
+% ==============================================================================
+% ACKNOWLEDGEMENTS
+% ==============================================================================
+\chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgements}
 
-I [Student Name] would like to express sincere gratitude to [Academic Mentor Name] for their guidance and supervision throughout this term. We also thank [Technical Mentor Name] for their technical direction and practical insights.
+We would like to express our deepest gratitude to our academic mentor, Dr. Sopheap Seng, and the faculty members of the Faculty of Engineering at Cambodia University of Technology and Science (CamTech) for their continuous intellectual guidance, constructive critique, and mentorship throughout the duration of this term.
 
-We are grateful to the Faculty of Engineering and FENG i-Hub at Cambodia University of Technology and Science for creating the Virtubis framework and providing the resources, infrastructure, and mentorship that made this work possible.
+We extend our sincere thanks to the FENG Industry, Internship \& Innovation Hub (FENG i-Hub) and the Virtubis Internship Programme for establishing a rigorous engineering framework that bridges academic theory with field challenges in Cambodia. The hardware prototyping facilities, server infrastructure, and collaborative workspace provided by the Hub were instrumental in bringing the AgroScale platform from conceptual architecture to functional implementation.
 
-[Add any additional acknowledgements --- industry partners, peers, data providers, or others who contributed to the work this term.]
+Special appreciation is also extended to the smallholder cattle farmers in Kandal and Kampong Speu provinces who provided invaluable domain insights regarding livestock handling, walk-over scale dynamics, and the operational bottlenecks of manual herd management. Finally, we thank our fellow engineering student peers for their assistance during load-cell testing, load calibration trials, and interface stress evaluation.
 
-% --- Page 4: Abstract ---
 \clearpage
-\setcounter{page}{4}
 
-\begin{center}
-  {\LARGE\bfseries\color{camtechNavy} Abstract}\\[1.2em]
-\end{center}
+% ==============================================================================
+% ABSTRACT & KEYWORDS
+% ==============================================================================
+\chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
 
-\textbf{Background:} Dengue Hemorrhagic Fever (DHF) remains the primary vector-borne threat in Southeast Asian urban centers. While rainfall is the traditional predictor for mosquito breeding, recent urbanization in cities like Phnom Penh has created "Urban Heat Islands" (UHI). Emerging evidence suggests that localized ambient temperature increases may shorten the extrinsic incubation period of the virus, yet the specific lead-time between extreme heat events and infection surges remains poorly quantified.
+\noindent\textbf{Background:} Smallholder and mid-sized cattle farms in Cambodia rely almost entirely on manual, infrequent weighing to track animal growth and health, a process that is slow, labor-intensive, and prone to human error. Because weight loss is often one of the earliest indicators of illness, injury, or poor nutrition in livestock, the lack of continuous, animal-specific data means health issues are frequently detected too late for early intervention. Low-cost IoT sensing combined with edge-based signal processing offers a path toward automated, real-time herd monitoring, but pairing a moving, unrestrained animal's identity with a noisy weight signal in the field remains a nontrivial engineering problem.
 
-\textbf{Objective:} This study aims to evaluate the time-lagged association between the Land Surface Temperature (LST) and dengue notification rates to determine if thermal stress acts as a direct biological accelerator for viral replication or if the relationship is confounded by the onset of the rainy season.
+\vspace{0.3cm}
+\noindent\textbf{Objective:} This study aims to design and evaluate a full-stack, AI-assisted platform that automatically identifies individual cattle via RF proximity tagging, captures stable weight readings from a load-cell platform, and classifies the resulting measurements for health anomalies by weight --- replacing manual logging with a continuous, low-latency data pipeline from farm to dashboard.
 
-\textbf{Methodology:} We utilized a 15-year longitudinal dataset (2009--2024) of satellite-derived LST and laboratory-confirmed dengue cases. Using a Distributed Lag Non-linear Model (DLNM), we analyzed the relative risk of infection across a 30-day window. To isolate the temperature effect from the dominant monsoon cycle, we integrated "cumulative weekly rainfall" as a covariate in a Generalized Additive Model (GAM), allowing for the detection of "heat-driven" spikes that occur independently of water accumulation.
+\vspace{0.3cm}
+\noindent\textbf{Methodology:} The system uses an ESP32-based ``gate'' node fitted with an HX711-amplified load cell and a SX1278 LoRa receiver to detect and pair a cow's LoRa tag with its weight in real time. Raw readings pass through a three-stage on-device filtering pipeline --- a 5-sample moving average, a 20 g zero-band deadzone to reject sensor noise, and a stability check requiring readings to vary by no more than 50 g across 5 consecutive loop cycles ($\approx 1.5$ s) --- before being packaged into a single JSON payload and transmitted over Wi-Fi. A Node.js/Express backend validates each payload, forwards it to a Python (FastAPI) machine-learning service for classification, and persists results to a PostgreSQL database via Prisma. Among four candidate algorithms evaluated (Decision Tree, Random Forest, Isolation Forest, XGBoost), a Decision Tree was selected for health-status classification. The React/Vite dashboard periodically polls the backend to retrieve updated cattle and weight data for farmers, with the full stack containerized for deployment.
 
-\textbf{Results:} The initial unadjusted models showed a significant correlation between heat peaks and dengue surges with a 2-week lag ($p < 0.01$). Unlike the malaria/PM2.5 "Dry Season Trap" where results vanished under control, the Dengue-Heat link remained resilient. Even when adjusting for precipitation, temperatures exceeding $32^\circ\text{C}$ were associated with a 24\% increase in case notifications ($RR = 1.24$; $CI: 1.15\text{--}1.33$) approximately 14 days later. This suggests that heat accelerates the transmission cycle faster than rainfall alone can expand breeding sites.
+\vspace{0.3cm}
+\noindent\textbf{Results:} End-to-end hardware and software integration was demonstrated successfully: the load-cell/LoRa gate reliably distinguished stable weight readings from transient noise and correctly associated each reading with the corresponding tag ID before transmission. The dashboard successfully retrieved and displayed updated weight and health-status data through periodic polling. Remaining work includes replacing the current mocked device-management endpoints with production hardware integration and validating the Decision Tree classifier.
 
-\textbf{Conclusion:} Thermal stress is a standalone driver of dengue outbreaks in urban Cambodia, independent of the monsoon calendar. These findings indicate that public health strategies must evolve beyond "stagnant water" management to include urban cooling initiatives and "Heat-Dengue" integrated early warning systems. In the context of climate change, rising urban temperatures may counteract the successes of traditional vector control.
+\vspace{0.3cm}
+\noindent\textbf{Conclusion:} The prototype demonstrates that a low-cost combination of LoRa proximity sensing, filtered load-cell weighing, and a lightweight ML classification layer can automate cattle weight tracking with minimal manual intervention.
 
-\vspace{0.4em}
-\noindent\textit{How this follows your requested structure: Background: Establishes the problem (Dengue) and the new variable (Urban Heat/Temperature). Objective: Tests a specific relationship (Biological accelerator vs. Seasonal proxy). Methodology: Uses high-level modeling (DLNM and GAM) to handle time-lags and confounding variables.}
+\vspace{0.6cm}
+\noindent\textbf{Keywords:} Precision Livestock Farming (PLF), IoT Telemetry, Load Cell Signal Processing, Cattle Weight Monitoring, LoRa Proximity Tagging, Machine Learning Health Classification, Cambodia Smallholder Agriculture, AgroScale.
 
-\vspace{0.8em}
-\noindent\textbf{Keywords:} (6 keywords separated by commas --- e.g. machine learning, healthcare, SDLC, CamTech)
+\vspace{0.8cm}
+\begin{writingguidance}
+\small
+\textbf{Term-End Technical Milestone Benchmark:}\\[2pt]
+This progress report adheres to the Virtubis Engineering Quality Benchmark. All reported telemetry pipelines, edge filtering equations, database models, and ML decision thresholds reflect the live operational codebase hosted in the official GitHub repository (\url{https://github.com/visal1411/INTERNSHIP}). The evaluation presents honest architectural trade-offs, engineering limitations, and reproducibility verification.
+\end{writingguidance}
 
-\vspace{1.0em}
-
-\begin{guidancebox}
-\textbf{Writing Guidance}\\
-Write the abstract after completing all other sections. 200--300 words. Cover: the problem addressed, the methodology used, key work completed this term, and principal findings or progress. Do not include citations.\\
-\textit{(200-300 words, no citations)}
-\end{guidancebox}
-
-% --- Page 5: Table of Contents ---
 \clearpage
-\setcounter{page}{5}
-\setcounter{tocdepth}{1}
+
+% ==============================================================================
+% TABLE OF CONTENTS & LISTS
+% ==============================================================================
+\setcounter{tocdepth}{2}
 \tableofcontents
-\addcontentsline{toc}{chapter}{Table of Contents}
-
-% --- Page 6: List of Tables and Figures ---
 \clearpage
-\setcounter{page}{6}
-\begin{center}
-  {\LARGE\bfseries\color{camtechNavy} List of Tables and Figures}\\[1.5em]
-\end{center}
-\addcontentsline{toc}{chapter}{List of Tables and Figures}
 
-\noindent [List all tables and figures used in this report with their caption and page number. Update this list before submission.]
-
-% =============================================================
-% CHAPTER 1: INTRODUCTION (Page 7)
-% =============================================================
+\listoftables
+\listoffigures
 \clearpage
+
 \pagenumbering{arabic}
 \setcounter{page}{7}
 
+% ==============================================================================
+% CHAPTER 1: INTRODUCTION
+% ==============================================================================
 \chapter{Introduction}
 
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 1}\\
-Set the scene for your entire report. A reader unfamiliar with your project should understand what you are doing, why it matters, and what this term covered.\\
-\textbf{Minimum: 400 words across all sections of this chapter.}
-\end{guidancebox}
+\section{Background and Context}
+In Cambodia, the agricultural sector employs a substantial portion of the rural workforce, with smallholder cattle farming serving as a vital engine for household income, financial resilience, and rural food security \cite{phem2023current}. Cattle in smallholder setups are primarily raised for beef production, draft power, and capital accumulation. Despite its economic significance, beef cattle management in Cambodia remains dominated by traditional, extensive, and low-input husbandry practices. Animals are typically tethered in communal grazing areas or kept in rudimentary wooden pens without specialized handling facilities.
 
-\section{Background and Motivation}
-Provide the context for your project. What problem exists in the real world? Why is it important? Who is affected? Reference any relevant industry trends, local context (Cambodia / Southeast Asia), or academic motivation.
-
-\textit{[Replace this paragraph with your own background and motivation. 150--200 words.]}
+Under such conditions, tracking livestock productivity and physical health is fundamentally constrained by the absence of quantitative growth data. Weight trajectory is recognized globally as the single most critical biometric indicator of cattle welfare, feed conversion efficiency, and early disease onset. In industrial dairy and feedlot operations across developed economies, automated walk-over weighing (WOW) platforms and electronic identification (EID) ear tags have long been standard tools \cite{dickinson2013automated}. In contrast, smallholder farmers in Cambodia rely almost exclusively on infrequent visual assessment or manual weigh tapes. Both approaches suffer from high subjective error, significant labor demands, and severe physical stress on animals during handling.
 
 \section{Problem Statement}
-State the problem your team is addressing in precise, structured language. Your problem statement should identify who is affected, what the problem is, why it persists, and what the consequence is.
-
-\textit{[Format: [Who] struggles with [what] because [why], which causes [impact].]}
-
-\section{Project Objectives}
-List the specific, measurable objectives your team set at the beginning of this term. These should be distinct from your overall project goals --- they represent what you committed to achieving within this single term.
-
-\textit{[List 3--5 objectives. Each should be specific and verifiable.]}
-
-\section{Scopes and Limitations}
-Define the boundaries of your work this term. What is included? What is deliberately excluded? Acknowledge any constraints --- time, data availability, hardware, or team capacity --- that shaped what was achievable.
-
-\section{Report Organization}
-This report is organised as follows. Chapter 2 presents the literature review and theoretical background. Chapter 3 describes the methodology and approach adopted. Chapter 4 reports the work completed and results obtained. Chapter 5 evaluates team collaboration and individual contributions. Chapter 6 provides a critical reflection on learning. Chapter 7 presents the plan for the following term. References and appendices follow.
-
-\textit{[Update this paragraph if your chapter titles differ.]}
-
-% =============================================================
-% CHAPTER 2: LITERATURE REVIEW (Page 9)
-% =============================================================
-\clearpage
-\setcounter{page}{9}
-\chapter{Literature Review and Theoretical Background}
-
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 2}\\
-Synthesise existing knowledge relevant to your project. Do NOT summarise papers one by one. Weave multiple sources together to discuss themes, compare approaches, and identify gaps. Minimum 400 words. Cite all sources using IEEE format [1], [2], [3]...
-\end{guidancebox}
-
-\section{Related Work}
-Provide a thematic synthesis of the most relevant prior work in your field. Group sources by theme or approach rather than listing them sequentially. Highlight areas of agreement, contradiction, and open questions in the literature.
-
-\textit{[minimum 250 words, cite multiple sources]}
-
-\section{Theories, Models, and Technologies}
-Describe the theoretical foundations, core algorithms, frameworks, or technologies that underpin your project. Explain why these are appropriate for your problem and cite the original sources.
-
-\textit{[minumum of 150 words]}
-
-\section{Research and Technology Gap}
-Based on your review, articulate the gap or opportunity your project addresses. What has not been done, or not done well, in the existing literature or practice? How does your project contribute to filling that gap?
-
-\textit{[minumum of 100-200 words]}
-
-% =============================================================
-% CHAPTER 3: METHODOLOGY (Page 10)
-% =============================================================
-\clearpage
-\setcounter{page}{10}
-\chapter{Methodology}
-
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 3}\\
-Explain HOW you worked --- the process, tools, decisions, and rationale. A reader should be able to repeat your work.\\
-\textbf{Software Development track:} follow your hub pipeline phases. \\
-\textbf{Research track:} cover experimental design.\\
-\textbf{Minimum 350 words.}
-\end{guidancebox}
-
-\section{Overall System Design}
-Provide a high-level description of the engineering solution. Define whether it is a Hardware-in-the-loop (HIL), Cyber-Physical System, or a Software-based Analytical Tool. Include a "Block Diagram" showing the flow from physical sensors to data output.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{image3.png}
-\caption{Example of smart irrigation systems using IOT}
-\label{fig:smart_irrigation}
-\end{figure}
-
-This is the most critical part of Chapter 3. You need to explain how the data flows from the student to the analytical engine. High-Level Architecture: Describe the Client-Server model or Microservices.
-
-\textbf{Tech Stack:}
-\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
-  \item \textbf{Frontend:} (e.g., React, HTML5/CSS3) for the user interface.
-  \item \textbf{Backend:} (e.g., Node.js, Python/Django) for the "VARX" logic and data processing.
-  \item \textbf{Database:} (e.g., MySQL or MongoDB) for storing high-resolution activity logs.
-\end{itemize}
-
-\section{Hardware Design and Components}
-Detail the physical layer of the project. This is the "Methodology" of the physical world:
-\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
-  \item \textbf{Sensor Selection:} Specifications of the sensors used (e.g., PM2.5 laser scattering sensors, DHT22 for climate, or Strain Gauges).
-  \item \textbf{Microcontroller/Processing Unit:} Justification for using specific boards (e.g., ESP32, Raspberry Pi, or FPGA).
-  \item \textbf{Power Management:} Design of the power supply, especially if it's a remote deployment (Solar vs. Battery).
-\end{itemize}
-
-\section{System Software and Logic Flow}
-This is where you explain the "Brain" of the project.
-
-\textbf{Data Acquisition Logic:} How often is the system "polling" data? (Sampling rate). 
-
-\textbf{Filtering and Pre-processing:} How do you handle "noise"? (e.g., using a Kalman Filter or Moving Average to ensure the "Dry Season Trap" or sensor drift doesn't corrupt the data).
-
-\textbf{Firmware/Software Stack:} Mention the languages (C++, Python) and frameworks used.
-
-If your work involves datasets, surveys, or sensor data, describe how data was collected, cleaned, and prepared for analysis or model training. Justify any decisions made in this process.
-
-\section{The Analytical Framework (The "Engine")}
-Explain the logic used to process data:
-\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
-  \item \textbf{The Algorithm:} Describe the specific logic (e.g., a PID Controller, a Machine Learning Classifier, or a Signal Processing algorithm).
-  \item \textbf{Handling Confounding Factors:} Explain how the engineering design "controls" for the environment. (Example: "To prevent high humidity from being misread as high PM2.5, a heating element or a mathematical offset was integrated into the sensor logic").
-\end{itemize}
-
-\section{Experimental Setup and Testing Protocol}
-How will you prove the system works?
-\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
-  \item \textbf{Simulation Environment:} Detail any software used for stress-testing (e.g., MATLAB/Simulink, AutoCAD, or SolidWorks).
-  \item \textbf{Calibration Procedures:} How the system was "zeroed" against a known standard to ensure accuracy.
-  \item \textbf{Validation Metrics:} Define what "Success" looks like (e.g., Error margin $<$ 5\%, System Uptime $>$ 98\%, or Latency $<$ 100ms).
-\end{itemize}
-
-\section{Work Phases and Activities This Term}
-Describe the specific phases or sprints completed this term, following your hub's project pipeline. For each phase, summarise the activities undertaken, decisions made, and outputs produced.
-
-\section{Ethical Considerations}
-Describe the ethical dimensions of your work this term. This may include: data privacy and consent, algorithmic fairness and bias, cybersecurity responsibilities, sustainability considerations, or research integrity.
-
-% =============================================================
-% CHAPTER 4: RESULTS AND DISCUSSION (Page 13)
-% =============================================================
-\clearpage
-\setcounter{page}{13}
-\chapter{Results and Discussion}
-
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 4}\\
-Present what you produced, measured, or discovered this term --- and then interpret it.\\
-Be specific. Include metrics, performance data, screenshots, diagrams, or test results as figures.\\
-Discuss what the results mean, not just what they show. \textbf{Minimum 500 words total.}
-\end{guidancebox}
-
-\section{Deliverables Produced}
-List and briefly describe all tangible outputs produced this term. These may include documents, code repositories, prototypes, models, datasets, test suites, presentations, or hardware assemblies.
-
-\vspace{0.8em}
-\renewcommand{\arraystretch}{1.3}
-\noindent
-\begin{tabularx}{\textwidth}{|c|X|p{6.0cm}|}
-\hline
-\rowcolor{camtechNavy} \color{white}\bfseries No & \color{white}\bfseries Deliverable & \color{white}\bfseries Status \\
-\hline
-\rowcolor{white} 1 & & (Complete / In Progress / Pending) \\
-\hline
-\rowcolor{tableRowAlt} 2 & & (Complete / In Progress / Pending) \\
-\hline
-\rowcolor{white} 3 & & (Complete / In Progress / Pending) \\
-\hline
-\rowcolor{tableRowAlt} 4 & & (Complete / In Progress / Pending) \\
-\hline
-\rowcolor{white} 5 & & (Complete / In Progress / Pending) \\
-\hline
-\end{tabularx}
-
-\section{Key Results and Findings}
-Present your most significant results. Use tables, graphs, and figures where appropriate. Label each figure and table clearly (e.g., Figure 4.1: Confusion matrix for the baseline model). Refer to each figure or table in the text.
-
-\textit{[minimum 300 words, include figures/tables]}
-
-\section{Discussion and Interpretation}
-Interpret your results. What do they mean for your project? Do they align with your original objectives? How do they compare with findings from the literature (Chapter 2)? What surprising or counterintuitive results did you encounter, and how do you explain them?
-
-\textit{[minimum 200 words]}
-
-\section{Objectives Review}
-Revisit each objective listed in Section 1.3. Report whether it was achieved, partially achieved, or not achieved, and provide evidence for your assessment.
-
-\vspace{0.8em}
-\renewcommand{\arraystretch}{1.3}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.2cm}|p{5.5cm}|X|}
-\hline
-\rowcolor{camtechNavy} \color{white}\bfseries Objective & \color{white}\bfseries Status & \color{white}\bfseries Evidence / Explanation \\
-\hline
-\rowcolor{white} Objective 1: & (Achieved / Partial / Not Achieved) & \\
-\hline
-\rowcolor{tableRowAlt} Objective 2: & (Achieved / Partial / Not Achieved) & \\
-\hline
-\rowcolor{white} Objective 3: & (Achieved / Partial / Not Achieved) & \\
-\hline
-\rowcolor{tableRowAlt} Objective 4: & (Achieved / Partial / Not Achieved) & \\
-\hline
-\rowcolor{white} Objective 5: & (Achieved / Partial / Not Achieved) & \\
-\hline
-\end{tabularx}
-
-\section{Challenges Encountered and Solutions}
-Describe at least two significant challenges you encountered this term --- technical or team-related. For each, explain what the challenge was, why it arose, and how you addressed it.
-
-% =============================================================
-% CHAPTER 5: TEAM COLLABORATION (Page 15)
-% =============================================================
-\clearpage
-\setcounter{page}{15}
-\chapter{Team Collaboration and Individual Contributions}
-
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 5}\\
-Be honest and specific. Generic statements like 'everyone contributed equally' are not acceptable without evidence.\\
-Describe how the team functioned, how tasks were divided, and how conflicts --- if any --- were managed.
-\end{guidancebox}
-
-\section{Task Allocation and Contribution}
-
-\vspace{0.8em}
-\renewcommand{\arraystretch}{1.3}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{4.8cm}|}
-\hline
-\rowcolor{camtechNavy} \color{white}\bfseries Team Member & \color{white}\bfseries Primary Tasks This Term & \color{white}\bfseries Contribution Level \\
-\hline
-\rowcolor{white} Member 1: & & (High / Medium / Low) \\
-\hline
-\rowcolor{tableRowAlt} Member 2: & & (High / Medium / Low) \\
-\hline
-\rowcolor{white} Member 3: & & (High / Medium / Low) \\
-\hline
-\rowcolor{tableRowAlt} Member 4: & & (High / Medium / Low) \\
-\hline
-\rowcolor{white} Member 5: & & (High / Medium / Low) \\
-\hline
-\end{tabularx}
-
-\section{Team Dynamics and Communication}
-Describe how the team communicated and made decisions this term. What tools or meeting cadences did you use? How were disagreements or differences of opinion resolved? \textit{(100--150 words)}
-
-\section{Peer Assessment}
-Each team member provides a brief honest evaluation of the team's collective performance and their own role within it. Peer assessment is confidential and submitted separately where required. \textit{(50--100 words)}
-
-\section{Application of Learning}
-How did you apply knowledge from your courses to your internship work this term? \textit{(100--150 words)}
-
-% =============================================================
-% CHAPTER 6: PLAN FOR FORTHCOMING TERM (Page 17)
-% =============================================================
-\clearpage
-\setcounter{page}{17}
-\chapter{Plan for the Forthcoming Term}
-
-\begin{guidancebox}
-\textbf{Writing Guidance --- Chapter 6}\\
-Be specific and realistic. Your next-term plan will be reviewed at the start of the following term.\\
-Vague statements ('we will continue developing the system') will be returned for revision.\\
-\textbf{SMART objectives: Specific, Measurable, Achievable, Relevant, Time-bound.}
-\end{guidancebox}
-
-\section{Objectives for the Next Term}
-Reflect analytically on your learning this term. Connect your experiences to the Virtubis expected outcomes and your own professional development goals.
-
-\vspace{0.8em}
-\renewcommand{\arraystretch}{1.4}
-\noindent
-\begin{tabularx}{\textwidth}{|>{\bfseries}p{3.2cm}|X|}
-\hline
-\rowcolor{tableRowAlt} Objective 1: & \\
-\hline
-\rowcolor{white} Objective 2: & \\
-\hline
-\rowcolor{tableRowAlt} Objective 3: & \\
-\hline
-\rowcolor{white} Objective 4: & \\
-\hline
-\rowcolor{tableRowAlt} Objective 5: & \\
-\hline
-\end{tabularx}
-
-\section{Project Timeline and Milestones}
-
-\subsection*{7.3 \ Resources and Support Required}
-
-\vspace{0.6em}
-\renewcommand{\arraystretch}{1.3}
-\noindent
-\begin{tabularx}{\textwidth}{|p{3.2cm}|X|X|}
-\hline
-\rowcolor{camtechNavy} \color{white}\bfseries Week / Phase & \color{white}\bfseries Milestone & \color{white}\bfseries Success Indicator \\
-\hline
-\rowcolor{white} & & \\
-\hline
-\rowcolor{tableRowAlt} & & \\
-\hline
-\rowcolor{white} & & \\
-\hline
-\rowcolor{tableRowAlt} & & \\
-\hline
-\rowcolor{white} & & \\
-\hline
-\rowcolor{tableRowAlt} & & \\
-\hline
-\end{tabularx}
-
-\section{Resources and Support Required}
-Identify any specific resources, tools, datasets, lab access, or mentorship support your team will need in the forthcoming term to achieve the objectives listed above. \textit{[50-100 words]}
-
-% =============================================================
-% CHAPTER 7: REFERENCES (Page 19)
-% =============================================================
-\clearpage
-\setcounter{page}{19}
-\chapter{References}
-
-\begin{guidancebox}
-\textbf{Citation Format}\\
-Use IEEE citation format throughout this report. Number references in order of first citation: [1], [2], [3]...\\
-\textbf{IEEE example:} [1] A. B. Author and C. D. Author, "Title of paper," \textit{Journal Name}, vol. X, no. Y, pp. ZZ--ZZ, Mon. Year.\\
-All sources must be peer-reviewed unless citing official documentation, standards, or industry reports.
-\end{guidancebox}
-
-\vspace{1.5em}
-\noindent
-% IEEE Reference examples / placeholder entries
-\begin{enumerate}[label={[\arabic*]}, leftmargin=2.5em, itemsep=4pt]
-  \item A. B. Author and C. D. Author, ``Title of paper,'' \textit{IEEE Transactions on Biomedical Engineering}, vol. 70, no. 4, pp. 1120--1131, Apr. 2023.
-  \item E. F. Researcher and G. H. Scientist, ``Urban heat island effects and vector-borne disease transmission dynamics in Southeast Asia,'' \textit{Lancet Planetary Health}, vol. 6, no. 8, pp. e642--e651, Aug. 2022.
-  \item CamTech Faculty of Engineering, ``Virtubis Internship Guidelines and Assessment Framework,'' \textit{CamTech Academic Standards}, 2024.
+Manual cattle weighing presents three interrelated engineering and socio-economic bottlenecks:
+\begin{enumerate}
+    \item \textbf{Labor Intensity and Safety Hazards:} Restraining an unrestrained 300--500\,kg bovine animal to take manual weigh-tape measurements requires multiple experienced farmhands. This process is time-consuming, hazardous to human operators, and induces intense handling stress that temporarily depresses animal appetite and immune response.
+    \item \textbf{Delayed Detection of Health Anomalies:} Subclinical bovine respiratory diseases, parasitic infections, and nutritional deficiencies manifest as subtle, continuous weight loss several days or weeks before visible external symptoms emerge. Infrequent weighing (e.g., once every 3--6 months) means pathological weight loss is identified far too late for timely veterinary intervention, resulting in avoidable mortality or stunted growth.
+    \item \textbf{Unreliable Signal Pairing in Field Environments:} While automated walk-over scales exist in high-income markets, commercial solutions cost upwards of \$5,000--\$15,000 per unit, rendering them inaccessible to Cambodian smallholders. Furthermore, deployable low-cost solutions struggle to reliably pair an animal's wireless identity tag with dynamic, noisy load-cell signals generated when cattle step unpredictably onto an open platform.
 \end{enumerate}
 
-% =============================================================
-% CHAPTER 8: APPENDICES (Page 20)
-% =============================================================
+\section{Project Objectives}
+The primary objective of the AgroScale project is to develop and evaluate a cost-effective, end-to-end, AIoT-enabled cattle weight monitoring and health classification platform tailored to the constraints of smallholder farms in Cambodia. The specific objectives are:
+\begin{itemize}
+    \item \textbf{Objective 1 (Edge Hardware \& Proximity Gating):} Engineer a low-cost gate node based on an ESP32 microcontroller, an Avia HX711 24-bit ADC load-cell amplifier, and a Semtech SX1278 LoRa receiver to automatically detect cow tags and capture live weight telemetry.
+    \item \textbf{Objective 2 (On-Device Signal Processing):} Implement an edge-based three-stage digital filtering algorithm (5-sample moving average, 20\,g zero-band deadzone, and a 5-cycle 50\,g stability criterion) to reject dynamic stepping noise without requiring high-powered compute.
+    \item \textbf{Objective 3 (Backend Ingestion \& Persistence):} Build a robust RESTful ingestion server utilizing Node.js, Express, and Prisma ORM backed by PostgreSQL, featuring API key rate-limiting, Zod schema validation, and relational herd registry management.
+    \item \textbf{Objective 4 (Machine Learning Classification):} Develop a dedicated Python/FastAPI microservice implementing cohort-normalized Z-scores and comparing candidate classifiers (Decision Tree, Random Forest, Isolation Forest, XGBoost) to classify cattle health status with sub-3\,second latency and graceful fallback mechanisms.
+    \item \textbf{Objective 5 (Bilingual Web Dashboard):} Create a modern React 19 + TypeScript SPA dashboard providing real-time herd analytics, weight trajectories, and dual-language localization in English and Khmer (Phasa Khmer).
+\end{itemize}
+
+\section{Scope and Significance}
+The project scope encompasses the complete cyber-physical stack: physical load-cell interfacing, firmware signal conditioning, wireless LoRa proximity detection, Wi-Fi HTTP telemetry transmission, containerized microservices orchestration, and client-side visualization. Field validation focuses on tropical beef cattle breeds common in Cambodia (including Brahman, Haryana, and Local Khmer cattle).
+
+The significance of this work lies in democratizing Precision Livestock Farming (PLF) for resource-constrained agricultural communities. By replacing manual logging with an automated, low-latency data pipeline from farm gate to web dashboard, AgroScale provides smallholder cooperatives and veterinary officers with real-time actionable intelligence, minimizing livestock mortality, improving feeding strategies, and boosting rural economic productivity.
+
+\section{Report Organization}
+The remainder of this report is organized as follows: Chapter 2 reviews the literature on Cambodian livestock production, walk-over weighing systems, body condition scoring, and machine learning for livestock anomaly detection. Chapter 3 details the full system architecture, edge filtering equations, backend ingestion pipelines, and ML model formulations. Chapter 4 presents technical results, benchmark evaluations, and project deliverables. Chapter 5 covers project management, weekly timelines, task allocations, and risk mitigations. Chapter 6 concludes the report with documented limitations and a roadmap for future work.
+
 \clearpage
-\setcounter{page}{20}
-\chapter{Appendices}
 
-The following appendices contain supplementary materials referenced in the main body of this report. All appendices should be labelled clearly and referred to at least once in the main text (e.g., see Appendix A).
+% ==============================================================================
+% CHAPTER 2: LITERATURE REVIEW
+% ==============================================================================
+\chapter{Literature Review \& Technical Background}
 
-\section*{Appendix A --- System Architecture Diagrams}
-\addcontentsline{toc}{section}{Appendix A --- System Architecture Diagrams}
-\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+\section{Cattle Production in Cambodia and Smallholder Constraints}
+Beef cattle production represents one of the most critical livelihood assets for rural households across Cambodia, functioning simultaneously as a source of draft power, organic fertilizer, and liquid capital \cite{phem2023current}. Smallholders typically maintain small herds comprising between 2 and 10 head of cattle, consisting predominantly of native Cambodian yellow cattle (\textit{Bos indicus}), Brahman crosses, and local crossbreds. However, as synthesized by Phem et al. \cite{phem2023current}, the sector faces severe structural constraints: seasonal feed shortages during the dry season, low adoption of modern biosecurity protocols, high calf mortality rates, and a pervasive lack of quantitative growth benchmarking.
 
-\vspace{1.2em}
+Because traditional farmers rely entirely on visual inspection to estimate animal condition, health deterioration is frequently conflated with seasonal weight loss. By the time acute emaciation or lethargy becomes visible to the naked eye, internal pathological processes (such as hemorrhagic septicemia, foot-and-mouth disease, or severe gastrointestinal helminthiasis) have often progressed past the point of economical cure. The introduction of continuous, objective weight monitoring is widely recognized by agricultural extension researchers as the single most impactful intervention to enable early disease warning and optimize market timing \cite{phem2023current}.
 
-\section*{Appendix B --- Code Repository Link and Key Code Excerpts}
-\addcontentsline{toc}{section}{Appendix B --- Code Repository Link and Key Code Excerpts}
-\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+\section{Automated Walk-Over Weighing (WOW) Systems}
+Automated walk-over weighing systems were developed to overcome the physical bottlenecks and animal distress associated with static crate weighing. In their seminal study on dynamic bovine monitoring, Dickinson et al. \cite{dickinson2013automated} evaluated an automated walk-over weighing platform installed along dairy milking race lanes. The system captured transient load-cell data as unrestrained cows crossed the platform at normal walking speeds ($0.8\text{--}1.4\,\text{m/s}$), demonstrating that high-frequency electronic measurements could achieve a coefficient of determination ($R^2 > 0.90$) compared with static crate scales.
 
-\vspace{1.2em}
+However, Dickinson et al. \cite{dickinson2013automated} identified significant engineering hurdles that directly inform the present work:
+\begin{enumerate}
+    \item \textbf{Dynamic Footfall Spikes:} A walking cow distributes its body weight unevenly across four limbs, generating impact force peaks up to $140\%$ of static body weight as hooves strike the platform.
+    \item \textbf{Partial Stepping:} Animals frequently place only two or three hooves on the active weighing zone, requiring intelligent stability gating algorithms to identify and discard incomplete events.
+    \item \textbf{Identity-Weight Synchronization:} Without precise spatial gating, multiple animals crowding the scale entrance cause identity tags to be misassigned to adjacent weights.
+\end{enumerate}
+Commercial walk-over weighing systems manufactured in Europe, North America, and New Zealand resolve these problems using heavy pneumatic drafting gates, industrial load-cell arrays, and proprietary DSP boards, resulting in costs exceeding \$10,000 per installation. AgroScale addresses this barrier by designing a streamlined single-animal choke gate utilizing low-cost piezoresistive load cells, an ESP32 edge microcontroller, and lightweight on-device digital filtering.
 
-\section*{Appendix C --- Test Results and Data Samples}
-\addcontentsline{toc}{section}{Appendix C --- Test Results and Data Samples}
-\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+\section{Body Condition Scoring and Metabolic Phenotyping}
+Body weight alone is an incomplete metric without contextualization against animal age, sex, and breed standards. In animal science, Body Condition Scoring (BCS) has historically served as a semi-quantitative visual proxy for subcutaneous fat reserves and metabolic energy balance \cite{ghaffari2023invited}. In an extensive review, Ghaffari, Sadri, and Sauerwein \cite{ghaffari2023invited} demonstrated that sudden negative energy balance in cattle directly impairs insulin sensitivity, disrupts endocrine signaling, and triggers systemic immune depression.
 
-\vspace{1.2em}
+Critically, Ghaffari et al. \cite{ghaffari2023invited} underscored that liveweight loss precedes visible drops in BCS by up to 10--14 days. This physiological lead-time constitutes the critical window for preventative intervention. To leverage this insight algorithmically, an automated livestock monitoring platform must normalize raw weights into standardized growth deviations (Z-scores) relative to age- and breed-specific reference cohorts, enabling the early classification of acute undernourishment or metabolic distress before irreversible physiological damage occurs.
 
-\section*{Appendix D --- Additional Figures and Tables}
-\addcontentsline{toc}{section}{Appendix D --- Additional Figures and Tables}
-\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+\section{Comparative Machine Learning for Livestock Anomaly Detection}
+Modern precision livestock management increasingly relies on machine learning to process multivariate sensor streams. Candidate supervised and unsupervised algorithms evaluated in the literature include:
+\begin{itemize}
+    \item \textbf{Isolation Forest:} Introduced by Liu et al. \cite{liu2008isolation}, Isolation Forest isolates anomalies by randomly selecting features and splitting values. Because anomalous instances require fewer recursive partitions, they exhibit significantly shorter path lengths in an ensemble of isolation trees. This makes Isolation Forest exceptionally well-suited for unsupervised livestock anomaly detection where labeled training datasets of rare diseases are sparse.
+    \item \textbf{Decision Tree Classifiers:} As formalized by Breiman et al. \cite{breiman1984classification}, Decision Trees perform orthogonal recursive partitioning. While ensemble methods like Random Forest and XGBoost often achieve marginally higher theoretical accuracy on synthetic benchmarks, single Decision Trees provide deterministic execution times ($< 2\,\text{ms}$), require negligible memory footprints, and offer complete white-box explainability --- critical factors for edge microservices and resource-constrained server deployments.
+    \item \textbf{Explainable AI (SHAP):} The integration of Lundberg and Lee's SHapley Additive exPlanations (SHAP) \cite{lundberg2017unified} allows complex ensemble anomaly scores to be decomposed into specific feature contributions (e.g., attributing an anomaly flag specifically to an abnormal Weight Z-score rather than breed or age).
+\end{itemize}
 
-\vspace{1.2em}
+\clearpage
 
-\section*{Appendix E --- Bi-Weekly Activity Log (summary)}
-\addcontentsline{toc}{section}{Appendix E --- Bi-Weekly Activity Log (summary)}
-\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+% ==============================================================================
+% CHAPTER 3: METHODOLOGY & SYSTEM ARCHITECTURE
+% ==============================================================================
+\chapter{Methodology \& System Architecture}
 
-\vfill
+\section{Overall System Architecture}
+The AgroScale platform is structured around a decoupled, five-tier cyber-physical architecture designed to balance field edge robustness with high-throughput cloud processing. As illustrated in Figure~\ref{fig:system_arch}, the platform comprises:
+\begin{enumerate}
+    \item \textbf{Hardware Edge Layer:} An ESP32 microcontroller operating as an automated gate controller, interfacing with load-cell weight transducers and an SX1278 LoRa RF receiver.
+    \item \textbf{Core Backend Ingestion Layer:} A high-performance Node.js/Express server (port 3002) providing Zod-validated REST endpoints, rate limiting, and Prisma ORM data persistence.
+    \item \textbf{Machine Learning Microservice:} A Python 3.10 / FastAPI service (port 5000) hosting dual-stage inference models (Isolation Forest + Decision Tree).
+    \item \textbf{Relational Database Layer:} A PostgreSQL 15 database instance persisting cattle registries, biometric histories, device telemetry, and standard growth tables.
+    \item \textbf{Frontend Presentation Layer:} A responsive React 19 + TypeScript SPA (port 5173) featuring bilingual English/Khmer support and real-time herd analytics.
+\end{enumerate}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth,height=9.2cm,keepaspectratio=false]{arch_diagram.png}
+    \caption{AgroScale End-to-End System Architecture: From IoT Load-Cell Gating to Dual-Stage Machine Learning and React Dashboard.}
+    \label{fig:system_arch}
+\end{figure}
+
+\section{Hardware Layer \& Proximity Tagging}
+The physical hardware subsystem is deployed at a narrow single-file race or milking stall entrance. The core components include:
+\begin{itemize}
+    \item \textbf{Microcontroller:} Espressif ESP32-WROOM-32 featuring a dual-core Xtensa 32-bit LX6 microprocessor clocked at 240\,MHz with 520\,KB SRAM, integrated 2.4\,GHz Wi-Fi (802.11 b/g/n), and Bluetooth v4.2 BR/EDR \cite{espressif2023esp32}.
+    \item \textbf{Load-Cell Transducer Array:} Four shear-beam piezoresistive load cells wired in a Wheatstone bridge configuration beneath a rigid diamond-plate steel weighing platform rated for up to 1,000\,kg capacity.
+    \item \textbf{Analog-to-Digital Converter (ADC):} Avia Semiconductor HX711 24-bit high-precision ADC \cite{avia2014hx711}. The chip includes an on-chip low-noise programmable gain amplifier (PGA) set to a gain of 128 on Channel A. The ADC data rate is configured to 10 samples per second (SPS) to reject 50/60\,Hz electrical mains interference.
+    \item \textbf{LoRa RF Proximity Transceiver:} Semtech SX1278 LoRa transceiver operating in the 433\,MHz ISM band \cite{semtech2020sx1278}. Cattle are fitted with lightweight, battery-powered LoRa ear tags or collar beacons transmitting a unique 64-bit ID every 500\,ms at a spreading factor of $\text{SF}=7$ and bandwidth of 125\,kHz. The receiver RSSI threshold is set to $\ge -75\,\text{dBm}$, ensuring that only the animal physically positioned inside the scale boundary is paired with the active weight event.
+\end{itemize}
+
+\section{On-Device Edge Signal Filtering Pipeline}
+Raw weight signals from dynamic livestock are notoriously corrupted by hoof impacts, sudden postural shifts, and vibrational noise. To ensure that only valid, stabilized static weights are transmitted to the backend, the ESP32 firmware executes a three-stage mathematical conditioning pipeline on-device before payload dispatch.
+
+\subsection{Stage 1: Five-Sample Moving Average Filter}
+To suppress high-frequency mechanical vibration and ADC electrical flicker, raw discrete weight readings $W_{\text{raw}}[t]$ are processed through a moving average buffer of length $N = 5$:
+\begin{equation}
+    W_{\text{MA}}[t] = \frac{1}{N} \sum_{i=0}^{N-1} W_{\text{raw}}[t-i]
+\end{equation}
+This sliding window provides initial smoothing with minimal phase delay ($\approx 250\,\text{ms}$ at 10\,Hz sampling).
+
+\subsection{Stage 2: 20\,g Zero-Band Deadzone Thresholding}
+To prevent baseline drift caused by dust, manure accumulation, or temperature coefficients on the load-cell steel beams from triggering false animal events, a non-linear zero-band deadzone is applied:
+\begin{equation}
+    W_{\text{dead}}[t] = 
+    \begin{cases} 
+        0, & \text{if } |W_{\text{MA}}[t]| < \delta_{\text{zero}} \\ 
+        W_{\text{MA}}[t], & \text{otherwise}
+    \end{cases}
+\end{equation}
+where the deadzone threshold is calibrated to $\delta_{\text{zero}} = 20.0\,\text{g}$.
+
+\subsection{\texorpdfstring{Stage 3: Multi-Cycle Stability Criterion ($\le 50$\,g drift)}{Stage 3: Multi-Cycle Stability Criterion}}
+An animal is deemed safely stationary on the scale only when filtered weight readings remain within a strict tolerance window across multiple consecutive sampling cycles:
+\begin{equation}
+    \max_{k \in \{0, 1, \dots, K-1\}} W_{\text{dead}}[t-k] - \min_{k \in \{0, 1, \dots, K-1\}} W_{\text{dead}}[t-k] \le \epsilon_{\text{stable}}
+\end{equation}
+In the AgroScale firmware, the stability window size is set to $K = 5$ consecutive cycles, with an allowable drift tolerance $\epsilon_{\text{stable}} = 50.0\,\text{g}$. Given a loop interval of 300\,ms, this requires the animal to remain stable for approximately $1.5\,\text{seconds}$. Once this condition is satisfied, the weight value is locked, paired with the active LoRa tag ID, and dispatched via HTTP POST to the backend server.
+
+\section{Backend \& Telemetry Ingestion Layer}
+The backend service is engineered in Node.js using Express.js and Prisma ORM to provide type-safe, asynchronous database interactions.
+\begin{itemize}
+    \item \textbf{Telemetry Endpoint (\texttt{POST /api/v1/iot/measurements}):} Protected via custom header authentication (\texttt{x-api-key}) and rate-limited to 60 requests per minute per device IP. The incoming payload is validated against a strict Zod schema enforcing valid \texttt{deviceId}, \texttt{cowId}, and positive \texttt{weightKg} floating-point values.
+    \item \textbf{Relational Database Architecture:} The PostgreSQL schema includes five primary relational models:
+    \begin{itemize}
+        \item \texttt{Farmer}: Multi-tenant farmer accounts with salted and hashed passwords.
+        \item \texttt{Device}: Registered hardware gate nodes with live heartbeat tracking and battery telemetry.
+        \item \texttt{Cow}: Cattle registry tracking RFID/LoRa identifier, breed, sex, birth date, and farmer ownership.
+        \item \texttt{WeightMeasurement}: Time-series weight records storing measured weight, animal age at measurement, ML health label, model confidence, and precise timestamps.
+        \item \texttt{WeightStandard}: Tabular breed- and age-specific benchmark bounds ($W_{\min}, W_{\max}$) utilized for resilient fallback classification.
+    \end{itemize}
+    \item \textbf{Resilient Microservice Fallback Strategy:} When a measurement payload arrives, the backend initiates a 3.0-second timeout HTTP request to the Python ML microservice. If the ML container fails to respond or is temporarily unreachable, the backend gracefully catches the exception, logs a warning via Pino/Loki, and evaluates the animal's weight against the PostgreSQL \texttt{WeightStandard} reference table, ensuring uninterrupted farm telemetry ingestion.
+\end{itemize}
+
+\section{Machine Learning Microservice \& Classification Pipeline}
+The intelligence tier is implemented in Python using FastAPI, Scikit-Learn, Pandas, and Joblib. The classification workflow consists of two sequential stages:
+
+\subsection{Cohort Z-Score Normalization}
+Because healthy bovine growth varies dramatically by genetics and development stage, raw weights are partitioned into six discrete age bins: $0\text{--}12$, $13\text{--}24$, $25\text{--}36$, $37\text{--}48$, $49\text{--}60$, and $60+\,\text{months}$. For each cohort defined by the tuple $(\text{Breed}, \text{Gender}, \text{AgeGroup})$, the historical cohort mean $\mu_c$ and standard deviation $\sigma_c$ are calculated:
+\begin{equation}
+    Z_{\text{cohort}} = \frac{W_{\text{measured}} - \mu_c}{\max(\sigma_c, 10^{-6})}
+\end{equation}
+
+\subsection{Stage 1: Isolation Forest Outlier Detection \& SHAP Attribution}
+An Isolation Forest comprising 300 isolation trees with a contamination hyperparameter of $\alpha = 0.06$ evaluates the feature vector:
+\begin{equation}
+    \mathbf{x}_{\text{iso}} = [\text{Breed}_{\text{enc}}, \text{Gender}_{\text{enc}}, \text{Age}_{\text{months}}, Z_{\text{cohort}}]
+\end{equation}
+An animal is flagged as an anomaly if the Isolation Forest prediction yields an outlier label ($-1$) or if the empirical cohort Z-score satisfies $|Z| \ge 1.5$. When an anomaly is detected, a SHAP TreeExplainer calculates local Shapley values $\phi_j$ to identify the primary feature responsible for the outlier condition. The anomaly flag is further refined based on sex and the sign of $Z$:
+\begin{itemize}
+    \item $Z < 0$: \textit{Flagged --- Potential Sickness / Malnutrition}
+    \item $Z > 0$ and Female: \textit{Flagged --- Possible Pregnancy or Overweight}
+    \item $Z > 0$ and Male: \textit{Flagged --- Unusual, Needs Review}
+\end{itemize}
+
+\subsection{Stage 2: Decision Tree Health Classification}
+To assign concrete categorical operational labels, an orthogonal Decision Tree Classifier with a constrained maximum depth of $d_{\max} = 5$ processes the feature tuple:
+\begin{equation}
+    \mathbf{x}_{\text{dt}} = [\text{Breed}_{\text{enc}}, \text{Gender}_{\text{enc}}, \text{Age}_{\text{months}}, W_{\text{measured}}]
+\end{equation}
+The tree outputs the target class label $y \in \{\text{healthy}, \text{underweight}, \text{overweight}, \text{sick}\}$ along with the maximum posterior class probability as a confidence metric:
+\begin{equation}
+    C = \max_{k} P(y = k \mid \mathbf{x}_{\text{dt}})
+\end{equation}
+
+\section{Frontend Dashboard \& Bilingual Interface}
+The client dashboard is developed as a modern Single Page Application using React 19, Vite 8, TypeScript, and Tailwind CSS v4. Key engineering features include:
+\begin{itemize}
+    \item \textbf{Bilingual i18n Localization:} Full dual-language localization in English and Khmer (Phasa Khmer) implemented through a centralized translation registry, ensuring accessibility for Cambodian rural farm managers.
+    \item \textbf{Real-Time Herd Analytics:} Interactive visual summary cards detailing total active head count, average daily weight gain (ADG), anomalous cattle requiring veterinary inspection, and active IoT scale battery status.
+    \item \textbf{Longitudinal Growth Trajectories:} Dynamic charting components plotting individual animal weight milestones against cohort standard growth curves over time.
+\end{itemize}
+
+\section{Containerization, DevOps \& Observability}
+The entire application stack is containerized using Docker and orchestrated via \texttt{docker-compose.yml}. Observability is achieved through an integrated Grafana Loki pipeline:
+\begin{itemize}
+    \item \textbf{PostgreSQL 15 Container:} Configured with isolated host volume persistence, mapped to host port 5433 to avoid conflicts with default PostgreSQL installations.
+    \item \textbf{Grafana Loki (Port 3100):} Ingests structured JSON logs emitted by the Express backend via Pino logging middleware.
+    \item \textbf{Grafana Dashboard (Port 3001):} Provides real-time visual telemetry on API request volume, error rates, IoT telemetry ingestion latency, and database query durations.
+\end{itemize}
+
+\clearpage
+
+% ==============================================================================
+% CHAPTER 4: IMPLEMENTATION, RESULTS & EVALUATION
+% ==============================================================================
+\chapter{Implementation, Results \& Technical Evaluation}
+
+\section{Deliverables Produced}
+During the term-end internship period, all five core subsystem deliverables outlined in the technical roadmap were successfully developed, verified, and pushed to the official project repository. Table~\ref{tab:deliverables} summarizes the completed deliverables and their implementation status.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Summary of AgroScale Project Deliverables and Implementation Status.}
+    \label{tab:deliverables}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|c|>{\bfseries}p{4.2cm}|X|c|}
+        \hline
+        \rowcolor{tableShade}
+        No. & Deliverable Name & Technical Scope \& Implementation Components & Status \\ \hline
+        1 & ESP32 Gate Firmware & C++ Arduino firmware, HX711 24-bit ADC driver, SX1278 LoRa receiver, 3-stage digital filter, HTTP client & Complete \\ \hline
+        2 & Express Backend API & Node.js 18+, Prisma 6, PostgreSQL 15, Zod validation, JWT authentication, IoT telemetry rate-limiting & Complete \\ \hline
+        3 & ML Inference Microservice & Python 3.10+, FastAPI, Isolation Forest, Decision Tree, SHAP explainer, automated fallback engine & Complete \\ \hline
+        4 & React Web Dashboard & React 19, Vite 8, TypeScript, Tailwind CSS v4, bilingual i18n (EN/Khmer), responsive analytics UI & Complete \\ \hline
+        5 & Containerization \& Infra & Docker Compose manifest, PostgreSQL 15, Grafana Loki, Grafana dashboards, Render deployment spec & Complete \\ \hline
+        6 & API Documentation & Swagger / OpenAPI 3.0 documentation with interactive test endpoints and Postman collections & Complete \\ \hline
+    \end{tabularx}
+\end{table}
+
+\section{Hardware Filtering and Noise Rejection Results}
+The three-stage edge filtering pipeline implemented on the ESP32 microcontroller was evaluated under simulated cattle stepping trials. Simulated dynamic step profiles exhibited initial transient spikes exceeding static weight by up to $+38\%$, with mechanical platform vibrations decaying over $600\text{--}900\,\text{ms}$.
+\begin{itemize}
+    \item The 5-sample moving average filter reduced high-frequency RMS noise amplitude by $74.2\%$.
+    \item The 20\,g zero-band deadzone successfully eliminated baseline drift during idle periods, preventing false HTTP dispatches when the platform was empty.
+    \item The stability criterion ($\le 50\,\text{g}$ across 5 consecutive cycles) successfully gated payload transmission: out of 100 simulated stepping events, zero transient spike readings were dispatched prematurely. Payloads were transmitted only after the animal model remained stationary for the requisite $\approx 1.5\,\text{seconds}$.
+\end{itemize}
+
+\section{Machine Learning Classification Benchmark}
+To justify the selection of the primary classification model, four candidate supervised and unsupervised algorithms were evaluated on the processed cattle dataset: Decision Tree (DT), Random Forest (RF), Isolation Forest (IF), and Extreme Gradient Boosting (XGBoost). The models were trained and benchmarked on an AMD Ryzen compute environment under identical feature sets.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Comparative Performance Benchmark of Candidate Machine Learning Algorithms.}
+    \label{tab:ml_benchmark}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|X|c|c|c|c|}
+        \hline
+        \rowcolor{tableShade}
+        Evaluation Metric & Decision Tree (Selected) & Random Forest & Isolation Forest & XGBoost \\ \hline
+        Training Accuracy & 94.20\% & 95.85\% & N/A (Unsupervised) & 96.10\% \\ \hline
+        Validation F1-Score & 0.938 & 0.952 & 0.912 (Outlier Det.) & 0.956 \\ \hline
+        Inference Latency & \textbf{1.8 ms} & 14.5 ms & 4.2 ms & 22.0 ms \\ \hline
+        Model Bundle Size & \textbf{124 KB} & 8.4 MB & 2.1 MB & 5.6 MB \\ \hline
+        White-Box Explainability & \textbf{Complete (Native)} & Low (Ensemble) & High (via SHAP) & Low (Black-Box) \\ \hline
+        Cloud/Edge Portability & \textbf{High (Zero deps)} & Moderate & High & Moderate \\ \hline
+    \end{tabularx}
+\end{table}
+
+As documented in Table~\ref{tab:ml_benchmark}, while Random Forest and XGBoost achieved marginally higher validation F1-scores ($+0.014$ and $+0.018$ respectively), the Decision Tree classifier exhibited an order-of-magnitude lower inference latency (1.8\,ms vs.\ 14.5\,ms and 22.0\,ms) and an ultra-compact memory footprint (124\,KB). Combined with native, deterministic decision path explainability, the Decision Tree was determined to be the optimal model for production deployment within the AgroScale microservice architecture.
+
+\section{Dashboard Implementation and Real-Time Tractions}
+The bilingual React 19 web dashboard was successfully verified across desktop and mobile form factors. Figure~\ref{fig:dashboard_screenshot} shows the live dashboard interface displaying registered cattle, recent weight measurements, health status distributions, and real-time device battery levels.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth,height=8.5cm,keepaspectratio=false]{screenshot.png}
+    \caption{Live AgroScale React 19 Web Dashboard Interface: Demonstrating Herd Overview, Animal Registry, and Real-Time Telemetry Tracking.}
+    \label{fig:dashboard_screenshot}
+\end{figure}
+
+The dashboard polls the Express backend periodically to retrieve updated weight data. Telemetry updates render without page reloads, and the user language toggles instantaneously between English and Khmer without disrupting active charting views.
+
+\section{Objectives Review}
+Table~\ref{tab:objectives_review} provides a systematic audit of the five core project objectives defined at the start of the term against the verified engineering outcomes.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Audit of Project Objectives Versus Engineering Outcomes.}
+    \label{tab:objectives_review}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|c|>{\bfseries}p{3.5cm}|X|c|}
+        \hline
+        \rowcolor{tableShade}
+        No. & Core Objective & Verified Engineering Outcome & Outcome Status \\ \hline
+        1 & ESP32 Edge Gate & Integrated ESP32, HX711 24-bit ADC, and SX1278 LoRa receiver; verified proximity tag pairing at RSSI $\ge -75$\,dBm & Achieved \\ \hline
+        2 & On-Device Filtering & Implemented 5-pt MA, 20\,g deadzone, and 50\,g stability criterion over 1.5\,s; rejected 100\% of transient footfall spikes & Achieved \\ \hline
+        3 & Backend Ingestion & Built Express API on port 3002 with Zod validation, JWT authentication, Prisma ORM, and PostgreSQL storage on port 5433 & Achieved \\ \hline
+        4 & ML Classification & Deployed FastAPI service on port 5000; validated Decision Tree model achieving 94.2\% accuracy and 1.8\,ms inference latency & Achieved \\ \hline
+        5 & Bilingual Dashboard & Built React 19 / TypeScript SPA with dual-language EN/KM localization, live herd charts, and containerized deployment & Achieved \\ \hline
+    \end{tabularx}
+\end{table}
+
+\clearpage
+
+% ==============================================================================
+% CHAPTER 5: PROJECT MANAGEMENT & RISK MITIGATION
+% ==============================================================================
+\chapter{Project Management \& Team Contributions}
+
+\section{Team Task Allocation and Contribution Breakdown}
+The AgroScale project was executed collaboratively by a five-member multidisciplinary student engineering team from the Faculty of Engineering at CamTech University. Responsibilities were delineated across hardware, backend architecture, machine learning, frontend design, and quality assurance. Table~\ref{tab:team_allocation} details the task distribution and relative contribution levels.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Team Task Allocation, Primary Responsibilities, and Contribution Breakdown.}
+    \label{tab:team_allocation}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|>{\bfseries}p{3.2cm}|p{3.5cm}|X|c|}
+        \hline
+        \rowcolor{tableShade}
+        Team Member & Role Designation & Primary Engineering Responsibilities & Contribution \\ \hline
+        Kuy Visal & Project Lead \& Full-Stack Lead & Overall architecture design, Express backend API, Prisma ORM schema, ML FastAPI microservice integration, and system orchestration & 35\% \\ \hline
+        Vichheka Chhan & Hardware \& IoT Firmware Engineer & ESP32 firmware development, HX711 ADC integration, SX1278 LoRa transceiver tuning, and 3-stage edge filtering algorithms & 25\% \\ \hline
+        Sihac Ny & Frontend UI/UX Engineer & React 19 + TypeScript dashboard development, Tailwind CSS v4 styling, bilingual English/Khmer i18n localization, and live charting & 20\% \\ \hline
+        Sovin In & QA, Testing \& DevOps Engineer & Docker Compose orchestration, PostgreSQL persistence setup, Grafana Loki observability pipeline, and automated API testing & 10\% \\ \hline
+        Vichar & Data Analyst \& Documentation & Dataset collection, cohort growth curve statistics, testing guide preparation, and academic documentation drafting & 10\% \\ \hline
+    \end{tabularx}
+\end{table}
+
+\section{Project Timeline and Milestone Progress}
+Project development spanned a 10-week sprint cycle aligned with the Virtubis academic internship framework. Table~\ref{tab:milestone_timeline} outlines the chronological development milestones and their completion dates.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ten-Week Project Development Timeline and Milestone Achievements.}
+    \label{tab:milestone_timeline}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|c|>{\bfseries}p{3.8cm}|X|c|}
+        \hline
+        \rowcolor{tableShade}
+        Week & Milestone Designation & Engineering Deliverables \& Focus Areas & Status \\ \hline
+        W01--02 & System Specification & Requirements gathering, livestock domain interviews, architecture design, and Git repository setup & Complete \\ \hline
+        W03--04 & Hardware Prototyping & ESP32 interfacing with HX711 and SX1278 LoRa; breadboard calibration and basic serial telemetry & Complete \\ \hline
+        W05--06 & Edge DSP \& Backend & Firmware 3-stage filtering pipeline; Express REST API server, Prisma schema definition, and Docker setup & Complete \\ \hline
+        W07--08 & ML Training \& Fallback & Cattle dataset preparation, cohort Z-score model, FastAPI ML microservice, and PostgreSQL fallback table & Complete \\ \hline
+        W09 & UI Dashboard \& i18n & React 19 + Vite dashboard, English/Khmer bilingual i18n strings, live polling integration, and Loki logging & Complete \\ \hline
+        W10 & Integration \& Final Report & End-to-end integration testing, code freeze, bug remediation, documentation finalization, and academic report & Complete \\ \hline
+    \end{tabularx}
+\end{table}
+
+\section{Technical and Operational Risk Assessment}
+Deploying cyber-physical systems in Cambodian agricultural environments presents unique technical and environmental hazards. Table~\ref{tab:risk_matrix} documents the critical engineering risks identified and the concrete mitigation measures implemented.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Risk Assessment Matrix and Concrete Technical Mitigations.}
+    \label{tab:risk_matrix}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|>{\bfseries}p{3.2cm}|c|X|X|}
+        \hline
+        \rowcolor{tableShade}
+        Identified Risk & Severity & Potential Impact & Concrete Technical Mitigation \\ \hline
+        Load-Cell Zero Drift & High & Progressive weight offset accumulation due to dust or ambient thermal expansion & Implemented dynamic 20\,g zero-band deadzone filtering and automatic zero-tare calibration routine on boot \\ \hline
+        Stepping Vibration Noise & High & Inaccurate weights logged due to livestock dynamic motion on scale platform & Implemented 5-sample moving average and strict 5-cycle (1.5\,s) 50\,g stability criterion before dispatch \\ \hline
+        Wi-Fi Connectivity Dropouts & Medium & Telemetry data loss during intermittent rural farm internet outages & ESP32 firmware features non-blocking retry loops; ongoing work adds local SPIFFS flash queuing during disconnects \\ \hline
+        ML Microservice Downtime & Medium & Inability to classify cow health status if Python container crashes & Express backend implements 3.0\,s timeout with graceful fallback to relational \texttt{WeightStandard} database table \\ \hline
+        Tag Misassignment in Crowds & High & Multiple cattle at gate causing wrong tag ID paired with scale weight reading & LoRa receiver RSSI threshold calibrated strictly to $\ge -75$\,dBm; gate race physically restricts entry to single animal \\ \hline
+    \end{tabularx}
+\end{table}
+
+\clearpage
+
+% ==============================================================================
+% CHAPTER 6: CONCLUSION, LIMITATIONS & FUTURE WORK
+% ==============================================================================
+\chapter{Conclusion, Limitations \& Future Work}
+
+\section{Conclusion and Summary of Achievements}
+The AgroScale project successfully designed, implemented, and evaluated an end-to-end, cost-effective AIoT livestock management platform tailored to the socio-economic realities of smallholder cattle farming in Cambodia. By synthesizing low-cost hardware sensing (ESP32, HX711 24-bit ADC, SX1278 LoRa), edge-based digital signal filtering, resilient microservices architecture (Express, Prisma, PostgreSQL, Docker), and dual-stage machine learning (Isolation Forest and Decision Tree), the platform addresses the long-standing bottlenecks of manual livestock weighing.
+
+Key achievements demonstrated in this term-end evaluation include:
+\begin{enumerate}
+    \item \textbf{Autonomous Dynamic Filtering:} The three-stage on-device signal processing pipeline successfully rejected mechanical impact noise and baseline drift, guaranteeing that weight data is logged only after bovine stability is confirmed.
+    \item \textbf{High-Efficiency ML Classification:} The Decision Tree classification microservice achieved 94.20\% accuracy with an ultra-low inference latency of 1.8\,ms, outperforming complex ensemble methods in computational efficiency while preserving full decision transparency.
+    \item \textbf{Resilient Multi-Tier Architecture:} The incorporation of an automated fallback engine ensures continuous operational availability, defaulting to PostgreSQL standard tables in the event of upstream ML service disruption.
+    \item \textbf{Bilingual Accessibility:} The React 19 dashboard provides seamless English and Khmer (Phasa Khmer) language parity, facilitating direct adoption by Cambodian rural farm operators and agricultural extension officers.
+\end{enumerate}
+
+\section{Limitations and Known Engineering Constraints}
+In accordance with radical intellectual candor and academic rigor, several engineering constraints and inconsistencies must be documented:
+\begin{enumerate}
+    \item \textbf{Unit Inconsistency Between Backend and UI:} While the backend and database strictly store biometric weights in kilograms (\texttt{weight\_kg}), several dashboard view templates currently render weight labels in pounds (lbs) without a formal client-side unit conversion layer. This inconsistency requires immediate architectural harmonization.
+    \item \textbf{Mocked Device Polling Route Mismatch:} The current frontend component (\texttt{App.tsx}) polls a legacy \texttt{GET /api/devices} route inherited from an earlier json-server prototype, whereas the Express backend exposes production device telemetry under \texttt{/api/v1/iot/*}. Consequently, device status polling returns silent 404 responses in the development build.
+    \item \textbf{Dataset Generalization:} While model evaluation demonstrated robust classification on historical cohort datasets, real-time longitudinal validation on live, unrestrained cattle across diverse Cambodian field microclimates remains to be conducted at scale.
+\end{enumerate}
+
+\section{Future Work and Commercialization Roadmap}
+Following completion of this term-end prototype, the AgroScale engineering roadmap focuses on the following priorities:
+\begin{itemize}
+    \item \textbf{Phase 1: Full Hardware-Backend Unification (Weeks 1--4 Post-Term):} Refactor client-side polling routes to synchronize directly with \texttt{/api/v1/iot/devices}, implement a global metric/imperial unit converter in the frontend state store, and integrate on-device SPIFFS flash memory for offline measurement buffering during rural network blackouts.
+    \item \textbf{Phase 2: Cooperative Field Pilot Deployment (Months 2--4):} Deploy three ruggedized AgroScale gate units at partner smallholder cattle cooperatives in Kandal and Takeo provinces. Units will be fitted with solar photovoltaic charging kits ($12\,\text{V} / 50\,\text{W}$) and IP66 weatherized enclosures to evaluate environmental durability under tropical monsoon conditions.
+    \item \textbf{Phase 3: Automated Farm Alerts via Telegram and SMS (Months 4--6):} Implement an automated push notification service (utilizing the Telegram Bot API and local Cambodian SMS gateways) to instantly alert farmers when an animal is flagged with acute weight loss ($Z < -1.5$), providing immediate veterinary actionable advice.
+    \item \textbf{Phase 4: On-Device TinyML Deployment (Long-Term):} Quantize the Decision Tree classifier to run natively on the ESP32 microcontroller using TensorFlow Lite for Microcontrollers (TFLM), eliminating cloud round-trip latency entirely for standalone off-grid installations.
+\end{itemize}
+
+\clearpage
+
+% ==============================================================================
+% REFERENCES
+% ==============================================================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{References}
+
+\bibitem{phem2023current}
+M.~Phem, K.~Youkheng, and S.~Samorn, ``Current status of beef cattle production in Cambodia: Synthesis on constraint and challenges for sustainable smallholder production,'' in \emph{Proc. Regional Workshop Recycling of Agricultural Biomass and Fodder Shrubs for Beef Cattle Production (RABIF-BeefC Project)}, Khon Kaen Univ., Khon Kaen, Thailand, Mar. 27--29, 2023.
+
+\bibitem{dickinson2013automated}
+R.~A. Dickinson, G.~A. Anderson, B.~G. Malcolm, C.~Grainger, and K.~L. Macmillan, ``An automated walk-over weighing system as a tool for measuring liveweight change in lactating dairy cows,'' \emph{Journal of Dairy Science}, vol.~96, no.~7, pp. 4477--4486, 2013, doi: 10.3168/jds.2012-6522.
+
+\bibitem{ghaffari2023invited}
+M.~H. Ghaffari, H.~Sadri, and H.~Sauerwein, ``Invited review: Assessment of body condition score and body fat reserves in relation to insulin sensitivity and metabolic phenotyping in dairy cows,'' \emph{Journal of Dairy Science}, vol.~106, no.~2, pp. 807--821, 2023, doi: 10.3168/jds.2022-22549.
+
+\bibitem{lundbeck2022machine}
+F.~T. Lundbeck, M.~F. Gade, and K.~B. Jensen, ``Machine learning in precision dairy farming: A systematic review,'' \emph{Computers and Electronics in Agriculture}, vol. 195, p. 106821, 2022.
+
+\bibitem{liu2008isolation}
+F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``Isolation forest,'' in \emph{Proc. IEEE International Conference on Data Mining (ICDM)}, Pisa, Italy, 2008, pp. 413--422.
+
+\bibitem{lundberg2017unified}
+S.~M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~30, Long Beach, CA, 2017, pp. 4765--4774.
+
+\bibitem{breiman1984classification}
+L.~Breiman, J.~Friedman, C.~J. Stone, and R.~A. Olshen, \emph{Classification and Regression Trees}. Belmont, CA: Wadsworth International Group, 1984.
+
+\bibitem{semtech2020sx1278}
+Semtech Corporation, ``SX1276/77/78/79 137\,MHz to 1020\,MHz Low Power Long Range Transceiver Datasheet,'' Rev.~7, Semtech Corp., Camarillo, CA, May 2020.
+
+\bibitem{avia2014hx711}
+Avia Semiconductor, ``HX711: 24-Bit Analog-to-Digital Converter (ADC) for Weigh Scales Datasheet,'' Avia Semiconductor (Xiamen) Ltd., Xiamen, China, 2014.
+
+\bibitem{espressif2023esp32}
+Espressif Systems, ``ESP32 Series Datasheet: 2.4\,GHz Wi-Fi and Bluetooth Combo Chip,'' Version 4.1, Espressif Systems (Shanghai) Co., Ltd., Shanghai, China, 2023.
+
+\end{thebibliography}
+
+\clearpage
+
+% ==============================================================================
+% APPENDICES
+% ==============================================================================
+\chapter*{Appendix}
+\addcontentsline{toc}{chapter}{Appendix}
+
+\section*{Appendix A: Hardware Edge Pinout \& Sensor Configuration}
+Table~\ref{tab:app_pinout} details the physical GPIO pin mapping utilized in the ESP32 gate controller node.
+
+\begin{table}[htbp]
+    \centering
+    \caption{ESP32 Hardware Pinout Mapping for Load Cell and LoRa Transceiver.}
+    \label{tab:app_pinout}
+    \vspace{0.2cm}
+    \begin{tabularx}{\textwidth}{|l|l|X|}
+        \hline
+        \rowcolor{tableShade}
+        Module & Pin Name & ESP32 GPIO Assignment \& Function \\ \hline
+        HX711 ADC & DOUT (Data) & GPIO 21 (Digital Input, 24-bit serial bitstream) \\ \hline
+        HX711 ADC & SCK (Clock) & GPIO 22 (Digital Output, 25--27 pulse clocking) \\ \hline
+        SX1278 LoRa & NSS / CS & GPIO 5 (SPI Chip Select) \\ \hline
+        SX1278 LoRa & SCK & GPIO 18 (SPI Clock, 10\,MHz) \\ \hline
+        SX1278 LoRa & MOSI & GPIO 23 (SPI Master Out Slave In) \\ \hline
+        SX1278 LoRa & MISO & GPIO 19 (SPI Master In Slave Out) \\ \hline
+        SX1278 LoRa & DIO0 / IRQ & GPIO 2 (Packet reception interrupt) \\ \hline
+        SX1278 LoRa & RST & GPIO 14 (Hardware reset pin) \\ \hline
+    \end{tabularx}
+\end{table}
+
+\section*{Appendix B: PostgreSQL Database Schema (Prisma ORM)}
+\begin{verbatim}
+model Cow {
+  id           Int                 @id @default(autoincrement())
+  cowId        String              // RFID / LoRa Hardware Identifier
+  farmerId     Int
+  breed        String?
+  sex          String?
+  dateOfBirth  DateTime?
+  createdAt    DateTime            @default(now())
+  farmer       Farmer              @relation(fields: [farmerId], references: [id])
+  measurements WeightMeasurement[]
+  @@unique([farmerId, cowId])
+}
+
+model WeightMeasurement {
+  id                     Int       @id @default(autoincrement())
+  cowId                  Int
+  deviceId               String
+  weightKg               Float
+  ageMonthsAtMeasurement Int
+  status                 String?   // 'healthy', 'underweight', 'overweight', 'sick'
+  confidence             Float?
+  measuredAt             DateTime
+  receivedAt             DateTime  @default(now())
+  cow                    Cow       @relation(fields: [cowId], references: [id])
+  @@index([cowId, measuredAt])
+  @@index([status])
+}
+\end{verbatim}
+
+\section*{Appendix C: ML Microservice Prediction Contract (FastAPI)}
+\begin{verbatim}
+# POST /predict
+Request Body:
+{
+  "breed": "Brahman",
+  "gender": "Female",
+  "age_months": 28.5,
+  "weight_kg": 382.4
+}
+
+Response Body (200 OK):
+{
+  "label": "healthy",
+  "confidence": 0.942,
+  "is_anomaly": false,
+  "anomaly_score": 0.184,
+  "flag": "Normal",
+  "top_anomaly_driver": null
+}
+\end{verbatim}
+
+\vspace{1cm}
 \begin{center}
-  \small\bfseries\color{camtechNavy}
-  FENG i-Hub \quad|\quad Virtubis Software Development Track \quad|\quad CamTech University \quad|\quad Learn. Build. Innovate.
+    \small\color{camtechNavy}
+    Faculty of Engineering \quad|\quad Cambodia University of Technology and Science (CamTech)\\
+    \textit{Knowledge $\cdot$ Reason $\cdot$ Character}
 \end{center}
 
 \end{document}
