@@ -651,7 +651,7 @@ Eksperimen dilakukan dalam beberapa tahapan utama, mulai dari pra-pemrosesan dat
 
 \end{document}
 """
-    }
+    },
     "camtech_progress_report": {
         "name": "CamTech Virtubis Progress Report",
         "description": "Laporan kemajuan magang Virtubis Internship Programme CamTech University lengkap dengan header banner, tabel evaluasi, dan format IEEE",
