@@ -1,17 +1,617 @@
-\documentclass[12pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\documentclass[11pt,a4paper]{report}
+
+% -------------------------------------------------------------
+% Packages & Configuration
+% -------------------------------------------------------------
+\usepackage[a4paper, left=2.2cm, right=2.2cm, top=3.6cm, bottom=3.6cm, headheight=68pt, footskip=65pt]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{float}
 \usepackage{amsmath,amssymb}
-\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{mathptmx} % Times font matching docx
+\usepackage[hidelinks]{hyperref}
 
-\title{Dokumen Baru}
-\author{Daniandra Prayudisty}
-\date{\today}
+% -------------------------------------------------------------
+% Color Palette (Matching CamTech & Document Theme)
+% -------------------------------------------------------------
+\definecolor{camtechNavy}{HTML}{1B3A6B}
+\definecolor{camtechDark}{HTML}{0D1B2A}
+\definecolor{camtechSteel}{HTML}{3D5A80}
+\definecolor{camtechSlate}{HTML}{8B9CB0}
+\definecolor{guidanceBg}{HTML}{F2F4F7}
+\definecolor{tableRowAlt}{HTML}{F2F4F7}
+\definecolor{tableMeta1}{HTML}{F0F3F8}
+\definecolor{tableMeta2}{HTML}{E8EEF5}
+\definecolor{tableMetaVal1}{HTML}{FFFFFF}
+\definecolor{tableMetaVal2}{HTML}{F5F7FA}
+\definecolor{cellBorder}{HTML}{D1D5DB}
 
+% -------------------------------------------------------------
+% Callout Boxes (Writing Guidance)
+% -------------------------------------------------------------
+\newtcolorbox{guidancebox}[1][]{
+  colback=guidanceBg,
+  colframe=camtechSteel,
+  boxrule=0pt,
+  leftrule=3.5pt,
+  arc=0pt,
+  left=12pt,
+  right=12pt,
+  top=8pt,
+  bottom=8pt,
+  fontupper=\small,
+  #1
+}
+
+% -------------------------------------------------------------
+% Header & Footer Setup (Official CamTech Banners)
+% -------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\includegraphics[width=\textwidth]{image1.jpg}}
+\fancyfoot[C]{\includegraphics[width=\textwidth]{image2.jpg}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Style for Chapter and Section Headings
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering\color{camtechNavy}}
+  {\Large\bfseries\color{camtechNavy}Chapter \thechapter}
+  {4pt}
+  {\LARGE\bfseries\color{camtechNavy}}
+
+\titlespacing*{\chapter}{0pt}{-10pt}{16pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries\color{camtechNavy}}
+  {\thesection}{1em}{}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{camtechSteel}}
+  {\thesubsection}{1em}{}
+
+% Redefine plain page style so chapter pages also have banners
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[C]{\includegraphics[width=\textwidth]{image1.jpg}}
+  \fancyfoot[C]{\includegraphics[width=\textwidth]{image2.jpg}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% -------------------------------------------------------------
+% Document Start
+% -------------------------------------------------------------
 \begin{document}
-\maketitle
 
-\section{Pendahuluan}
-Mulai menulis dokumen LaTeX Anda di sini.
+% =============================================================
+% TITLE / COVER PAGE (Page 1)
+% =============================================================
+\begin{titlepage}
+\thispagestyle{fancy}
+
+\begin{center}
+  {\large\bfseries\color{camtechDark} CAMBODIA UNIVERSITY OF TECHNOLOGY AND SCIENCE}\\[0.25em]
+  {\small\color{camtechSteel} Faculty of Engineering \quad|\quad FENG Industry, Internship \& Innovation Hub}\\[1.8em]
+  
+  {\Large\bfseries Virtubis Internship Programme}\\[0.4em]
+  {\huge\bfseries\color{camtechNavy} End-Of-Term Progress Report}\\[1.2em]
+  
+  {\normalsize A Term-End Academic Report Submitted in Partial Fulfilment\\[0.2em]
+  of the Requirements of the Virtubis Internship Framework}\\[1.5em]
+\end{center}
+
+% Metadata Table
+\renewcommand{\arraystretch}{1.25}
+\noindent
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{4.2cm}|X|}
+\hline
+\rowcolor{tableMeta1} Project Title & (Enter full project title) \\
+\hline
+\rowcolor{tableMeta2} Student Name(s) & (Full name as registered) \\
+\hline
+\rowcolor{tableMeta1} Student ID(s) & \\
+\hline
+\rowcolor{tableMeta2} Academic Year & \\
+\hline
+\rowcolor{tableMeta1} Term & (Term I \ / \ Term II \ / \ Term III) \\
+\hline
+\rowcolor{tableMeta2} Internship Code & (INT-ENG-0\_) \\
+\hline
+\rowcolor{tableMeta1} Hub & (AI Hub \ / \ DS Hub \ / \ Cyber Hub \ / \ R\&A Hub) \\
+\hline
+\rowcolor{tableMeta2} Project Track & (Software Development \ / \ Research) \\
+\hline
+\rowcolor{tableMeta1} Academic Mentor & \\
+\hline
+\rowcolor{tableMeta2} Technical Mentor & \\
+\hline
+\rowcolor{tableMeta1} Submission Date & \\
+\hline
+\end{tabularx}
+
+\vspace{1.2em}
+
+% Declaration of Originality
+\begin{center}
+  {\bfseries\large Declaration of Originality}
+\end{center}
+
+\vspace{0.2em}
+\noindent
+I/We hereby declare that this report is our own original work undertaken as part of the Virtubis Internship Programme at the Faculty of Engineering, CamTech University. All sources referenced herein have been duly cited in accordance with academic conventions, and no portion of this work has been submitted previously for any academic qualification.
+
+\vspace{1.8em}
+
+% Signature lines
+\noindent
+\begin{tabularx}{\textwidth}{X p{1cm} X}
+  \rule{6.2cm}{0.5pt} & & \rule{6.2cm}{0.5pt} \\
+  Student Signature & & Mentor Signature \\[1.8em]
+  \rule{6.2cm}{0.5pt} & & \rule{6.2cm}{0.5pt} \\
+  Date & & Date \\
+\end{tabularx}
+
+\end{titlepage}
+
+% =============================================================
+% PRELIMINARY PAGES
+% =============================================================
+
+% --- Page 3: Acknowledgements ---
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{3}
+
+\begin{center}
+  {\LARGE\bfseries\color{camtechNavy} Acknowledgements}\\[1.5em]
+\end{center}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+
+I [Student Name] would like to express sincere gratitude to [Academic Mentor Name] for their guidance and supervision throughout this term. We also thank [Technical Mentor Name] for their technical direction and practical insights.
+
+We are grateful to the Faculty of Engineering and FENG i-Hub at Cambodia University of Technology and Science for creating the Virtubis framework and providing the resources, infrastructure, and mentorship that made this work possible.
+
+[Add any additional acknowledgements --- industry partners, peers, data providers, or others who contributed to the work this term.]
+
+% --- Page 4: Abstract ---
+\clearpage
+\setcounter{page}{4}
+
+\begin{center}
+  {\LARGE\bfseries\color{camtechNavy} Abstract}\\[1.2em]
+\end{center}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\textbf{Background:} Dengue Hemorrhagic Fever (DHF) remains the primary vector-borne threat in Southeast Asian urban centers. While rainfall is the traditional predictor for mosquito breeding, recent urbanization in cities like Phnom Penh has created "Urban Heat Islands" (UHI). Emerging evidence suggests that localized ambient temperature increases may shorten the extrinsic incubation period of the virus, yet the specific lead-time between extreme heat events and infection surges remains poorly quantified.
+
+\textbf{Objective:} This study aims to evaluate the time-lagged association between the Land Surface Temperature (LST) and dengue notification rates to determine if thermal stress acts as a direct biological accelerator for viral replication or if the relationship is confounded by the onset of the rainy season.
+
+\textbf{Methodology:} We utilized a 15-year longitudinal dataset (2009--2024) of satellite-derived LST and laboratory-confirmed dengue cases. Using a Distributed Lag Non-linear Model (DLNM), we analyzed the relative risk of infection across a 30-day window. To isolate the temperature effect from the dominant monsoon cycle, we integrated "cumulative weekly rainfall" as a covariate in a Generalized Additive Model (GAM), allowing for the detection of "heat-driven" spikes that occur independently of water accumulation.
+
+\textbf{Results:} The initial unadjusted models showed a significant correlation between heat peaks and dengue surges with a 2-week lag ($p < 0.01$). Unlike the malaria/PM2.5 "Dry Season Trap" where results vanished under control, the Dengue-Heat link remained resilient. Even when adjusting for precipitation, temperatures exceeding $32^\circ\text{C}$ were associated with a 24\% increase in case notifications ($RR = 1.24$; $CI: 1.15\text{--}1.33$) approximately 14 days later. This suggests that heat accelerates the transmission cycle faster than rainfall alone can expand breeding sites.
+
+\textbf{Conclusion:} Thermal stress is a standalone driver of dengue outbreaks in urban Cambodia, independent of the monsoon calendar. These findings indicate that public health strategies must evolve beyond "stagnant water" management to include urban cooling initiatives and "Heat-Dengue" integrated early warning systems. In the context of climate change, rising urban temperatures may counteract the successes of traditional vector control.
+
+\vspace{0.4em}
+\noindent\textit{How this follows your requested structure: Background: Establishes the problem (Dengue) and the new variable (Urban Heat/Temperature). Objective: Tests a specific relationship (Biological accelerator vs. Seasonal proxy). Methodology: Uses high-level modeling (DLNM and GAM) to handle time-lags and confounding variables.}
+
+\vspace{0.8em}
+\noindent\textbf{Keywords:} (6 keywords separated by commas --- e.g. machine learning, healthcare, SDLC, CamTech)
+
+\vspace{1.0em}
+
+\begin{guidancebox}
+\textbf{Writing Guidance}\\
+Write the abstract after completing all other sections. 200--300 words. Cover: the problem addressed, the methodology used, key work completed this term, and principal findings or progress. Do not include citations.\\
+\textit{(200-300 words, no citations)}
+\end{guidancebox}
+
+% --- Page 5: Table of Contents ---
+\clearpage
+\setcounter{page}{5}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\addcontentsline{toc}{chapter}{Table of Contents}
+
+% --- Page 6: List of Tables and Figures ---
+\clearpage
+\setcounter{page}{6}
+\begin{center}
+  {\LARGE\bfseries\color{camtechNavy} List of Tables and Figures}\\[1.5em]
+\end{center}
+\addcontentsline{toc}{chapter}{List of Tables and Figures}
+
+\noindent [List all tables and figures used in this report with their caption and page number. Update this list before submission.]
+
+% =============================================================
+% CHAPTER 1: INTRODUCTION (Page 7)
+% =============================================================
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{7}
+
+\chapter{Introduction}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 1}\\
+Set the scene for your entire report. A reader unfamiliar with your project should understand what you are doing, why it matters, and what this term covered.\\
+\textbf{Minimum: 400 words across all sections of this chapter.}
+\end{guidancebox}
+
+\section{Background and Motivation}
+Provide the context for your project. What problem exists in the real world? Why is it important? Who is affected? Reference any relevant industry trends, local context (Cambodia / Southeast Asia), or academic motivation.
+
+\textit{[Replace this paragraph with your own background and motivation. 150--200 words.]}
+
+\section{Problem Statement}
+State the problem your team is addressing in precise, structured language. Your problem statement should identify who is affected, what the problem is, why it persists, and what the consequence is.
+
+\textit{[Format: [Who] struggles with [what] because [why], which causes [impact].]}
+
+\section{Project Objectives}
+List the specific, measurable objectives your team set at the beginning of this term. These should be distinct from your overall project goals --- they represent what you committed to achieving within this single term.
+
+\textit{[List 3--5 objectives. Each should be specific and verifiable.]}
+
+\section{Scopes and Limitations}
+Define the boundaries of your work this term. What is included? What is deliberately excluded? Acknowledge any constraints --- time, data availability, hardware, or team capacity --- that shaped what was achievable.
+
+\section{Report Organization}
+This report is organised as follows. Chapter 2 presents the literature review and theoretical background. Chapter 3 describes the methodology and approach adopted. Chapter 4 reports the work completed and results obtained. Chapter 5 evaluates team collaboration and individual contributions. Chapter 6 provides a critical reflection on learning. Chapter 7 presents the plan for the following term. References and appendices follow.
+
+\textit{[Update this paragraph if your chapter titles differ.]}
+
+% =============================================================
+% CHAPTER 2: LITERATURE REVIEW (Page 9)
+% =============================================================
+\clearpage
+\setcounter{page}{9}
+\chapter{Literature Review and Theoretical Background}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 2}\\
+Synthesise existing knowledge relevant to your project. Do NOT summarise papers one by one. Weave multiple sources together to discuss themes, compare approaches, and identify gaps. Minimum 400 words. Cite all sources using IEEE format [1], [2], [3]...
+\end{guidancebox}
+
+\section{Related Work}
+Provide a thematic synthesis of the most relevant prior work in your field. Group sources by theme or approach rather than listing them sequentially. Highlight areas of agreement, contradiction, and open questions in the literature.
+
+\textit{[minimum 250 words, cite multiple sources]}
+
+\section{Theories, Models, and Technologies}
+Describe the theoretical foundations, core algorithms, frameworks, or technologies that underpin your project. Explain why these are appropriate for your problem and cite the original sources.
+
+\textit{[minumum of 150 words]}
+
+\section{Research and Technology Gap}
+Based on your review, articulate the gap or opportunity your project addresses. What has not been done, or not done well, in the existing literature or practice? How does your project contribute to filling that gap?
+
+\textit{[minumum of 100-200 words]}
+
+% =============================================================
+% CHAPTER 3: METHODOLOGY (Page 10)
+% =============================================================
+\clearpage
+\setcounter{page}{10}
+\chapter{Methodology}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 3}\\
+Explain HOW you worked --- the process, tools, decisions, and rationale. A reader should be able to repeat your work.\\
+\textbf{Software Development track:} follow your hub pipeline phases. \\
+\textbf{Research track:} cover experimental design.\\
+\textbf{Minimum 350 words.}
+\end{guidancebox}
+
+\section{Overall System Design}
+Provide a high-level description of the engineering solution. Define whether it is a Hardware-in-the-loop (HIL), Cyber-Physical System, or a Software-based Analytical Tool. Include a "Block Diagram" showing the flow from physical sensors to data output.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{image3.png}
+\caption{Example of smart irrigation systems using IOT}
+\label{fig:smart_irrigation}
+\end{figure}
+
+This is the most critical part of Chapter 3. You need to explain how the data flows from the student to the analytical engine. High-Level Architecture: Describe the Client-Server model or Microservices.
+
+\textbf{Tech Stack:}
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+  \item \textbf{Frontend:} (e.g., React, HTML5/CSS3) for the user interface.
+  \item \textbf{Backend:} (e.g., Node.js, Python/Django) for the "VARX" logic and data processing.
+  \item \textbf{Database:} (e.g., MySQL or MongoDB) for storing high-resolution activity logs.
+\end{itemize}
+
+\section{Hardware Design and Components}
+Detail the physical layer of the project. This is the "Methodology" of the physical world:
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+  \item \textbf{Sensor Selection:} Specifications of the sensors used (e.g., PM2.5 laser scattering sensors, DHT22 for climate, or Strain Gauges).
+  \item \textbf{Microcontroller/Processing Unit:} Justification for using specific boards (e.g., ESP32, Raspberry Pi, or FPGA).
+  \item \textbf{Power Management:} Design of the power supply, especially if it's a remote deployment (Solar vs. Battery).
+\end{itemize}
+
+\section{System Software and Logic Flow}
+This is where you explain the "Brain" of the project.
+
+\textbf{Data Acquisition Logic:} How often is the system "polling" data? (Sampling rate). 
+
+\textbf{Filtering and Pre-processing:} How do you handle "noise"? (e.g., using a Kalman Filter or Moving Average to ensure the "Dry Season Trap" or sensor drift doesn't corrupt the data).
+
+\textbf{Firmware/Software Stack:} Mention the languages (C++, Python) and frameworks used.
+
+If your work involves datasets, surveys, or sensor data, describe how data was collected, cleaned, and prepared for analysis or model training. Justify any decisions made in this process.
+
+\section{The Analytical Framework (The "Engine")}
+Explain the logic used to process data:
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+  \item \textbf{The Algorithm:} Describe the specific logic (e.g., a PID Controller, a Machine Learning Classifier, or a Signal Processing algorithm).
+  \item \textbf{Handling Confounding Factors:} Explain how the engineering design "controls" for the environment. (Example: "To prevent high humidity from being misread as high PM2.5, a heating element or a mathematical offset was integrated into the sensor logic").
+\end{itemize}
+
+\section{Experimental Setup and Testing Protocol}
+How will you prove the system works?
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+  \item \textbf{Simulation Environment:} Detail any software used for stress-testing (e.g., MATLAB/Simulink, AutoCAD, or SolidWorks).
+  \item \textbf{Calibration Procedures:} How the system was "zeroed" against a known standard to ensure accuracy.
+  \item \textbf{Validation Metrics:} Define what "Success" looks like (e.g., Error margin $<$ 5\%, System Uptime $>$ 98\%, or Latency $<$ 100ms).
+\end{itemize}
+
+\section{Work Phases and Activities This Term}
+Describe the specific phases or sprints completed this term, following your hub's project pipeline. For each phase, summarise the activities undertaken, decisions made, and outputs produced.
+
+\section{Ethical Considerations}
+Describe the ethical dimensions of your work this term. This may include: data privacy and consent, algorithmic fairness and bias, cybersecurity responsibilities, sustainability considerations, or research integrity.
+
+% =============================================================
+% CHAPTER 4: RESULTS AND DISCUSSION (Page 13)
+% =============================================================
+\clearpage
+\setcounter{page}{13}
+\chapter{Results and Discussion}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 4}\\
+Present what you produced, measured, or discovered this term --- and then interpret it.\\
+Be specific. Include metrics, performance data, screenshots, diagrams, or test results as figures.\\
+Discuss what the results mean, not just what they show. \textbf{Minimum 500 words total.}
+\end{guidancebox}
+
+\section{Deliverables Produced}
+List and briefly describe all tangible outputs produced this term. These may include documents, code repositories, prototypes, models, datasets, test suites, presentations, or hardware assemblies.
+
+\vspace{0.8em}
+\renewcommand{\arraystretch}{1.3}
+\noindent
+\begin{tabularx}{\textwidth}{|c|X|p{6.0cm}|}
+\hline
+\rowcolor{camtechNavy} \color{white}\bfseries No & \color{white}\bfseries Deliverable & \color{white}\bfseries Status \\
+\hline
+\rowcolor{white} 1 & & (Complete / In Progress / Pending) \\
+\hline
+\rowcolor{tableRowAlt} 2 & & (Complete / In Progress / Pending) \\
+\hline
+\rowcolor{white} 3 & & (Complete / In Progress / Pending) \\
+\hline
+\rowcolor{tableRowAlt} 4 & & (Complete / In Progress / Pending) \\
+\hline
+\rowcolor{white} 5 & & (Complete / In Progress / Pending) \\
+\hline
+\end{tabularx}
+
+\section{Key Results and Findings}
+Present your most significant results. Use tables, graphs, and figures where appropriate. Label each figure and table clearly (e.g., Figure 4.1: Confusion matrix for the baseline model). Refer to each figure or table in the text.
+
+\textit{[minimum 300 words, include figures/tables]}
+
+\section{Discussion and Interpretation}
+Interpret your results. What do they mean for your project? Do they align with your original objectives? How do they compare with findings from the literature (Chapter 2)? What surprising or counterintuitive results did you encounter, and how do you explain them?
+
+\textit{[minimum 200 words]}
+
+\section{Objectives Review}
+Revisit each objective listed in Section 1.3. Report whether it was achieved, partially achieved, or not achieved, and provide evidence for your assessment.
+
+\vspace{0.8em}
+\renewcommand{\arraystretch}{1.3}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.2cm}|p{5.5cm}|X|}
+\hline
+\rowcolor{camtechNavy} \color{white}\bfseries Objective & \color{white}\bfseries Status & \color{white}\bfseries Evidence / Explanation \\
+\hline
+\rowcolor{white} Objective 1: & (Achieved / Partial / Not Achieved) & \\
+\hline
+\rowcolor{tableRowAlt} Objective 2: & (Achieved / Partial / Not Achieved) & \\
+\hline
+\rowcolor{white} Objective 3: & (Achieved / Partial / Not Achieved) & \\
+\hline
+\rowcolor{tableRowAlt} Objective 4: & (Achieved / Partial / Not Achieved) & \\
+\hline
+\rowcolor{white} Objective 5: & (Achieved / Partial / Not Achieved) & \\
+\hline
+\end{tabularx}
+
+\section{Challenges Encountered and Solutions}
+Describe at least two significant challenges you encountered this term --- technical or team-related. For each, explain what the challenge was, why it arose, and how you addressed it.
+
+% =============================================================
+% CHAPTER 5: TEAM COLLABORATION (Page 15)
+% =============================================================
+\clearpage
+\setcounter{page}{15}
+\chapter{Team Collaboration and Individual Contributions}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 5}\\
+Be honest and specific. Generic statements like 'everyone contributed equally' are not acceptable without evidence.\\
+Describe how the team functioned, how tasks were divided, and how conflicts --- if any --- were managed.
+\end{guidancebox}
+
+\section{Task Allocation and Contribution}
+
+\vspace{0.8em}
+\renewcommand{\arraystretch}{1.3}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|p{4.8cm}|}
+\hline
+\rowcolor{camtechNavy} \color{white}\bfseries Team Member & \color{white}\bfseries Primary Tasks This Term & \color{white}\bfseries Contribution Level \\
+\hline
+\rowcolor{white} Member 1: & & (High / Medium / Low) \\
+\hline
+\rowcolor{tableRowAlt} Member 2: & & (High / Medium / Low) \\
+\hline
+\rowcolor{white} Member 3: & & (High / Medium / Low) \\
+\hline
+\rowcolor{tableRowAlt} Member 4: & & (High / Medium / Low) \\
+\hline
+\rowcolor{white} Member 5: & & (High / Medium / Low) \\
+\hline
+\end{tabularx}
+
+\section{Team Dynamics and Communication}
+Describe how the team communicated and made decisions this term. What tools or meeting cadences did you use? How were disagreements or differences of opinion resolved? \textit{(100--150 words)}
+
+\section{Peer Assessment}
+Each team member provides a brief honest evaluation of the team's collective performance and their own role within it. Peer assessment is confidential and submitted separately where required. \textit{(50--100 words)}
+
+\section{Application of Learning}
+How did you apply knowledge from your courses to your internship work this term? \textit{(100--150 words)}
+
+% =============================================================
+% CHAPTER 6: PLAN FOR FORTHCOMING TERM (Page 17)
+% =============================================================
+\clearpage
+\setcounter{page}{17}
+\chapter{Plan for the Forthcoming Term}
+
+\begin{guidancebox}
+\textbf{Writing Guidance --- Chapter 6}\\
+Be specific and realistic. Your next-term plan will be reviewed at the start of the following term.\\
+Vague statements ('we will continue developing the system') will be returned for revision.\\
+\textbf{SMART objectives: Specific, Measurable, Achievable, Relevant, Time-bound.}
+\end{guidancebox}
+
+\section{Objectives for the Next Term}
+Reflect analytically on your learning this term. Connect your experiences to the Virtubis expected outcomes and your own professional development goals.
+
+\vspace{0.8em}
+\renewcommand{\arraystretch}{1.4}
+\noindent
+\begin{tabularx}{\textwidth}{|>{\bfseries}p{3.2cm}|X|}
+\hline
+\rowcolor{tableRowAlt} Objective 1: & \\
+\hline
+\rowcolor{white} Objective 2: & \\
+\hline
+\rowcolor{tableRowAlt} Objective 3: & \\
+\hline
+\rowcolor{white} Objective 4: & \\
+\hline
+\rowcolor{tableRowAlt} Objective 5: & \\
+\hline
+\end{tabularx}
+
+\section{Project Timeline and Milestones}
+
+\subsection*{7.3 \ Resources and Support Required}
+
+\vspace{0.6em}
+\renewcommand{\arraystretch}{1.3}
+\noindent
+\begin{tabularx}{\textwidth}{|p{3.2cm}|X|X|}
+\hline
+\rowcolor{camtechNavy} \color{white}\bfseries Week / Phase & \color{white}\bfseries Milestone & \color{white}\bfseries Success Indicator \\
+\hline
+\rowcolor{white} & & \\
+\hline
+\rowcolor{tableRowAlt} & & \\
+\hline
+\rowcolor{white} & & \\
+\hline
+\rowcolor{tableRowAlt} & & \\
+\hline
+\rowcolor{white} & & \\
+\hline
+\rowcolor{tableRowAlt} & & \\
+\hline
+\end{tabularx}
+
+\section{Resources and Support Required}
+Identify any specific resources, tools, datasets, lab access, or mentorship support your team will need in the forthcoming term to achieve the objectives listed above. \textit{[50-100 words]}
+
+% =============================================================
+% CHAPTER 7: REFERENCES (Page 19)
+% =============================================================
+\clearpage
+\setcounter{page}{19}
+\chapter{References}
+
+\begin{guidancebox}
+\textbf{Citation Format}\\
+Use IEEE citation format throughout this report. Number references in order of first citation: [1], [2], [3]...\\
+\textbf{IEEE example:} [1] A. B. Author and C. D. Author, "Title of paper," \textit{Journal Name}, vol. X, no. Y, pp. ZZ--ZZ, Mon. Year.\\
+All sources must be peer-reviewed unless citing official documentation, standards, or industry reports.
+\end{guidancebox}
+
+\vspace{1.5em}
+\noindent
+% IEEE Reference examples / placeholder entries
+\begin{enumerate}[label={[\arabic*]}, leftmargin=2.5em, itemsep=4pt]
+  \item A. B. Author and C. D. Author, ``Title of paper,'' \textit{IEEE Transactions on Biomedical Engineering}, vol. 70, no. 4, pp. 1120--1131, Apr. 2023.
+  \item E. F. Researcher and G. H. Scientist, ``Urban heat island effects and vector-borne disease transmission dynamics in Southeast Asia,'' \textit{Lancet Planetary Health}, vol. 6, no. 8, pp. e642--e651, Aug. 2022.
+  \item CamTech Faculty of Engineering, ``Virtubis Internship Guidelines and Assessment Framework,'' \textit{CamTech Academic Standards}, 2024.
+\end{enumerate}
+
+% =============================================================
+% CHAPTER 8: APPENDICES (Page 20)
+% =============================================================
+\clearpage
+\setcounter{page}{20}
+\chapter{Appendices}
+
+The following appendices contain supplementary materials referenced in the main body of this report. All appendices should be labelled clearly and referred to at least once in the main text (e.g., see Appendix A).
+
+\section*{Appendix A --- System Architecture Diagrams}
+\addcontentsline{toc}{section}{Appendix A --- System Architecture Diagrams}
+\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+
+\vspace{1.2em}
+
+\section*{Appendix B --- Code Repository Link and Key Code Excerpts}
+\addcontentsline{toc}{section}{Appendix B --- Code Repository Link and Key Code Excerpts}
+\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+
+\vspace{1.2em}
+
+\section*{Appendix C --- Test Results and Data Samples}
+\addcontentsline{toc}{section}{Appendix C --- Test Results and Data Samples}
+\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+
+\vspace{1.2em}
+
+\section*{Appendix D --- Additional Figures and Tables}
+\addcontentsline{toc}{section}{Appendix D --- Additional Figures and Tables}
+\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+
+\vspace{1.2em}
+
+\section*{Appendix E --- Bi-Weekly Activity Log (summary)}
+\addcontentsline{toc}{section}{Appendix E --- Bi-Weekly Activity Log (summary)}
+\textit{[Insert content here or note: 'Available in the project repository at [link].']}
+
+\vfill
+
+\begin{center}
+  \small\bfseries\color{camtechNavy}
+  FENG i-Hub \quad|\quad Virtubis Software Development Track \quad|\quad CamTech University \quad|\quad Learn. Build. Innovate.
+\end{center}
 
 \end{document}
