@@ -262,12 +262,44 @@ class LatexStudioApp {
 
     async init() {
         this.initEditor();
+        this.bindLanguageSwitcherEvents();
         this.applyLanguage(this.currentLang, false);
         await this.loadTemplates();
         await this.loadFolders();
         await this.loadProjects();
         this.renderMobileFolderCarousel();
         this.setupKeyboardShortcuts();
+
+        // Check URL path: if /editor/{projectId}, open project directly
+        const pathParts = window.location.pathname.split("/").filter(Boolean);
+        if (pathParts[0] === "editor" && pathParts[1]) {
+            this.openEditor(pathParts[1]);
+        }
+    }
+
+    bindLanguageSwitcherEvents() {
+        const btnId = document.getElementById("btn-lang-id");
+        const btnEn = document.getElementById("btn-lang-en");
+        if (btnId) {
+            btnId.onclick = (e) => {
+                e.preventDefault();
+                this.setLanguage("id");
+            };
+            btnId.ontouchend = (e) => {
+                e.preventDefault();
+                this.setLanguage("id");
+            };
+        }
+        if (btnEn) {
+            btnEn.onclick = (e) => {
+                e.preventDefault();
+                this.setLanguage("en");
+            };
+            btnEn.ontouchend = (e) => {
+                e.preventDefault();
+                this.setLanguage("en");
+            };
+        }
     }
 
     t(key, params = {}) {
@@ -282,8 +314,11 @@ class LatexStudioApp {
     setLanguage(lang) {
         if (lang !== "id" && lang !== "en") return;
         this.currentLang = lang;
-        localStorage.setItem("yudiaz_latex_lang", lang);
+        try {
+            localStorage.setItem("yudiaz_latex_lang", lang);
+        } catch (e) {}
         this.applyLanguage(lang, true);
+        this.toast(lang === "en" ? "Language set to English 🇬🇧" : "Bahasa diubah ke Indonesia 🇮🇩", 2200);
     }
 
     applyLanguage(lang, triggerRender = true) {
@@ -1298,7 +1333,11 @@ class LatexStudioApp {
     }
 }
 
-// Instantiate on DOMContentLoaded
-window.addEventListener("DOMContentLoaded", () => {
+// Instantiate on DOMContentLoaded or immediately if DOM is already ready
+if (document.readyState === "loading") {
+    window.addEventListener("DOMContentLoaded", () => {
+        window.app = new LatexStudioApp();
+    });
+} else {
     window.app = new LatexStudioApp();
-});
+}

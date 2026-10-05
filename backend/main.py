@@ -352,5 +352,21 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 def serve_index():
     index_file = STATIC_DIR / "index.html"
     if index_file.exists():
-        return HTMLResponse(index_file.read_text(encoding="utf-8"))
+        content = index_file.read_text(encoding="utf-8")
+        import time
+        v_tag = str(int(time.time()))
+        # Cache busting replacement
+        import re
+        content = re.sub(r'app\.js(\?v=[^"]*)?', f'app.js?v={v_tag}', content)
+        content = re.sub(r'style\.css(\?v=[^"]*)?', f'style.css?v={v_tag}', content)
+        resp = HTMLResponse(content)
+        resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        resp.headers["Pragma"] = "no-cache"
+        resp.headers["Expires"] = "0"
+        return resp
     return HTMLResponse("<h1>Yudiaz LaTeX Studio Backend Ready</h1>")
+
+@app.get("/editor/{project_id}", response_class=HTMLResponse)
+@app.head("/editor/{project_id}")
+def serve_editor(project_id: str):
+    return serve_index()

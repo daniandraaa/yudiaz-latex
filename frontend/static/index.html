@@ -20,7 +20,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="/static/style.css?v=1.1.0">
+    <link rel="stylesheet" href="/static/style.css?v=2.0.0">
+    <script>
+        // High-priority immediate language switcher helper
+        window.switchLanguage = function(lang) {
+            console.log("[Yudiaz] switchLanguage:", lang);
+            try {
+                localStorage.setItem("yudiaz_latex_lang", lang);
+            } catch(e) {}
+            if (window.app && typeof window.app.setLanguage === "function") {
+                window.app.setLanguage(lang);
+            } else {
+                window.location.reload();
+            }
+        };
+    </script>
 </head>
 <body>
     <!-- Main Top Navigation -->
@@ -72,8 +86,8 @@
         <div class="header-right">
             <!-- Language Switcher Pill -->
             <div class="lang-switch" id="lang-switch" title="Ganti Bahasa / Switch Language" data-i18n-title="lang_switch_tooltip">
-                <button class="lang-btn active" id="btn-lang-id" onclick="app.setLanguage('id')">ID</button>
-                <button class="lang-btn" id="btn-lang-en" onclick="app.setLanguage('en')">EN</button>
+                <button type="button" class="lang-btn active" id="btn-lang-id" onclick="window.switchLanguage('id')">ID</button>
+                <button type="button" class="lang-btn" id="btn-lang-en" onclick="window.switchLanguage('en')">EN</button>
             </div>
 
             <div id="dashboard-nav-actions" class="dashboard-actions">
@@ -415,6 +429,6 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
-    <script src="/static/app.js?v=1.1.0"></script>
+    <script src="/static/app.js?v=2.0.0"></script>
 </body>
 </html>
