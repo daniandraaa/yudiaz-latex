@@ -147,6 +147,13 @@ class StorageManager:
             fpath = pdir / fname
             fpath.parent.mkdir(parents=True, exist_ok=True)
             fpath.write_text(fcontent, encoding="utf-8")
+
+        # Copy binary template assets if available
+        tpl_assets_dir = self.base_dir.parent / "backend" / "templates_assets" / (data.template or "")
+        if tpl_assets_dir.exists() and tpl_assets_dir.is_dir():
+            for asset_file in tpl_assets_dir.iterdir():
+                if asset_file.is_file():
+                    shutil.copy2(asset_file, pdir / asset_file.name)
             
         return meta
 
