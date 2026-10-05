@@ -877,7 +877,7 @@ class LatexStudioApp {
 
             // Breadcrumbs
             const folderObj = this.folders.find(f => f.id === this.currentProject.folder_id);
-            const folderName = folderObj ? folderObj.name : "Root";
+            const folderName = folderObj ? this.getLocalizedFolderName(folderObj.name) : "Root";
             
             document.getElementById("breadcrumb-container").style.display = "flex";
             document.getElementById("crumb-folder").textContent = folderName;
@@ -931,7 +931,7 @@ class LatexStudioApp {
 
         try {
             const res = await fetch(`/api/projects/${this.currentProject.id}/files/${filePath}`);
-            if (!res.ok) throw new Error("Gagal membaca file");
+            if (!res.ok) throw new Error(this.t("toast_read_file_error"));
             const data = await res.json();
             
             if (this.aceEditor) {
@@ -939,7 +939,7 @@ class LatexStudioApp {
                 this.markSaved();
             }
         } catch (e) {
-            this.toast("Gagal memuat isi file: " + e.message);
+            this.toast(this.t("toast_read_file_error") + ": " + e.message);
         }
     }
 
@@ -953,7 +953,7 @@ class LatexStudioApp {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ content })
             });
-            if (!res.ok) throw new Error("Gagal menyimpan ke server");
+            if (!res.ok) throw new Error(this.t("toast_save_server_error"));
             this.markSaved();
             if (!silent) this.toast(this.t("toast_file_saved"));
         } catch (e) {
