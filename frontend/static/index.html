@@ -97,7 +97,8 @@
                 </button>
                 <button class="btn btn-primary" onclick="app.openProjectModal()">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    <span><span class="desktop-only-inline" data-i18n="create_prefix">Buat </span><span data-i18n="doc_title_default">Dokumen</span></span>
+                    <span class="desktop-only-inline" data-i18n="new_doc_btn">Dokumen Baru</span>
+                    <span class="mobile-only-inline" data-i18n="new_doc_mobile">+ Dok</span>
                 </button>
             </div>
             
@@ -177,8 +178,8 @@
             <section class="dashboard-content">
                 <div class="content-header">
                     <div>
-                        <h2 id="active-folder-title" class="content-title">Semua Dokumen</h2>
-                        <p id="active-folder-desc" class="content-subtitle">Daftar seluruh dokumen dan draft LaTeX aktif.</p>
+                        <h2 id="active-folder-title" class="content-title" data-i18n="all_documents">Semua Dokumen</h2>
+                        <p id="active-folder-desc" class="content-subtitle" data-i18n="all_documents_desc">Daftar seluruh dokumen dan draft LaTeX aktif.</p>
                     </div>
                     <div class="content-tools desktop-only">
                         <button class="btn btn-primary" onclick="app.openProjectModal()">

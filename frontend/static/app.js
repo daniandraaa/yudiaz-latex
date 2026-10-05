@@ -109,7 +109,18 @@ const TRANSLATIONS = {
         confirm_delete_folder: "Hapus folder \"{name}\"? Dokumen di dalamnya akan dipindahkan ke Root.",
         confirm_delete_file: "Hapus file \"{path}\"?",
         default_doc_desc: "Dokumen kerja LaTeX Yudiaz Studio.",
-        compile_log_empty: "Log kompilasi kosong."
+        compile_log_empty: "Log kompilasi kosong.",
+        new_doc_mobile: "+ Dok",
+        line_prefix: "Baris",
+        root_chip: "Root",
+        toast_folder_delete_error: "Gagal menghapus folder.",
+        toast_project_delete_error: "Gagal menghapus proyek.",
+        toast_file_create_error: "Gagal membuat file.",
+        toast_file_delete_error: "Gagal menghapus file.",
+        toast_upload_error: "Gagal mengunggah file aset",
+        toast_fetch_project_error: "Gagal mengambil data proyek.",
+        toast_read_file_error: "Gagal membaca isi file.",
+        toast_save_server_error: "Gagal menyimpan ke server."
     },
     en: {
         brand_sub: "Executive Cloud Workspace",
@@ -219,7 +230,18 @@ const TRANSLATIONS = {
         confirm_delete_folder: "Delete folder \"{name}\"? Documents inside will be moved to Root.",
         confirm_delete_file: "Delete file \"{path}\"?",
         default_doc_desc: "Yudiaz Studio LaTeX working document.",
-        compile_log_empty: "Compilation log is empty."
+        compile_log_empty: "Compilation log is empty.",
+        new_doc_mobile: "+ Doc",
+        line_prefix: "Line",
+        root_chip: "Root",
+        toast_folder_delete_error: "Failed to delete folder.",
+        toast_project_delete_error: "Failed to delete project.",
+        toast_file_create_error: "Failed to create file.",
+        toast_file_delete_error: "Failed to delete file.",
+        toast_upload_error: "Failed to upload asset file",
+        toast_fetch_project_error: "Failed to retrieve project data.",
+        toast_read_file_error: "Failed to read file content.",
+        toast_save_server_error: "Failed to save file to server."
     }
 };
 
@@ -263,10 +285,10 @@ class LatexStudioApp {
     async init() {
         this.initEditor();
         this.bindLanguageSwitcherEvents();
-        this.applyLanguage(this.currentLang, false);
         await this.loadTemplates();
         await this.loadFolders();
         await this.loadProjects();
+        this.applyLanguage(this.currentLang, true);
         this.renderMobileFolderCarousel();
         this.setupKeyboardShortcuts();
 
@@ -309,6 +331,23 @@ class LatexStudioApp {
             str = str.replace(new RegExp(`\\{${k}\\}`, "g"), v);
         }
         return str;
+    }
+
+    getLocalizedFolderName(name) {
+        if (!name) return "";
+        if (this.currentLang !== "en") return name;
+        const dict = {
+            "Akademik": "Academic",
+            "Skripsi & Riset": "Thesis & Research",
+            "Bisnis & Klien": "Business & Clients",
+            "Soetahills Real Estate": "Soetahills Real Estate",
+            "Yudiaz Internal": "Yudiaz Internal",
+            "Laporan Magang & MBKM": "Internship & MBKM Reports",
+            "Laporan Kerja Praktik": "Practical Work Reports",
+            "Proposal Tugas Akhir - Dimas": "Final Project Proposal - Dimas",
+            "Dokumen & Administrasi - Karina": "Documents & Administration - Karina"
+        };
+        return dict[name] || name;
     }
 
     setLanguage(lang) {
@@ -377,14 +416,14 @@ class LatexStudioApp {
             if (descEl) descEl.textContent = this.t("root_folder_desc");
         } else {
             const folderObj = this.folders.find(f => f.id === this.activeFolderId);
-            if (titleEl) titleEl.textContent = folderObj ? folderObj.name : "Folder";
-            if (descEl) descEl.textContent = `${this.t("folder_desc_prefix")} ${folderObj ? folderObj.name : ''}.`;
+            if (titleEl) titleEl.textContent = folderObj ? this.getLocalizedFolderName(folderObj.name) : "Folder";
+            if (descEl) descEl.textContent = `${this.t("folder_desc_prefix")} ${folderObj ? this.getLocalizedFolderName(folderObj.name) : ''}.`;
         }
 
         // If in editor view, refresh breadcrumb labels
         if (this.currentProject) {
             const folderObj = this.folders.find(f => f.id === this.currentProject.folder_id);
-            const folderName = folderObj ? folderObj.name : "Root";
+            const folderName = folderObj ? this.getLocalizedFolderName(folderObj.name) : "Root";
             const crumbFolder = document.getElementById("crumb-folder");
             if (crumbFolder) crumbFolder.textContent = folderName;
             const folderInfoVal = document.getElementById("active-project-folder-name");
@@ -554,7 +593,7 @@ class LatexStudioApp {
         div.innerHTML = `
             <div class="tree-content">
                 <span class="folder-dot" style="background-color: ${folder.color || '#d4af37'}"></span>
-                <span class="tree-label">${this.escapeHtml(folder.name)}</span>
+                <span class="tree-label">${this.escapeHtml(this.getLocalizedFolderName(folder.name))}</span>
             </div>
             <div style="display: flex; align-items: center; gap: 0.4rem;">
                 <span class="badge">${count}</span>
@@ -582,14 +621,14 @@ class LatexStudioApp {
             projSelect.innerHTML = `<option value="">${this.t('root_parent_option')}</option>`;
             this.folders.forEach(f => {
                 const prefix = f.parent_id ? "— " : "";
-                projSelect.innerHTML += `<option value="${f.id}">${prefix}${this.escapeHtml(f.name)}</option>`;
+                projSelect.innerHTML += `<option value="${f.id}">${prefix}${this.escapeHtml(this.getLocalizedFolderName(f.name))}</option>`;
             });
         }
 
         if (folderParentSelect) {
             folderParentSelect.innerHTML = `<option value="">${this.t('root_parent_option')}</option>`;
             this.folders.filter(f => !f.parent_id).forEach(f => {
-                folderParentSelect.innerHTML += `<option value="${f.id}">${this.escapeHtml(f.name)}</option>`;
+                folderParentSelect.innerHTML += `<option value="${f.id}">${this.escapeHtml(this.getLocalizedFolderName(f.name))}</option>`;
             });
         }
     }
@@ -642,7 +681,7 @@ class LatexStudioApp {
 
         this.projects.forEach(p => {
             const folderObj = this.folders.find(f => f.id === p.folder_id);
-            const folderName = folderObj ? folderObj.name : "Root";
+            const folderName = folderObj ? this.getLocalizedFolderName(folderObj.name) : "Root";
             const folderColor = folderObj ? folderObj.color : "#d4af37";
 
             let statusPillClass = "never";
@@ -715,8 +754,8 @@ class LatexStudioApp {
         } else {
             document.getElementById(`folder-tree-${folderId}`)?.classList.add("active");
             const folderObj = this.folders.find(f => f.id === folderId);
-            document.getElementById("active-folder-title").textContent = folderObj ? folderObj.name : "Folder";
-            document.getElementById("active-folder-desc").textContent = `${this.t("folder_desc_prefix")} ${folderObj ? folderObj.name : ''}.`;
+            document.getElementById("active-folder-title").textContent = folderObj ? this.getLocalizedFolderName(folderObj.name) : "Folder";
+            document.getElementById("active-folder-desc").textContent = `${this.t("folder_desc_prefix")} ${folderObj ? this.getLocalizedFolderName(folderObj.name) : ''}.`;
         }
 
         this.toggleMobileDrawer(false);
@@ -778,7 +817,7 @@ class LatexStudioApp {
         const rootCount = this.projects.filter(p => !p.folder_id).length;
         const rootChip = document.createElement("div");
         rootChip.className = `folder-chip ${this.activeFolderId === 'root' ? 'active' : ''}`;
-        rootChip.innerHTML = `<span>📁 Root</span> <span class="badge">${rootCount}</span>`;
+        rootChip.innerHTML = `<span>📁 ${this.t("root_chip") || "Root"}</span> <span class="badge">${rootCount}</span>`;
         rootChip.onclick = () => this.selectFolder('root');
         bar.appendChild(rootChip);
 
@@ -788,7 +827,7 @@ class LatexStudioApp {
             chip.className = `folder-chip ${this.activeFolderId === f.id ? 'active' : ''}`;
             chip.innerHTML = `
                 <span class="folder-dot" style="background-color: ${f.color || '#d4af37'}"></span>
-                <span>${this.escapeHtml(f.name)}</span>
+                <span>${this.escapeHtml(this.getLocalizedFolderName(f.name))}</span>
                 <span class="badge">${count}</span>
             `;
             chip.onclick = () => this.selectFolder(f.id);
