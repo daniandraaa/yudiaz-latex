@@ -1019,7 +1019,7 @@ class LatexStudioApp {
                 
                 let errHtml = `<strong>${this.t("status_error")}:</strong><ul>`;
                 (result.errors || []).forEach(err => {
-                    errHtml += `<li>Baris ${err.line || '?'}: ${this.escapeHtml(err.message)}</li>`;
+                    errHtml += `<li>${this.t("line_prefix")} ${err.line || '?'}: ${this.escapeHtml(err.message)}</li>`;
                 });
                 errHtml += `</ul>`;
                 errSummary.innerHTML = errHtml;
@@ -1172,6 +1172,8 @@ class LatexStudioApp {
     openProjectModal() {
         document.getElementById("new-project-title").value = "";
         document.getElementById("new-project-desc").value = "";
+        this.renderTemplates();
+        this.updateFolderSelects();
         if (this.activeFolderId && this.activeFolderId !== "root") {
             document.getElementById("new-project-folder").value = this.activeFolderId;
         } else {
@@ -1201,7 +1203,7 @@ class LatexStudioApp {
                     template: this.selectedTemplate
                 })
             });
-            if (!res.ok) throw new Error("Gagal membuat dokumen");
+            if (!res.ok) throw new Error(this.t("toast_doc_created_error") || "Failed to create document");
             const newProj = await res.json();
             
             this.closeModal("modal-project");
@@ -1215,6 +1217,7 @@ class LatexStudioApp {
 
     openFolderModal() {
         document.getElementById("new-folder-name").value = "";
+        this.updateFolderSelects();
         document.getElementById("modal-folder").style.display = "flex";
     }
 
@@ -1235,7 +1238,7 @@ class LatexStudioApp {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, parent_id, color })
             });
-            if (!res.ok) throw new Error("Gagal membuat folder");
+            if (!res.ok) throw new Error(this.t("toast_folder_created_error") || "Failed to create folder");
             
             this.closeModal("modal-folder");
             this.toast(this.t("toast_folder_created", { name }));
@@ -1255,7 +1258,7 @@ class LatexStudioApp {
             await this.loadFolders();
             await this.loadProjects();
         } catch (e) {
-            this.toast("Gagal menghapus folder.");
+            this.toast(this.t("toast_folder_delete_error"));
         }
     }
 
@@ -1267,7 +1270,7 @@ class LatexStudioApp {
             this.toast(this.t("toast_doc_deleted", { title: projectTitle }));
             await this.loadProjects();
         } catch (e) {
-            this.toast("Gagal menghapus proyek.");
+            this.toast(this.t("toast_project_delete_error"));
         }
     }
 
@@ -1286,7 +1289,7 @@ class LatexStudioApp {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ content: "% New LaTeX File\n" })
             });
-            if (!res.ok) throw new Error("Gagal membuat file");
+            if (!res.ok) throw new Error(this.t("toast_file_create_error"));
             
             this.closeModal("modal-file");
             this.toast(this.t("toast_file_created", { path }));
@@ -1314,7 +1317,7 @@ class LatexStudioApp {
             this.renderProjectFiles();
             this.loadFile("main.tex");
         } catch (e) {
-            this.toast("Gagal menghapus file.");
+            this.toast(this.t("toast_file_delete_error"));
         }
     }
 
@@ -1328,7 +1331,7 @@ class LatexStudioApp {
                 method: "POST",
                 body: formData
             });
-            if (!res.ok) throw new Error("Gagal upload");
+            if (!res.ok) throw new Error(this.t("toast_upload_error"));
             this.toast(this.t("toast_asset_uploaded", { name: file.name }));
             
             const pRes = await fetch(`/api/projects/${this.currentProject.id}`);
@@ -1336,7 +1339,7 @@ class LatexStudioApp {
             this.currentFiles = pData.files;
             this.renderProjectFiles();
         } catch (e) {
-            this.toast("Gagal mengunggah file asset: " + e.message);
+            this.toast(this.t("toast_upload_error") + ": " + e.message);
         }
     }
 
