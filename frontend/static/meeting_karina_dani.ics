@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Yudiaz Creative Studio//Adam Secretary Kim//ID
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:🤝 Meeting: Karina & Mas Dani
+X-WR-TIMEZONE:Asia/Jakarta
+BEGIN:VEVENT
+UID:feadaeff-d491-4e86-b7d2-2497c9516b9b
+DTSTAMP:20261007T013533Z
+DTSTART:20261007T030000Z
+DTEND:20261007T043000Z
+SUMMARY:🤝 Meeting Koordinasi: Karina & Mas Dani
+DESCRIPTION:Agenda meeting koordinasi antara Mbak Karina (Executive Secretary CSC) dan Mas Dani (Daniandra Prayudisty / CEO). Disinkronkan otomatis oleh Adam - Secretary Kim.
+LOCATION:Meeting Room / Online Call
+STATUS:CONFIRMED
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Pengingat: 15 menit menuju meeting dengan Mas Dani
+END:VALARM
+END:VEVENT
+END:VCALENDAR
