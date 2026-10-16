@@ -40,6 +40,20 @@
   {}
   {\titlerule*[0.5pc]{.}\contentspage}
 
+\titlecontents{table}
+  [0pt]
+  {\addvspace{3pt}}
+  {Tabel \thecontentslabel\quad}
+  {}
+  {\titlerule*[0.5pc]{.}\contentspage}
+
+\titlecontents{figure}
+  [0pt]
+  {\addvspace{3pt}}
+  {Gambar \thecontentslabel\quad}
+  {}
+  {\titlerule*[0.5pc]{.}\contentspage}
+
 \usepackage{caption}
 \usepackage{microtype}
 \usepackage{cite}
@@ -57,6 +71,8 @@
 % Konfigurasi Label Bahasa Indonesia
 \addto\captionsindonesian{\renewcommand{\bibname}{DAFTAR PUSTAKA}}
 \addto\captionsindonesian{\renewcommand{\contentsname}{DAFTAR ISI}}
+\addto\captionsindonesian{\renewcommand{\listtablename}{DAFTAR TABEL}}
+\addto\captionsindonesian{\renewcommand{\listfigurename}{DAFTAR GAMBAR}}
 
 % Format Judul Bab: Huruf Kapital, Tebal, Ukuran 14pt (Sesuai Panduan Buku PA Rev05)
 \titleformat{\chapter}[display]
@@ -172,6 +188,15 @@ The system development is carried out using the Research and Development (R\&D) 
   \singlespacing
   \setlength{\parskip}{0pt}
   \tableofcontents
+}
+\newpage
+
+% --- DAFTAR TABEL ---
+\addcontentsline{toc}{chapter}{\listtablename}
+{
+  \singlespacing
+  \setlength{\parskip}{0pt}
+  \listoftables
 }
 \newpage
 
