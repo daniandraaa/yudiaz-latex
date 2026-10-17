@@ -1,6 +1,8 @@
 \begin{tabular}{lrrrrrrrr}
 \toprule
-Model & Params (M) & GFLOPs & Attn.\ entries & CPU (ms) & GPU (ms) & GPU (win/s) & Train (min/fit) & CV F1 \\
+ & Params & GFLOPs & Attention & \multicolumn{2}{c}{Latency (ms/patient)} & GPU & Training & CV \\
+\cmidrule(lr){5-6}
+Model & (M) & /window & entries & CPU & GPU & win/s & min/fit & F1 \\
 \midrule
 \textbf{CNN-PatchTST} & 2.80 & 0.37 & 800 & 10.1 & 4.6 & 2{,}672 & 0.64 & 0.899 \\
 CNN-Transformer Encoder & 1.75 & 1.24 & 194{,}688 & 25.8 & 15.6 & 673 & 2.21 & 0.890 \\
