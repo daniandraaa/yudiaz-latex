@@ -1,0 +1,12 @@
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{Development (230)} & \multicolumn{3}{c}{Hold-out (59)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Method & Coverage & F1$^{a}$ & AUC & Coverage & F1$^{a}$ & AUC \\
+\midrule
+Transition zone (TZ) & 0.61 & 0.732 & 0.749 & 0.54 & 0.766 & 0.849 \\
+V2S/V3R $\leq 1.5$ & 0.97 & 0.711 & 0.835 & 0.95 & 0.649 & 0.908 \\
+V2 transition ratio $\geq 0.6$ & 0.87 & 0.500 & 0.824 & 0.90 & 0.556 & 0.892 \\
+\textbf{CNN-PatchTST}$^{b}$ & 1.00 & 0.892 & 0.959 & 1.00 & 0.866 & 0.962 \\
+\bottomrule
+\end{tabular}

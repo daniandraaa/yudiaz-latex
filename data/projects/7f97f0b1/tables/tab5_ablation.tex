@@ -1,0 +1,11 @@
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{Default (LR $10^{-3}$, no cGAN)} & \multicolumn{3}{c}{Tuned (LR $10^{-4}$, batch 32, cGAN)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Model & F1 (SD) & AUC & Sens.\ LVOT & F1 (SD) & AUC & Sens.\ LVOT \\
+\midrule
+CNN-only & 0.891 (0.031) & 0.931 & 0.859 & 0.881 (0.042) & 0.935 & 0.820 \\
+PatchTST-only & 0.869 (0.041) & 0.917 & 0.806 & 0.893 (0.038) & 0.937 & 0.860 \\
+CNN-PatchTST & 0.748 (0.202) & 0.858 & 0.531 & 0.899 (0.028) & 0.940 & 0.830 \\
+\bottomrule
+\end{tabular}
