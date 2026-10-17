@@ -1,18 +1,18 @@
-\begin{tabular}{llrccr l}
+\begin{tabular}{llrccrrl}
 \toprule
-Comparator & Metric & $\Delta$ & 90\% CI & 95\% CI & $p$ & Interpretation \\
+Comparator & Metric & $\Delta$ & 90\% CI & 95\% CI & $p$ & $p_{\mathrm{Holm}}$ & Interpretation \\
 \midrule
-CNN-Transformer Encoder & F1 & +0.009 & [-0.027, +0.044] & [-0.034, +0.052] & 0.666 & non-inferior (margin 0.03) \\
-CNN-Transformer Encoder & AUC & +0.003 & [-0.031, +0.036] & [-0.038, +0.043] & 0.889 & non-inferior (margin 0.04) \\
-CNN-Hierarchical Transformer & F1 & +0.019 & [-0.013, +0.050] & [-0.019, +0.057] & 0.312 & non-inferior (margin 0.03) \\
-CNN-Hierarchical Transformer & AUC & +0.011 & [-0.016, +0.038] & [-0.022, +0.044] & 0.492 & non-inferior (margin 0.04) \\
-CNN-only & F1 & +0.018 & [-0.015, +0.051] & [-0.022, +0.058] & 0.346 & non-inferior (margin 0.03) \\
-CNN-only & AUC & +0.005 & [-0.019, +0.030] & [-0.025, +0.036] & 0.705 & non-inferior (margin 0.04) \\
-PatchTST-only & F1 & +0.006 & [-0.027, +0.039] & [-0.034, +0.046] & 0.748 & non-inferior (margin 0.03) \\
-PatchTST-only & AUC & +0.004 & [-0.028, +0.036] & [-0.035, +0.043] & 0.844 & non-inferior (margin 0.04) \\
-BiLSTM & F1 & +0.006 & [-0.027, +0.039] & [-0.035, +0.046] & 0.758 & non-inferior (margin 0.03) \\
-BiLSTM & AUC & +0.006 & [-0.029, +0.041] & [-0.036, +0.049] & 0.764 & non-inferior (margin 0.04) \\
-Random Forest & F1 & +0.124 & [+0.055, +0.193] & [+0.039, +0.208] & 0.007 & CNN-PatchTST superior \\
-Random Forest & AUC & +0.089 & [-0.002, +0.180] & [-0.021, +0.200] & 0.106 & non-inferior (margin 0.04) \\
+CNN-Transformer Encoder & F1 & -0.003 & [-0.033, +0.028] & [-0.039, +0.034] & 0.880 & 1.000 & inconclusive \\
+CNN-Transformer Encoder & AUC & +0.001 & [-0.029, +0.031] & [-0.035, +0.038] & 0.942 & 1.000 & non-inferior (margin 0.04) \\
+CNN-Hierarchical Transformer & F1 & +0.006 & [-0.028, +0.039] & [-0.036, +0.047] & 0.778 & 1.000 & non-inferior (margin 0.03) \\
+CNN-Hierarchical Transformer & AUC & +0.021 & [-0.028, +0.070] & [-0.039, +0.080] & 0.466 & 1.000 & non-inferior (margin 0.04) \\
+CNN-only & F1 & +0.018 & [-0.015, +0.051] & [-0.022, +0.058] & 0.346 & 1.000 & non-inferior (margin 0.03) \\
+CNN-only & AUC & +0.005 & [-0.019, +0.030] & [-0.025, +0.036] & 0.705 & 1.000 & non-inferior (margin 0.04) \\
+PatchTST-only & F1 & +0.006 & [-0.027, +0.039] & [-0.034, +0.046] & 0.748 & 1.000 & non-inferior (margin 0.03) \\
+PatchTST-only & AUC & +0.004 & [-0.028, +0.036] & [-0.035, +0.043] & 0.844 & 1.000 & non-inferior (margin 0.04) \\
+BiLSTM & F1 & +0.006 & [-0.027, +0.039] & [-0.035, +0.046] & 0.758 & 1.000 & non-inferior (margin 0.03) \\
+BiLSTM & AUC & +0.006 & [-0.029, +0.041] & [-0.036, +0.049] & 0.764 & 1.000 & non-inferior (margin 0.04) \\
+Random Forest & F1 & +0.124 & [+0.055, +0.193] & [+0.039, +0.208] & 0.007 & 0.043 & CNN-PatchTST superior \\
+Random Forest & AUC & +0.089 & [-0.002, +0.180] & [-0.021, +0.200] & 0.106 & 0.634 & non-inferior (margin 0.04) \\
 \bottomrule
 \end{tabular}
