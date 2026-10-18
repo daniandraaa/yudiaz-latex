@@ -53,8 +53,8 @@
 \begin{abstract}
 \textbf{Background:} Predicting whether an idiopathic outflow-tract ventricular arrhythmia (OT-VA) originates from the left (LVOT) or right (RVOT) ventricular outflow tract guides the ablation approach. Hybrid CNN--Transformer models are attractive for this task, but the conventional design, which assigns one attention token to every time step of the CNN feature map, is computationally expensive.
 \textbf{Methods:} We evaluated CNN-PatchTST, a hybrid in which CNN features are grouped into 128-ms patch tokens before self-attention, on the public Ningbo 12-lead ECG database (289 patients with ablation-confirmed origin). It was compared with a conventional CNN--Transformer encoder, a hierarchical CNN--Transformer, two ablations (CNN-only and PatchTST-only), a tuned bidirectional LSTM, a feature-based random forest and three clinical ECG criteria. Models were assessed by patient-level 5-fold cross-validation repeated with three seeds (230 patients) using a corrected repeated cross-validation $t$-test, and on a 59-patient historical hold-out set. Floating-point operations and inference latency were measured under identical conditions.
-\textbf{Results:} CNN-PatchTST achieved a cross-validated macro-F1 of 0.899 (95\% CI 0.865--0.933) and AUC of 0.940 (0.916--0.965), comparable to the best conventional hybrid (encoder: 0.902 and 0.939), with the smallest between-fold variability. No difference from any deep comparator was statistically significant; non-inferiority (margin 0.03 macro-F1) was shown against the hierarchical hybrid, both ablations and the BiLSTM, but was inconclusive against the encoder. CNN-PatchTST outperformed the random forest (+0.124 macro-F1, Holm-adjusted $p=0.043$) and all clinical criteria (AUC difference +0.12 to +0.21). Patch tokenization shortened the attention sequence from 312 to 20 tokens, reducing floating-point operations 2.9--3.4-fold, inference latency 2.5--3.0-fold on GPU (4.1 vs 10.2--12.2~ms per patient) and 2.1--2.4-fold on CPU (8.4 vs 17.8--20.6~ms), and training time 3.1-fold relative to the conventional hybrids; it was about 7-fold faster than the BiLSTM.
-\textbf{Conclusion:} Patch tokenization retains the accuracy of conventional CNN--Transformer models for LVOT/RVOT localization while substantially reducing computational cost, supporting real-time use on standard hardware. External validation is required before clinical use.
+\textbf{Results:} CNN-PatchTST achieved a cross-validated macro-F1 of 0.899 (95\% CI 0.865--0.933) and AUC of 0.940 (0.916--0.965), comparable to the best conventional hybrid (encoder: 0.902 and 0.939), with the smallest between-fold variability. No difference from any deep comparator was statistically significant. A balanced audit, in which the ablations received the same hyper-parameter search, showed that the CNN stem added no measurable accuracy: CNN-only (0.903) and PatchTST-only (0.900) matched the hybrid, results were insensitive to patch length (64--256~ms) and the models made nearly identical patient-level predictions ($\kappa$ 0.89--0.92). CNN-PatchTST outperformed the random forest (+0.124 macro-F1, Holm-adjusted $p=0.043$) and all clinical criteria (AUC difference +0.12 to +0.21). Patch tokenization shortened the attention sequence from 312 to 20 tokens, reducing floating-point operations 2.9--3.4-fold, inference latency 2.5--3.0-fold on GPU (4.1 vs 10.2--12.2~ms per patient) and 2.1--2.4-fold on CPU (8.4 vs 17.8--20.6~ms), and training time 3.1-fold relative to the conventional hybrids; it was about 7-fold faster than the BiLSTM.
+\textbf{Conclusion:} Patch tokenization retains the accuracy of conventional CNN--Transformer models for LVOT/RVOT localization while substantially reducing computational cost; however, simpler patch-based or convolutional models reach the same accuracy at even lower cost, indicating that architectural complexity is not the limiting factor for this task. External validation is required before clinical use.
 \end{abstract}
 
 %% Graphical abstract
@@ -65,8 +65,8 @@
 %% Research highlights
 \begin{highlights}
 \item Patch tokens cut CNN--Transformer attention from 312 to 20 tokens per ECG window
-\item CNN-PatchTST matched conventional hybrids with the most stable CV macro-F1
-\item No significant accuracy difference from hybrids, ablations or a tuned BiLSTM
+\item All tuned deep models reached a CV macro-F1 of 0.89--0.90 for LVOT vs RVOT
+\item A balanced audit showed the CNN stem added no measurable accuracy to the hybrid
 \item 2.9--3.4$\times$ fewer FLOPs and 2.1--3.0$\times$ faster inference than conventional hybrids
 \item Outperformed a random forest and three clinical ECG criteria in cross-validation
 \end{highlights}
@@ -96,7 +96,7 @@ This study makes four contributions:
 \begin{enumerate}
 \item We introduce CNN-PatchTST for LVOT/RVOT localization and compare it with a conventional CNN--Transformer encoder and a hierarchical CNN--Transformer under an identical patient-level protocol.
 \item We show that patch tokenization shortens the attention sequence from 312 to 20 tokens, reducing attention entries 152--243-fold and floating-point operations 2.9--3.4-fold relative to the conventional hybrids, with 2.1--3.1-fold faster inference and training and comparable accuracy.
-\item Ablations (CNN-only and PatchTST-only) quantify the contribution of each component.
+\item A balanced audit of the CNN contribution (equal hyper-parameter search for the ablations, patch-length and stride sensitivity, prediction agreement and paired hold-out analysis) tests whether the hybrid design is needed.
 \item CNN-PatchTST is benchmarked against a tuned bidirectional LSTM, a feature-based random forest and three clinical ECG criteria, with an analysis of errors by anatomical site.
 \end{enumerate}
 
@@ -152,7 +152,7 @@ All deep models share the same classification head (layer normalization, a 256$\
 \subsection{Training}
 Models were trained with AdamW \cite{loshchilov2019adamw} (weight decay $10^{-4}$), cosine learning-rate decay ($T_{\max}=100$, minimum $10^{-6}$), gradient clipping at 1.0, class weights inversely proportional to patient class frequency, up to 100 epochs and early stopping with patience 15 on validation patient-level macro-F1. During training, four windows were sampled per patient; batch sizes are expressed in windows (32 windows = 8 patients).
 
-For every deep model trained end-to-end (the three hybrids and the BiLSTM), learning rate and batch size were selected with the same procedure on the binary task: ten candidates, namely a default configuration (learning rate $10^{-3}$, batch 32, no augmentation) and the grid $\{10^{-4}, 5\times10^{-4}, 10^{-3}\} \times \{16, 32, 64\}$ with augmentation, were evaluated by development cross-validation, and the candidate with the highest mean macro-F1 was retained. The selected configurations (learning rate/batch size, all with augmentation) were $10^{-4}$/32 for CNN-PatchTST, $5\times10^{-4}$/64 for the encoder, $10^{-3}$/64 for the hierarchical model and $10^{-3}$/16 for the BiLSTM. The ablations used the CNN-PatchTST configuration, and the random forest used default settings. During training, one of the four windows of each patient was replaced by a synthetic window of the same side generated by a class-conditional GAN \cite{goodfellow2014gan} trained only on the training patients of that fold and accepted after a pre-specified quality screen; the isolated effect of this augmentation was small and not statistically significant in preliminary experiments.
+For every deep model trained end-to-end (the three hybrids and the BiLSTM), learning rate and batch size were selected with the same procedure on the binary task: ten candidates, namely a default configuration (learning rate $10^{-3}$, batch 32, no augmentation) and the grid $\{10^{-4}, 5\times10^{-4}, 10^{-3}\} \times \{16, 32, 64\}$ with augmentation, were evaluated by development cross-validation, and the candidate with the highest mean macro-F1 was retained. The selected configurations (learning rate/batch size, all with augmentation) were $10^{-4}$/32 for CNN-PatchTST, $5\times10^{-4}$/64 for the encoder, $10^{-3}$/64 for the hierarchical model and $10^{-3}$/16 for the BiLSTM. The two ablations received the same search (selected: $5\times10^{-4}$/16 for CNN-only and $10^{-4}$/64 for PatchTST-only); their results with the CNN-PatchTST setting are also reported. The random forest used default settings. During training, one of the four windows of each patient was replaced by a synthetic window of the same side generated by a class-conditional GAN \cite{goodfellow2014gan} trained only on the training patients of that fold and accepted after a pre-specified quality screen; the isolated effect of this augmentation was small and not statistically significant in preliminary experiments.
 
 Final models were retrained on all 230 development patients for the median best epoch observed in cross-validation, with five seeds (42--46), and their probabilities were averaged (ensemble). The decision threshold was fixed at 0.5.
 
@@ -160,6 +160,9 @@ Final models were retrained on all 230 development patients for the median best 
 The primary evaluation was patient-level stratified-group 5-fold cross-validation repeated with three seeds (15 fits per model); every model used the same folds, seeds and validation patients, allowing paired comparisons. Metrics were macro-F1, AUC, balanced accuracy and LVOT sensitivity. Because cross-validation fits share training data, they are not independent; differences were therefore tested with the corrected repeated cross-validation $t$-test \cite{nadeau2003inference,bouckaert2004evaluating}, with variance inflated by $(1/J + n_{\text{test}}/n_{\text{train}})$, $J=15$, and $p$-values were adjusted with the Holm procedure across the six comparators for each metric. Non-inferiority of CNN-PatchTST was declared when the lower limit of the 90\% confidence interval of the difference exceeded $-0.03$ macro-F1 or $-0.04$ AUC, equivalent to a one-sided test at $\alpha=0.05$ \cite{schuirmann1987tost}; these margins were chosen after the mean cross-validation results were known and should be interpreted accordingly. On the hold-out set, 95\% confidence intervals were obtained by stratified patient bootstrap (5000 resamples) and paired predictions were compared with the exact McNemar test.
 
 Clinical criteria were computed automatically on beats with QRS width $\geq$120~ms (and, for the V2 transition ratio, sinus beats with QRS width $<$120~ms): precordial transition zone (LVOT if R$\geq$S by V2, RVOT if at V4 or later, undecided at V3), V2S/V3R $\leq 1.5$ \cite{yoshida2014v2sv3r} and V2 transition ratio $\geq 0.6$ \cite{betensky2011v2tr}, using the published thresholds without tuning.
+
+\subsection{Audit of the CNN contribution}
+To test whether the hybrid design is needed, we performed four additional analyses. (i) Balanced tuning: CNN-only and PatchTST-only received the same ten-candidate search as the other deep models, followed by final models and hold-out evaluation. (ii) Patch length and stride: for CNN-PatchTST and PatchTST-only, patch lengths of 64, 128 and 256~ms were combined with a stride equal to the patch length (no overlap) or half of it (50\% overlap), using each model's selected training configuration and cross-validation only; the 128-ms non-overlapping setting was retrained with the same parameterized implementation, whose FLOPs were identical to the original model. (iii) Consistency and representation: between-fold variability, worst-fold macro-F1, the number of paired fits favouring CNN-PatchTST, and the agreement of pooled out-of-fold predictions (Cohen's $\kappa$, correlation of predicted probabilities, patients classified correctly by only one model, errors by site of origin). (iv) Hold-out re-evaluation: paired stratified bootstrap (5000 resamples) of the ensemble differences in macro-F1 and AUC with 90\% and 95\% intervals and the exact McNemar test; and a matched comparison with the clinical criteria restricted to the patients each criterion could classify, in which the model threshold was set to give the same LVOT specificity as the criterion.
 
 \subsection{Computational efficiency}
 All models were benchmarked on one laptop (Apple M4, PyTorch 2.12) in a single session on the same 30 development patients (mean 11.1 windows per patient); deep models were instantiated with random weights, because latency and FLOPs do not depend on weight values. We report parameters, floating-point operations (FLOPs) per window, attention-matrix entries per window, median latency per patient over 90 measurements after warm-up (all windows of a patient in one pass) on CPU and GPU (Metal), GPU throughput at batch size 64, and training time per cross-validation fit. Latency excludes raw-signal pre-processing, except for the random forest, whose timing includes feature extraction.
@@ -172,7 +175,7 @@ Each experiment was specified in a time-stamped internal protocol, together with
 \label{sec:results}
 
 \subsection{Overall performance}
-Table~\ref{tab:main} and Fig.~\ref{fig:cv} summarize performance. In cross-validation, the deep models reached mean macro-F1 values between 0.881 and 0.902: the encoder 0.902, CNN-PatchTST 0.899, the hierarchical model 0.894, the tuned BiLSTM and PatchTST-only 0.893, and CNN-only 0.881. CNN-PatchTST had the highest mean AUC (0.940), the narrowest confidence intervals and the smallest between-fold standard deviation of macro-F1 (0.028, compared with 0.029--0.049 for the other deep models and 0.081 for the random forest). On the historical hold-out set, all deep models had overlapping confidence intervals (macro-F1 0.81--0.89, AUC 0.94--0.98), whereas the random forest was clearly lower (macro-F1 0.721, AUC 0.741).
+Table~\ref{tab:main} and Fig.~\ref{fig:cv} summarize performance. In cross-validation, the tuned deep models reached mean macro-F1 values between 0.893 and 0.903: CNN-only 0.903, the encoder 0.902, PatchTST-only 0.900, CNN-PatchTST 0.899, the hierarchical model 0.894 and the BiLSTM 0.893. CNN-PatchTST had the highest mean AUC (0.940) and, together with CNN-only, the smallest between-fold standard deviation of macro-F1 (0.028, compared with 0.029--0.049 for the other deep models and 0.081 for the random forest). On the historical hold-out set, all deep models had overlapping confidence intervals (macro-F1 0.81--0.87, AUC 0.94--0.98), whereas the random forest was clearly lower (macro-F1 0.721, AUC 0.741).
 
 \begin{table}[!htbp]
 \centering
@@ -190,7 +193,7 @@ Table~\ref{tab:main} and Fig.~\ref{fig:cv} summarize performance. In cross-valid
 \end{figure}
 
 \subsection{Statistical comparison}
-No difference between CNN-PatchTST and the other deep models was statistically significant (corrected $p=0.35$--$0.94$; Table~\ref{tab:stats}, Fig.~\ref{fig:forest}). CNN-PatchTST was non-inferior in macro-F1 to the hierarchical CNN--Transformer, both ablations and the tuned BiLSTM (lower 90\% limits $-0.028$ to $-0.015$), and non-inferior in AUC to all deep comparators; against the encoder the macro-F1 comparison was inconclusive (difference $-0.003$, lower 90\% limit $-0.033$). Equivalence within $\pm0.03$ could not be established for any model. CNN-PatchTST outperformed the random forest in macro-F1 ($+0.124$, 95\% CI $+0.039$ to $+0.208$, Holm-adjusted $p=0.043$).
+No difference between CNN-PatchTST and the other deep models was statistically significant (corrected $p=0.47$--$0.98$; Table~\ref{tab:stats}, Fig.~\ref{fig:forest}). In macro-F1, CNN-PatchTST was equivalent to CNN-only within $\pm0.03$ (90\% CI $-0.028$ to $+0.019$) and non-inferior to the hierarchical CNN--Transformer and the tuned BiLSTM (lower 90\% limits $-0.028$ and $-0.027$); the comparisons with the encoder and PatchTST-only were inconclusive (lower 90\% limits $-0.033$ and $-0.035$). In AUC, CNN-PatchTST was non-inferior to all deep comparators at the 0.04 margin. CNN-PatchTST outperformed the random forest in macro-F1 ($+0.124$, 95\% CI $+0.039$ to $+0.208$, Holm-adjusted $p=0.043$).
 
 \begin{table}[!htbp]
 \centering
@@ -207,19 +210,59 @@ No difference between CNN-PatchTST and the other deep models was statistically s
 \label{fig:forest}
 \end{figure}
 
-\subsection{Ablation}
-With the tuned configuration, CNN-only reached a macro-F1 of 0.881, PatchTST-only 0.893 and CNN-PatchTST 0.899 (Table~\ref{tab:ablation}). With the default configuration (learning rate $10^{-3}$, no augmentation), the simpler models were already stable (0.891 and 0.869), whereas CNN-PatchTST was unstable (0.748, SD 0.202; LVOT sensitivity 0.531). The hybrid therefore required a lower learning rate, after which it combined the highest mean with the lowest variability.
+\subsection{Ablation with balanced tuning}
+When the ablations used the CNN-PatchTST setting, CNN-only reached a macro-F1 of 0.881 and PatchTST-only 0.893, slightly below the hybrid (0.899). With their own search, both improved to 0.903 and 0.900, respectively, matching or exceeding the hybrid (Table~\ref{tab:ablation}). With the default configuration (learning rate $10^{-3}$, no augmentation), the simpler models were already stable (0.891 and 0.869), whereas CNN-PatchTST was unstable (0.748, SD 0.202; LVOT sensitivity 0.531). The earlier advantage of the hybrid over its ablations was therefore a consequence of unequal tuning.
 
 \begin{table}[!htbp]
 \centering
-\caption{Ablation in cross-validation (mean over 15 fits).}
+\caption{Ablation with balanced tuning (cross-validation, mean over 15 fits). Configurations are learning rate/batch size; all except the default use cGAN augmentation.}
 \label{tab:ablation}
 \footnotesize
 \input{tables/tab5_ablation.tex}
 \end{table}
 
+\subsection{Patch length and stride}
+Across patch lengths of 64--256~ms with and without overlap, cross-validated macro-F1 ranged from 0.891 to 0.903 for CNN-PatchTST and from 0.893 to 0.905 for PatchTST-only (Table~\ref{tab:patch}, Fig.~\ref{fig:patch}). The best settings (64~ms with 50\% overlap) were within 0.004--0.012 of the 128-ms setting and well inside the between-fold variability, so performance was insensitive to patch length; the 128-ms setting was not shown to be optimal.
+
+\begin{table}[!htbp]
+\centering
+\caption{Sensitivity to patch length and stride (cross-validation, 15 fits per setting; bold = best per model).}
+\label{tab:patch}
+\footnotesize
+\input{tables/tab10_patch.tex}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.75\textwidth]{fig8_patch_sensitivity.png}
+\caption{Cross-validated macro-F1 as a function of patch length, with and without 50\% overlap (error bars: standard error over 15 fits).}
+\label{fig:patch}
+\end{figure}
+
+\subsection{Consistency and representation}
+CNN-PatchTST outperformed the encoder, CNN-only and PatchTST-only in only 6, 5 and 7 of the 15 paired fits, respectively (Table~\ref{tab:consistency}). Its worst-fold macro-F1 (0.856) equalled that of PatchTST-only and exceeded that of CNN-only (0.822). Pooled out-of-fold predictions were highly concordant ($\kappa$ 0.89--0.92; correlation of predicted probabilities 0.94--0.95), and only 3--5 patients were classified correctly by just one model of each pair. CNN-PatchTST had the highest pooled AUC (0.959 vs 0.942--0.953). Errors by site of origin were similar across models (Table~\ref{tab:errors}), with half of the right coronary cusp origins misclassified by every model.
+
+\begin{table}[!htbp]
+\centering
+\caption{Consistency and agreement with CNN-PatchTST. ``CNN-PatchTST better'': number of the 15 paired fits in which CNN-PatchTST had the higher macro-F1. Discordant: patients classified correctly only by the comparator / only by CNN-PatchTST.}
+\label{tab:consistency}
+\footnotesize
+\resizebox{\textwidth}{!}{\input{tables/tab9_consistency.tex}}
+\end{table}
+
+\subsection{Paired hold-out comparison}
+On the hold-out set the paired differences were imprecise (Table~\ref{tab:holdout}): the 90\% interval of the macro-F1 difference between CNN-PatchTST and the encoder spanned $-0.084$ to $+0.082$, so the 59-patient hold-out set cannot establish non-inferiority at a 0.03 margin. The hold-out macro-F1 of PatchTST-only changed from 0.886 with the CNN-PatchTST setting to 0.847 with its own selected setting, illustrating that differences of one or two patients dominate hold-out comparisons between deep models. Seed-to-seed variability on the hold-out set was largest for the encoder (SD 0.084) and similar for the other models (0.035--0.041).
+
+\begin{table}[!htbp]
+\centering
+\caption{Paired hold-out comparison (59 patients; difference = CNN-PatchTST minus comparator, five-seed ensembles, stratified bootstrap).}
+\label{tab:holdout}
+\footnotesize
+\resizebox{\textwidth}{!}{\input{tables/tab11_holdout.tex}}
+\end{table}
+
 \subsection{Computational efficiency}
-CNN-PatchTST required 0.37 GFLOPs per window, compared with 1.24 for the encoder and 1.06 for the hierarchical model, and computed 800 attention entries per window instead of 194,688 and 121,680 (Table~\ref{tab:eff}, Fig.~\ref{fig:eff}). Its median latency was 4.1~ms per patient on GPU and 8.4~ms on CPU, which was 2.5--3.0 times faster on GPU and 2.1--2.4 times faster on CPU than the conventional hybrids, and 7.1--7.6 times faster than the BiLSTM. GPU throughput was 2875 windows per second (820 for the encoder and 1004 for the hierarchical model), and one cross-validation fit took 0.64~min (1.98--1.99~min for the conventional hybrids). A complete recording, on average 27.7~s of ECG, was therefore processed roughly three orders of magnitude faster than real time on a CPU. CNN-PatchTST has more parameters than the other hybrids (2.80 vs 1.75--1.95 million) because of its patch projection, but parameter count did not determine cost: sequence length and FLOPs did (Fig.~\ref{fig:flops}).
+CNN-PatchTST required 0.37 GFLOPs per window, compared with 1.24 for the encoder and 1.06 for the hierarchical model, and computed 800 attention entries per window instead of 194,688 and 121,680 (Table~\ref{tab:eff}, Fig.~\ref{fig:eff}). Its median latency was 4.1~ms per patient on GPU and 8.4~ms on CPU, which was 2.5--3.0 times faster on GPU and 2.1--2.4 times faster on CPU than the conventional hybrids, and 7.1--7.6 times faster than the BiLSTM. GPU throughput was 2875 windows per second (820 for the encoder and 1004 for the hierarchical model), and one cross-validation fit took 0.64~min (1.98--1.99~min for the conventional hybrids). A complete recording, on average 27.7~s of ECG, was therefore processed roughly three orders of magnitude faster than real time on a CPU. CNN-PatchTST has more parameters than the other hybrids (2.80 vs 1.75--1.95 million) because of its patch projection, but parameter count did not determine cost: sequence length and FLOPs did (Fig.~\ref{fig:flops}). The two ablations, which reached the same accuracy, were cheaper still: CNN-only required 0.26 GFLOPs and 5.5~ms per patient on CPU, and PatchTST-only 0.09 GFLOPs and 1.8~ms.
 
 \begin{table}[!htbp]
 \centering
@@ -244,7 +287,15 @@ CNN-PatchTST required 0.37 GFLOPs per window, compared with 1.24 for the encoder
 \end{figure}
 
 \subsection{Comparison with clinical criteria}
-The clinical criteria could be applied in 54--97\% of patients and achieved AUCs of 0.75--0.84 in the development cohort (Table~\ref{tab:clinical}). Using pooled out-of-fold predictions, CNN-PatchTST reached an AUC of 0.959, exceeding the transition zone by 0.21 (95\% CI 0.13--0.29), V2S/V3R by 0.12 (0.06--0.19) and the V2 transition ratio by 0.14 (0.07--0.22). On the hold-out set the differences were in the same direction (+0.05 to +0.11) but not statistically significant (Fig.~\ref{fig:roc}).
+The clinical criteria could be applied in 54--97\% of patients and achieved AUCs of 0.75--0.84 in the development cohort (Table~\ref{tab:clinical}). Using pooled out-of-fold predictions, CNN-PatchTST reached an AUC of 0.959, exceeding the transition zone by 0.21 (95\% CI 0.13--0.29), V2S/V3R by 0.12 (0.06--0.19) and the V2 transition ratio by 0.14 (0.07--0.22). On the hold-out set the differences were in the same direction (+0.05 to +0.11) but not statistically significant (Fig.~\ref{fig:roc}). In the matched analysis restricted to the patients each criterion could classify (Table~\ref{tab:clinmatched}), CNN-PatchTST at the same LVOT specificity detected more LVOT origins than every criterion in the development cohort (0.97--1.00 vs 0.70--0.92), and its classifications were more often correct (McNemar $p<0.001$); on the hold-out set the advantage was significant for V2S/V3R and the V2 transition ratio ($p\le0.001$) but not for the transition zone, which could be applied in only 32 patients.
+
+\begin{table}[!htbp]
+\centering
+\caption{Matched comparison with clinical criteria on the patients each criterion could classify. The model threshold was set to give the criterion's LVOT specificity; McNemar compares correct classifications of the criterion and of the model at threshold 0.5.}
+\label{tab:clinmatched}
+\footnotesize
+\resizebox{\textwidth}{!}{\input{tables/tab12_clinical_matched.tex}}
+\end{table}
 
 \begin{table}[!htbp]
 \centering
@@ -262,11 +313,11 @@ The clinical criteria could be applied in 54--97\% of patients and achieved AUCs
 \end{figure}
 
 \subsection{Errors by site of origin}
-Misclassifications concentrated in the aortic cusps (Table~\ref{tab:errors}): the misclassification rate was 44\% for right coronary cusp origins (6 patients) and 19\% for left coronary cusp origins (31 patients), compared with 0--6\% for most RVOT sites.
+Misclassifications concentrated in the aortic cusps for all models (Table~\ref{tab:errors}): half of the right coronary cusp origins (6 patients) were misclassified by every model, and left coronary cusp errors ranged from 10\% (PatchTST-only) to 23\% (CNN-PatchTST and encoder), compared with 0--10\% for most RVOT sites.
 
 \begin{table}[!htbp]
 \centering
-\caption{Cross-validated misclassification rate of CNN-PatchTST by site of origin (3 seeds pooled).}
+\caption{Misclassification rate by site of origin (pooled out-of-fold predictions averaged over three seeds; development cohort).}
 \label{tab:errors}
 \footnotesize
 \input{tables/tab8_errors.tex}
@@ -277,13 +328,13 @@ Misclassifications concentrated in the aortic cusps (Table~\ref{tab:errors}): th
 \label{sec:discussion}
 
 \subsection{Principal findings}
-In a patient-level benchmark in which every deep model received the same hyper-parameter search, CNN-PatchTST reached accuracy comparable to conventional CNN--Transformer hybrids, ablated variants and a tuned BiLSTM, with the most stable cross-validated performance, at a fraction of the computational cost. The main contribution is therefore efficiency without loss of accuracy rather than a gain in accuracy.
+In a patient-level benchmark in which every deep model received the same hyper-parameter search, CNN-PatchTST reached accuracy comparable to conventional CNN--Transformer hybrids, its ablations and a tuned BiLSTM, at a fraction of the computational cost of the conventional hybrids. The audit showed, however, that the CNN stem did not add measurable accuracy: all tuned deep models converged to a macro-F1 of about 0.90, made nearly identical predictions and failed on the same patients. The main finding is therefore that, for LVOT/RVOT discrimination on this database, architectural complexity is not the limiting factor; patch tokenization reduces the cost of attention, and simpler models are equally accurate.
 
 \subsection{Why patch tokens}
-Patch tokenization reduces the attention sequence from 312 to 20 tokens. Since self-attention scales quadratically with sequence length, this explains the 243-fold reduction in attention entries and the 3.4-fold reduction in FLOPs relative to the encoder (152-fold and 2.9-fold relative to the hierarchical model), consistent with the original PatchTST analysis \cite{nie2023patchtst}. Each 128-ms patch approximates the duration of a QRS complex, so attention operates between morphologically meaningful units. Forming patches from all 12 leads jointly keeps the inter-lead relations on which LVOT/RVOT discrimination relies.
+Patch tokenization reduces the attention sequence from 312 to 20 tokens. Since self-attention scales quadratically with sequence length, this explains the 243-fold reduction in attention entries and the 3.4-fold reduction in FLOPs relative to the encoder (152-fold and 2.9-fold relative to the hierarchical model), consistent with the original PatchTST analysis \cite{nie2023patchtst}. A 128-ms patch approximates the duration of a QRS complex, which motivated the design, but the sensitivity analysis showed that patches of 64--256~ms performed equally well, so this correspondence should be regarded as a design rationale rather than a demonstrated optimum. Forming patches from all 12 leads jointly keeps the inter-lead relations on which LVOT/RVOT discrimination relies.
 
-\subsection{Ablation: CNN-only, PatchTST-only and CNN-PatchTST}
-Both components alone already captured most of the information: local CNN features (CNN-only, 0.881) and patch-level context from raw samples (PatchTST-only, 0.893). Their combination gave the highest mean and the smallest variance after tuning but was not significantly better. LVOT/RVOT discrimination is therefore not limited by either component. PatchTST-only was the fastest model overall, but it was less stable than CNN-PatchTST; we regard CNN-PatchTST as the better trade-off between accuracy, stability and cost. The default-configuration results show that the hybrid is more sensitive to the learning rate than the simpler models, a practical point for future applications.
+\subsection{What does the CNN stem contribute?}
+With equal tuning, local convolutional features alone (CNN-only, 0.903) and patch-level context from raw samples alone (PatchTST-only, 0.900) matched their combination (0.899). The hybrid was not more stable than CNN-only (identical standard deviation), its predictions agreed with those of the ablations for all but 3--5 patients, and it was not better on the difficult aortic-cusp origins. The only residual advantages were a slightly higher pooled AUC and a higher worst-fold macro-F1 than CNN-only, both small. The apparent benefit of the hybrid in our first ablation came from tuning the ablations with the hybrid's configuration. We conclude that, for this task and data size, the CNN stem is not required; PatchTST-only offers the lowest cost (1.8~ms per patient on CPU) and CNN-only the smallest model (0.17 million parameters). The hybrid was also more sensitive to the learning rate than the simpler models, which is a practical disadvantage.
 
 \subsection{Comparison with other approaches}
 The tuned BiLSTM reached a similar macro-F1 but was about 7 times slower, because it processes 625 time steps sequentially. The random forest on handcrafted morphology features performed worst among the learned models, particularly for LVOT (sensitivity 0.62), suggesting that summary features lose information that end-to-end models exploit. All learned deep models exceeded the clinical criteria, which could not be applied in every patient.
@@ -316,12 +367,12 @@ Errors concentrated in the right and left coronary cusps. The right coronary cus
 All deep models processed a patient in well under a second, so the latency gain alone is not clinically decisive for a single 12-lead ECG. The practical value of the reduction lies elsewhere. First, training cost fell about 3-fold, which matters for repeated cross-validation, hyper-parameter search and future multicentre retraining. Second, recordings are processed window by window, so the per-window saving accumulates linearly over long recordings (e.g., screening hours of Holter data for ectopic beats), and attention cost within a window grows quadratically with the number of tokens: patching divides the token count by 16 and the attention term by 256, so the advantage widens if longer analysis windows are needed to capture more beats. Third, low FLOPs and CPU-only inference enable deployment on bedside devices, mapping systems and wearable or low-power hardware, and allow large ECG archives to be screened retrospectively at negligible cost.
 
 \subsection{Limitations}
-This study has limitations. First, all data came from a single centre and no external validation was available; the results must be confirmed in independent cohorts. Second, the hold-out set had been observed in earlier experiments, so cross-validation is the primary evidence. Third, the non-inferiority margins were chosen after the cross-validation means were known, and non-inferiority to the encoder could not be shown at the 0.03 margin; full confidence intervals are reported so that readers can apply other margins. Fourth, hyper-parameters were selected in the same development cross-validation that is reported, which can make cross-validated estimates slightly optimistic; this applies equally to all tuned models. Fifth, the ablations used the CNN-PatchTST configuration rather than their own grid search. Sixth, our patch transformer mixes leads within each patch and differs from the channel-independent PatchTST. Seventh, the clinical criteria were measured automatically and not by electrophysiologists. Finally, absolute latencies depend on hardware; the relative differences and FLOPs are more transferable.
+This study has limitations. First, all data came from a single centre and no external validation was available; the results must be confirmed in independent cohorts. Second, the hold-out set had been observed in earlier experiments, so cross-validation is the primary evidence. Third, the non-inferiority margins were chosen after the cross-validation means were known, and non-inferiority to the encoder could not be shown at the 0.03 margin; full confidence intervals are reported so that readers can apply other margins. Fourth, hyper-parameters were selected in the same development cross-validation that is reported, which can make cross-validated estimates slightly optimistic; this applies equally to all tuned models. Fifth, the hold-out set is too small (14 LVOT patients) for paired non-inferiority testing between deep models; differences of one or two patients dominate. Sixth, our patch transformer mixes leads within each patch and differs from the channel-independent PatchTST. Seventh, the clinical criteria were measured automatically and not by electrophysiologists. Finally, absolute latencies depend on hardware; the relative differences and FLOPs are more transferable.
 
 % =====================================================================
 \section{Conclusion}
 \label{sec:conclusion}
-Grouping CNN features into 128-ms, lead-joint patch tokens preserved the accuracy of CNN--Transformer models for distinguishing LVOT from RVOT origin while reducing FLOPs 2.9--3.4-fold, inference latency 2.1--3.0-fold and training time about 3-fold. CNN-PatchTST had the most stable cross-validated performance, did not differ significantly from any deep comparator, and outperformed a feature-based random forest and standard clinical ECG criteria. These properties make it suitable for real-time decision support, pending external validation.
+Grouping CNN features into 128-ms, lead-joint patch tokens preserved the accuracy of CNN--Transformer models for distinguishing LVOT from RVOT origin while reducing FLOPs 2.9--3.4-fold, inference latency 2.1--3.0-fold and training time about 3-fold. CNN-PatchTST did not differ significantly from any deep comparator and outperformed a feature-based random forest and standard clinical ECG criteria. A balanced audit showed that its CNN stem added no measurable accuracy and that simpler patch-based or convolutional models were equally accurate at lower cost. Lightweight models are therefore sufficient for real-time LVOT/RVOT decision support on standard hardware, pending external validation.
 
 % =====================================================================
 \section*{CRediT authorship contribution statement}
