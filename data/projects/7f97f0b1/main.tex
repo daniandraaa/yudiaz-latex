@@ -1,32 +1,49 @@
-% =====================================================================
-% CNN-PatchTST manuscript (elsarticle). Draft v1, 17 October 2026.
-% All numbers are generated from results/research_v14 (see analysis_v14/paper_assets.py).
-% Items marked [AUTHOR] must be confirmed by the authors before submission.
-% =====================================================================
+%% Manuscript based on the official Elsevier template elsarticle-template-num.tex
+%% (Elsarticle Bundle, Copyright 2007-2024 Elsevier Ltd, LPPL 1.3).
+%% Numbers, tables and figures are generated from results/research_v14 (analysis_v14/paper_assets.py).
+%% Items marked [AUTHOR] must be confirmed by the authors before submission.
 \documentclass[preprint,12pt]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[preprint,review,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
+%% Line numbers for peer review
+\usepackage{lineno}
 \biboptions{numbers,sort&compress}
 \graphicspath{{figures/}{assets/}{./}}
 
 \journal{[AUTHOR: target journal]}
 
 \begin{document}
+
 \begin{frontmatter}
 
 \title{Patch-tokenized CNN--Transformer for efficient and stable ECG localization of idiopathic outflow-tract ventricular arrhythmias: a patient-level benchmark}
 
-% [AUTHOR] confirm author order, the corresponding author and any additional co-authors.
+%% [AUTHOR] confirm author order and corresponding author.
 \author[aff1]{Daniandra Prayudisty Ilham\corref{cor1}}
-\ead{[AUTHOR: e-mail]}
-\author[aff1]{Satria Mandala}
+\ead{daniandraaa@student.telkomuniversity.ac.id}
+
+\author[aff1,aff2]{Satria Mandala}
+\ead{satriamandala@telkomuniversity.ac.id}
+
 \cortext[cor1]{Corresponding author.}
+
 \affiliation[aff1]{organization={School of Computing, Telkom University},
+            addressline={Jl. Telekomunikasi No. 1},
+            city={Bandung},
+            postcode={40257},
+            state={West Java},
+            country={Indonesia}}
+
+\affiliation[aff2]{organization={Human Centric (HUMIC) Engineering Research Center, Telkom University},
             addressline={Jl. Telekomunikasi No. 1},
             city={Bandung},
             postcode={40257},
@@ -40,11 +57,28 @@
 \textbf{Conclusion:} Patch tokenization retains the accuracy of conventional CNN--Transformer models for LVOT/RVOT localization while substantially reducing computational cost, supporting real-time use on standard hardware. External validation is required before clinical use.
 \end{abstract}
 
+%% Graphical abstract
+\begin{graphicalabstract}
+\includegraphics[width=\textwidth]{graphical_abstract.png}
+\end{graphicalabstract}
+
+%% Research highlights
+\begin{highlights}
+\item Patch tokens cut CNN--Transformer attention from 312 to 20 tokens per ECG window
+\item CNN-PatchTST matched conventional hybrids with the most stable CV macro-F1
+\item No significant accuracy difference from hybrids, ablations or a tuned BiLSTM
+\item 2.9--3.4$\times$ fewer FLOPs and 2.1--3.0$\times$ faster inference than conventional hybrids
+\item Outperformed a random forest and three clinical ECG criteria in cross-validation
+\end{highlights}
+
 \begin{keyword}
 Electrocardiogram \sep Outflow-tract ventricular arrhythmia \sep Origin localization \sep CNN--Transformer \sep PatchTST \sep Computational efficiency
 \end{keyword}
 
 \end{frontmatter}
+
+%% Line numbers for review
+\linenumbers
 
 % =====================================================================
 \section{Introduction}
@@ -70,7 +104,7 @@ This study makes four contributions:
 \section{Materials and methods}
 \label{sec:methods}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{fig1_pipeline.png}
 \caption{Study workflow. All pre-processing, scaling, augmentation and model selection steps were fitted within the training patients of each fold.}
@@ -82,7 +116,7 @@ The study workflow is shown in Fig.~\ref{fig:pipeline}. We used the public 12-le
 
 A patient-level 20\% hold-out set (59 patients) had been defined before this study and was used in earlier exploratory experiments; we therefore refer to it as a \emph{historical hold-out} and treat it as secondary evidence. All model development and selection used the remaining 230 development patients.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Cohort by site of origin.}
 \label{tab:cohort}
@@ -108,7 +142,7 @@ All deep models share the same classification head (layer normalization, a 256$\
 
 \paragraph{Non-CNN comparators} A bidirectional LSTM \cite{hochreiter1997lstm,schuster1997bidirectional} (two layers, 128 hidden units per direction, dropout 0.2) processes each window after averaging every 8 samples (250~Hz, 625 steps), followed by mean pooling. A random forest \cite{breiman2001rf} (500 trees, balanced class weights, otherwise default settings) uses 132 handcrafted morphology features per patient (median and inter-quartile range across beats of QRS width, relative R and S amplitudes, R fraction and signed QRS area in each lead, plus QRS span, precordial transition, V2S/V3R and RR intervals), with median imputation estimated on the training folds.
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{fig2_architectures.png}
 \caption{Tokenization in the three hybrid architectures. All share the same CNN stem, classification head and patient-level aggregation; they differ only in how CNN features are turned into attention tokens.}
@@ -140,15 +174,15 @@ Each experiment was specified in a time-stamped internal protocol, together with
 \subsection{Overall performance}
 Table~\ref{tab:main} and Fig.~\ref{fig:cv} summarize performance. In cross-validation, the deep models reached mean macro-F1 values between 0.881 and 0.902: the encoder 0.902, CNN-PatchTST 0.899, the hierarchical model 0.894, the tuned BiLSTM and PatchTST-only 0.893, and CNN-only 0.881. CNN-PatchTST had the highest mean AUC (0.940), the narrowest confidence intervals and the smallest between-fold standard deviation of macro-F1 (0.028, compared with 0.029--0.049 for the other deep models and 0.081 for the random forest). On the historical hold-out set, all deep models had overlapping confidence intervals (macro-F1 0.81--0.89, AUC 0.94--0.98), whereas the random forest was clearly lower (macro-F1 0.721, AUC 0.741).
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Patient-level performance for LVOT versus RVOT (mean or ensemble value [95\% CI]). Cross-validation: 5 folds $\times$ 3 seeds, corrected CI. Hold-out: five-seed ensemble, bootstrap CI.}
 \label{tab:main}
-\scriptsize
+\footnotesize
 \resizebox{\textwidth}{!}{\input{tables/tab3_main_results.tex}}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{fig3_cv_f1.png}
 \caption{Cross-validated macro-F1 for each of the 15 paired folds $\times$ seeds.}
@@ -158,15 +192,15 @@ Table~\ref{tab:main} and Fig.~\ref{fig:cv} summarize performance. In cross-valid
 \subsection{Statistical comparison}
 No difference between CNN-PatchTST and the other deep models was statistically significant (corrected $p=0.35$--$0.94$; Table~\ref{tab:stats}, Fig.~\ref{fig:forest}). CNN-PatchTST was non-inferior in macro-F1 to the hierarchical CNN--Transformer, both ablations and the tuned BiLSTM (lower 90\% limits $-0.028$ to $-0.015$), and non-inferior in AUC to all deep comparators; against the encoder the macro-F1 comparison was inconclusive (difference $-0.003$, lower 90\% limit $-0.033$). Equivalence within $\pm0.03$ could not be established for any model. CNN-PatchTST outperformed the random forest in macro-F1 ($+0.124$, 95\% CI $+0.039$ to $+0.208$, Holm-adjusted $p=0.043$).
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Paired cross-validated differences (CNN-PatchTST minus comparator) with the corrected repeated cross-validation $t$-test.}
 \label{tab:stats}
-\scriptsize
+\footnotesize
 \resizebox{\textwidth}{!}{\input{tables/tab4_statistics.tex}}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{fig4_forest.png}
 \caption{Differences between CNN-PatchTST and each comparator. Non-inferiority is shown when the 90\% interval lies to the right of the dashed margin.}
@@ -176,33 +210,33 @@ No difference between CNN-PatchTST and the other deep models was statistically s
 \subsection{Ablation}
 With the tuned configuration, CNN-only reached a macro-F1 of 0.881, PatchTST-only 0.893 and CNN-PatchTST 0.899 (Table~\ref{tab:ablation}). With the default configuration (learning rate $10^{-3}$, no augmentation), the simpler models were already stable (0.891 and 0.869), whereas CNN-PatchTST was unstable (0.748, SD 0.202; LVOT sensitivity 0.531). The hybrid therefore required a lower learning rate, after which it combined the highest mean with the lowest variability.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Ablation in cross-validation (mean over 15 fits).}
 \label{tab:ablation}
-\scriptsize
+\footnotesize
 \input{tables/tab5_ablation.tex}
 \end{table}
 
 \subsection{Computational efficiency}
 CNN-PatchTST required 0.37 GFLOPs per window, compared with 1.24 for the encoder and 1.06 for the hierarchical model, and computed 800 attention entries per window instead of 194,688 and 121,680 (Table~\ref{tab:eff}, Fig.~\ref{fig:eff}). Its median latency was 4.1~ms per patient on GPU and 8.4~ms on CPU, which was 2.5--3.0 times faster on GPU and 2.1--2.4 times faster on CPU than the conventional hybrids, and 7.1--7.6 times faster than the BiLSTM. GPU throughput was 2875 windows per second (820 for the encoder and 1004 for the hierarchical model), and one cross-validation fit took 0.64~min (1.98--1.99~min for the conventional hybrids). A complete recording, on average 27.7~s of ECG, was therefore processed roughly three orders of magnitude faster than real time on a CPU. CNN-PatchTST has more parameters than the other hybrids (2.80 vs 1.75--1.95 million) because of its patch projection, but parameter count did not determine cost: sequence length and FLOPs did (Fig.~\ref{fig:flops}).
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Computational efficiency under identical conditions (Apple M4). Latency is the median per patient. $^{a}$Number of tree nodes. $^{b}$Includes feature extraction (34~ms) and prediction (32~ms).}
 \label{tab:eff}
-\scriptsize
+\footnotesize
 \resizebox{\textwidth}{!}{\input{tables/tab6_efficiency.tex}}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{fig5_efficiency.png}
 \caption{Compute, inference latency and training time of all models.}
 \label{fig:eff}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.65\textwidth]{fig6_accuracy_vs_flops.png}
 \caption{Accuracy versus compute; marker size is proportional to the number of parameters.}
@@ -212,15 +246,15 @@ CNN-PatchTST required 0.37 GFLOPs per window, compared with 1.24 for the encoder
 \subsection{Comparison with clinical criteria}
 The clinical criteria could be applied in 54--97\% of patients and achieved AUCs of 0.75--0.84 in the development cohort (Table~\ref{tab:clinical}). Using pooled out-of-fold predictions, CNN-PatchTST reached an AUC of 0.959, exceeding the transition zone by 0.21 (95\% CI 0.13--0.29), V2S/V3R by 0.12 (0.06--0.19) and the V2 transition ratio by 0.14 (0.07--0.22). On the hold-out set the differences were in the same direction (+0.05 to +0.11) but not statistically significant (Fig.~\ref{fig:roc}).
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{CNN-PatchTST versus clinical ECG criteria. $^{a}$Undecided patients counted as RVOT. $^{b}$Development: pooled out-of-fold predictions averaged over three seeds; hold-out: five-seed ensemble.}
 \label{tab:clinical}
-\scriptsize
+\footnotesize
 \input{tables/tab7_clinical.tex}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.55\textwidth]{fig7_roc_test.png}
 \caption{Receiver operating characteristic curves on the historical hold-out set (LVOT as positive class) with the operating points of the clinical criteria.}
@@ -230,11 +264,11 @@ The clinical criteria could be applied in 54--97\% of patients and achieved AUCs
 \subsection{Errors by site of origin}
 Misclassifications concentrated in the aortic cusps (Table~\ref{tab:errors}): the misclassification rate was 44\% for right coronary cusp origins (6 patients) and 19\% for left coronary cusp origins (31 patients), compared with 0--6\% for most RVOT sites.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Cross-validated misclassification rate of CNN-PatchTST by site of origin (3 seeds pooled).}
 \label{tab:errors}
-\scriptsize
+\footnotesize
 \input{tables/tab8_errors.tex}
 \end{table}
 
@@ -256,11 +290,11 @@ The tuned BiLSTM reached a similar macro-F1 but was about 7 times slower, becaus
 
 Table~\ref{tab:sota} places the results in the context of previous work. Direct comparison is not possible because evaluation units, splits and exclusions differ: Talebzadeh et al.\ \cite{talebzadeh2025outflow} reported 93.4\% accuracy with an 80/20 split after oversampling without specifying whether the split was patient-level; Kujime et al.\ \cite{kujime2024semantic} reported an AUC of 0.848 on the Ningbo database after excluding 28.4\% of recordings as undecidable; and Zheng et al.\ \cite{zheng2022origins} used a larger cohort with model selection involving the testing cohort. Our study classifies every patient, uses patient-level folds and keeps the hold-out set out of all selection steps.
 
-\begin{table}[t]
+\begin{table}[!htbp]
 \centering
 \caption{Context with previous studies. Values are as reported by the authors and are not directly comparable. [AUTHOR: verify all values against the original articles.]}
 \label{tab:sota}
-\scriptsize
+\footnotesize
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{p{2.6cm}p{2.3cm}p{2.6cm}p{2.6cm}p{3.2cm}}
 \toprule
@@ -291,14 +325,15 @@ Grouping CNN features into 128-ms, lead-joint patch tokens preserved the accurac
 
 % =====================================================================
 \section*{CRediT authorship contribution statement}
-% [AUTHOR] confirm the contribution roles.
+%% [AUTHOR] confirm the contribution roles.
 \textbf{Daniandra Prayudisty Ilham:} Conceptualization, Methodology, Software, Formal analysis, Investigation, Visualization, Writing -- original draft. \textbf{Satria Mandala:} Conceptualization, Supervision, Writing -- review \& editing.
 
 \section*{Declaration of competing interest}
 [AUTHOR] The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
 
 \section*{Funding}
-[AUTHOR: funding source, or ``This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'']
+%% [AUTHOR] confirm with Satria Mandala whether this work was funded by a specific grant; do not reuse grants of other projects.
+[AUTHOR: funding statement, or ``This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'']
 
 \section*{Ethics statement}
 This study used a publicly available, de-identified database released under a CC0 licence \cite{zheng2020dataset}; no new data were collected. [AUTHOR: confirm whether institutional review is required by the target journal.]
@@ -306,7 +341,7 @@ This study used a publicly available, de-identified database released under a CC
 \section*{Data and code availability}
 The ECG database is available from the original publication \cite{zheng2020dataset}. [AUTHOR: repository URL and DOI for code, protocols and code hashes.]
 
-\section*{Declaration of generative AI use}
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
 [AUTHOR: state the use of AI-assisted tools in analysis and writing according to the journal policy.]
 
 \bibliographystyle{elsarticle-num}
