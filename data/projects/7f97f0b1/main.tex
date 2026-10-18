@@ -21,12 +21,17 @@
 
 \title{Patch-tokenized CNN--Transformer for efficient and stable ECG localization of idiopathic outflow-tract ventricular arrhythmias: a patient-level benchmark}
 
+% [AUTHOR] confirm author order, the corresponding author and any additional co-authors.
 \author[aff1]{Daniandra Prayudisty Ilham\corref{cor1}}
 \ead{[AUTHOR: e-mail]}
-% [AUTHOR] add supervisor(s) and co-authors with \author[aff1]{...}
+\author[aff1]{Satria Mandala}
 \cortext[cor1]{Corresponding author.}
-\affiliation[aff1]{organization={[AUTHOR: department and university]},
-            city={[AUTHOR: city]}, country={Indonesia}}
+\affiliation[aff1]{organization={School of Computing, Telkom University},
+            addressline={Jl. Telekomunikasi No. 1},
+            city={Bandung},
+            postcode={40257},
+            state={West Java},
+            country={Indonesia}}
 
 \begin{abstract}
 \textbf{Background:} Predicting whether an idiopathic outflow-tract ventricular arrhythmia (OT-VA) originates from the left (LVOT) or right (RVOT) ventricular outflow tract guides the ablation approach. Hybrid CNN--Transformer models are attractive for this task, but the conventional design, which assigns one attention token to every time step of the CNN feature map, is computationally expensive.
@@ -286,7 +291,8 @@ Grouping CNN features into 128-ms, lead-joint patch tokens preserved the accurac
 
 % =====================================================================
 \section*{CRediT authorship contribution statement}
-[AUTHOR: e.g., Daniandra Prayudisty Ilham: Conceptualization, Methodology, Software, Formal analysis, Writing -- original draft. Supervisor: Supervision, Writing -- review \& editing.]
+% [AUTHOR] confirm the contribution roles.
+\textbf{Daniandra Prayudisty Ilham:} Conceptualization, Methodology, Software, Formal analysis, Investigation, Visualization, Writing -- original draft. \textbf{Satria Mandala:} Conceptualization, Supervision, Writing -- review \& editing.
 
 \section*{Declaration of competing interest}
 [AUTHOR] The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
