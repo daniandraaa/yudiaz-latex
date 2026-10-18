@@ -1,0 +1,10 @@
+\begin{tabular}{lccccc}
+\toprule
+Comparator & Ensemble F1 & Seed SD & $\Delta$F1 [90\% CI] & $\Delta$AUC [90\% CI] & McNemar $p$ \\
+\midrule
+CNN-PatchTST (reference) & 0.866 & 0.041 & -- & -- & -- \\
+CNN-Transformer Encoder & 0.873 & 0.084 & -0.007 [-0.084, +0.082] & -0.016 [-0.044, +0.006] & 1.00 \\
+CNN-only & 0.828 & 0.038 & +0.037 [-0.033, +0.113] & +0.021 [-0.010, +0.054] & 0.62 \\
+PatchTST-only & 0.847 & 0.035 & +0.019 [+0.000, +0.055] & +0.005 [-0.008, +0.021] & 1.00 \\
+\bottomrule
+\end{tabular}

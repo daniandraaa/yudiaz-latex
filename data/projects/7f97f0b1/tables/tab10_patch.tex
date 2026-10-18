@@ -1,0 +1,19 @@
+\begin{tabular}{lrrrcccc}
+\toprule
+Model & Patch (ms) & Stride (ms) & Tokens & Macro-F1 & SD & AUC & Sens.\ LVOT \\
+\midrule
+CNN-PatchTST & 64 & 64 & 39 & 0.894 & 0.035 & 0.938 & 0.831 \\
+CNN-PatchTST & 64 & 32 & 77 & \textbf{0.903} & 0.028 & 0.939 & 0.853 \\
+CNN-PatchTST & 128 & 128 & 20 & 0.899 & 0.028 & 0.940 & 0.830 \\
+CNN-PatchTST & 128 & 64 & 38 & 0.891 & 0.040 & 0.922 & 0.813 \\
+CNN-PatchTST & 256 & 256 & 10 & 0.891 & 0.031 & 0.925 & 0.848 \\
+CNN-PatchTST & 256 & 128 & 19 & 0.895 & 0.033 & 0.935 & 0.835 \\
+\addlinespace
+PatchTST-only & 64 & 64 & 39 & 0.900 & 0.026 & 0.939 & 0.871 \\
+PatchTST-only & 64 & 32 & 77 & \textbf{0.905} & 0.028 & 0.933 & 0.865 \\
+PatchTST-only & 128 & 128 & 20 & 0.893 & 0.030 & 0.922 & 0.858 \\
+PatchTST-only & 128 & 64 & 38 & 0.903 & 0.042 & 0.932 & 0.888 \\
+PatchTST-only & 256 & 256 & 10 & 0.894 & 0.047 & 0.940 & 0.882 \\
+PatchTST-only & 256 & 128 & 19 & 0.896 & 0.043 & 0.944 & 0.877 \\
+\bottomrule
+\end{tabular}
