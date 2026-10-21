@@ -10,7 +10,7 @@
 \usepackage[hidelinks]{hyperref}
 
 \begin{document}
-\title{A Web-Based IoT Framework for Outflow-Tract Arrhythmia Localization Using a Compact 1D CNN}
+\title{A Web-Based IoT Framework for Outflow-Tract Arrhythmia Localization Using a Compact 1D CNN Ensemble}
 \author{
 \IEEEauthorblockN{Daniandra Prayudisty Ilham}
 \IEEEauthorblockA{\textit{Informatics, School of Computing}\\
@@ -67,7 +67,7 @@ The lead order is I, II, III, aVR, aVL, aVF, and V1--V6. Native dataset amplitud
 The denoised signal is divided into 5000-point windows (2.5~s), with a 2500-point step. Only complete windows are used; an incomplete trailing window is discarded. Each lead is standardized using means and scales estimated exclusively from the training patients for that fold. Final deployment uses the scaler fitted on the 230 development patients. Whole-record filtering, window boundaries, and lead scaling are reused in the server rather than replaced with browser-side approximations.
 
 \subsection{CNN Architecture and Patient Aggregation}
-Four convolutional blocks use 32, 64, 128, and 256 channels, with respective kernel lengths 7, 5, 3, and 3. Each block contains same-padded convolution, batch normalization, ReLU, and factor-two max pooling. Global temporal averaging feeds a head consisting of layer normalization, a 256-to-128 linear layer, ReLU, dropout of 0.3, and a two-output linear layer. Each model has 170,914 trainable parameters. The deployed predictor uses CNN blocks only; no Transformer is used at inference.
+Four convolutional blocks use 32, 64, 128, and 256 channels, with respective kernel lengths 7, 5, 3, and 3. Each block contains same-padded convolution, batch normalization, ReLU, and factor-two max pooling. Global temporal averaging feeds a head consisting of layer normalization, a 256-to-128 linear layer, ReLU, dropout of 0.3, and a two-output linear layer. Each model has 170,914 trainable parameters; the five deployed CNNs therefore contain 854,570 trainable parameters in total. ``Compact'' describes the individual architecture's parameter count, rather than a measured energy or embedded-device advantage. The deployed predictor uses CNN blocks only; no Transformer is used at inference.
 
 Let $p_{s,w}(c)$ denote the softmax probability for class $c$ from window $w$ and model seed $s$. With $W_i$ complete windows in patient $i$, its single-model probability is
 \begin{equation}
@@ -103,31 +103,65 @@ with a $t_{14}$ reference, following the dependence correction of Nadeau and Ben
 
 \section{Gateway and Web Application}
 \subsection{Record Transfer and Inference}
-Fig.~\ref{fig:system} shows the implemented architecture. A Python gateway reads a real 12-lead dataset file and opens an HTTP/JSON session containing sampling rate, lead order, amplitude-unit metadata, and expected recording length. Chunks contain a sequence number, sample offset, and a matrix of ECG values. The server supports up to 8000 time points per chunk. An identical retransmission is handled idempotently; a gap, conflicting retransmission, or inconsistent offset is rejected. Finalization checks completeness before running the inference pipelines.
+Fig.~\ref{fig:system} places ECG acquisition upstream of the IoT gateway, preprocessing, inference, and user interface. In the target acquisition path, electrodes and a 12-lead ECG device capture and digitize the patient signal; the gateway transports the resulting record to the server. ECG acquisition supplies the signal, while the CNN performs anatomical origin localization. In this study, real recordings from the public database are injected at the same gateway boundary to evaluate the downstream application. The physical device interface and live acquisition have not been characterized in these experiments. A Python gateway reads a real 12-lead dataset file and opens an HTTP/JSON session containing sampling rate, lead order, amplitude-unit metadata, and expected recording length. Chunks contain a sequence number, sample offset, and a matrix of ECG values. The server supports up to 8000 time points per chunk. An identical retransmission is handled idempotently; a gap, conflicting retransmission, or inconsistent offset is rejected. Finalization checks completeness before running the inference pipelines.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\begin{tikzpicture}[font=\scriptsize,
- box/.style={draw,rounded corners=2pt,align=center,minimum height=8mm,inner sep=3pt},
- arr/.style={-{Stealth[length=1.6mm]},thick}]
-\node[box,text width=70mm] (source) at (0,0) {12-lead database recording, 2000 Hz\\Gateway client: acquisition-paced or no-delay replay};
-\node[box,text width=70mm] (server) at (0,-1.35) {HTTP/JSON session and sequenced chunks\\Lead/unit checks, ordered buffer, completeness check};
-\node[box,text width=31mm] (cnn) at (-1.95,-2.95) {Full-record filtering + DWT\\Lead scaling + windows\\Five CNNs + probability pooling};
-\node[box,text width=31mm] (rf) at (1.95,-2.95) {Raw-record beat delineation\\132 features + imputation\\Five Random Forests};
-\node[box,text width=70mm] (result) at (0,-4.55) {Browser dashboard: LVOT/RVOT result, waveform, timing\\Session summary and artifact provenance};
-\draw[arr] (source)--node[right,font=\tiny]{1000 points/chunk}(server);
-\draw[arr] (server.south)-|(cnn.north);
-\draw[arr] (server.south)-|(rf.north);
-\draw[arr] (cnn.south)--(cnn.south |- result.north);
-\draw[arr] (rf.south)--(rf.south |- result.north);
-\end{tikzpicture}
-\caption{Implemented gateway framework. Dataset replay is the evaluated signal source. Final predictions follow whole-record processing.}
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[font=\footnotesize,
+ box/.style={draw,rounded corners=2pt,align=center,minimum height=14mm,inner sep=3pt},
+ arr/.style={-{Stealth[length=2mm]},thick},
+ target/.style={arr,dashed,gray}]
+\node[box,text width=11mm,dashed,draw=gray] (patient) at (0,0) {Patient};
+\node[box,text width=21mm,dashed,draw=gray] (device) at (2.25,0) {12-lead ECG\\acquisition\\device};
+\node[box,text width=21mm,fill=blue!5] (gateway) at (5.0,0) {IoT gateway\\HTTP/JSON\\record buffer};
+\node[box,text width=26mm,fill=blue!5] (pre) at (8.1,0) {Preprocessing\\HP filter + DWT\\scaling + windows};
+\node[box,text width=23mm,fill=blue!5] (cnn) at (11.3,0) {Compact 1D CNN\\five-model ensemble\\probability pooling};
+\node[box,text width=20mm,fill=green!5] (output) at (14.1,0) {LVOT/RVOT\\probabilities\\and timing};
+\node[box,text width=15mm,fill=green!5] (user) at (16.65,0) {User\\browser view\\and export};
+\node[box,text width=29mm,fill=orange!8] (dataset) at (2.25,-2.0) {Public 12-lead dataset\\evaluated signal source};
+\node[box,text width=33mm,fill=orange!8] (rf) at (11.3,-2.0) {Benchmark branch: raw record\\132 morphology/RR features\\five Random Forests};
+\draw[target] (patient)--(device);
+\draw[target] (device)--node[above,font=\scriptsize]{device interface}(gateway);
+\draw[arr] (gateway)--(pre);
+\draw[arr] (pre)--(cnn);
+\draw[arr] (cnn)--(output);
+\draw[arr] (output)--(user);
+\draw[arr] (dataset.east)--(4.05,-2.0)--node[left,font=\scriptsize]{replay}(4.05,-.85)--(gateway.south);
+\draw[arr] (gateway.south)--(5.0,-2.0)--node[above,font=\scriptsize]{raw ECG}(rf.west);
+\draw[arr] (rf.east)-|(output.south);
+\node[align=left,font=\scriptsize,anchor=west] at (-.75,-3.05) {Dashed: physical acquisition/interface path, not evaluated in this study.\\Solid: implemented data transfer, processing, prediction, and user interaction.};
+\end{tikzpicture}}
+\caption{Acquisition-to-user architecture. A physical ECG device is the intended upstream signal source for the IoT gateway. The completed experiments inject real public-dataset recordings at the gateway and evaluate the solid paths. Device output format, live capture, and wireless transport are outside the measured scope. The RF branch receives the raw record and performs its own feature processing.}
 \label{fig:system}
-\end{figure}
+\end{figure*}
 
 The Python server uses PyTorch for CNN inference, scikit-learn for RF, and a browser-based dashboard. Both predictions, class probabilities, waveform previews, and stage timings are returned through the application. The catalog exposes all 334 source records while distinguishing the 289 supported cohort entries from the excluded entries. Catalog visibility is separate from the number of patients used to train or evaluate a model. The application also distinguishes the frozen CV summary from the historical hold-out summary; displaying a CV macro-F1 of approximately 0.90 does not make that value the accuracy of an individual gateway prediction.
 
 The CNN checkpoints and scaler are verified against their recorded SHA-256 provenance at startup; RF artifact hashes are recorded as part of the deployed artifact identity. Session summaries retain results and timing without storing the full raw waveform. The interface supports bearer-token access when serving a local network. Authentication capability is not evidence of an evaluated production security deployment: the experiments here use loopback HTTP, and do not measure encrypted wireless transfer or remote operation.
+
+\subsection{Web Interface and Implementation Evidence}
+Fig.~\ref{fig:webapp} documents the running application using an actual historical hold-out recording, ECG-231. The interface displays all 12 received leads, the completed acquisition status, and a record-level RVOT output with a CNN probability of 98.0\% and RF probability of 82.2\%. These are rounded model outputs for one recording, rather than estimates of diagnostic accuracy. The heart graphic is a schematic orientation cue, not a reconstructed patient-specific anatomical map. A separate CV summary panel displays the fixed 230-patient evaluation, so population metrics remain distinguishable from the selected record's prediction.
+
+The user workflow is to select or upload a record, start transfer, inspect the received waveform, and review the final localization after preprocessing and inference. The dashboard also exposes stage timings, session history, and result export. The screenshots substantiate an implemented user interface; end-to-end replay and automated functional checks provide separate evidence that its server path executes the frozen models.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.63\textwidth}
+\centering
+{\footnotesize\textbf{(a) Received 12-lead ECG and completed transfer}}\\[2pt]
+\includegraphics[width=\linewidth]{web_signal.png}\\[5pt]
+{\footnotesize\textbf{(c) Separate development-CV summary}}\\[2pt]
+\includegraphics[width=\linewidth]{web_cv_summary.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+{\footnotesize\textbf{(b) Record-level localization output}}\\[2pt]
+\includegraphics[width=\linewidth]{web_result.png}
+\end{minipage}
+\caption{Cropped screenshots from the functioning web application. Panels (a) and (b) show ECG-231 (5.3755~s, 12 leads, 2000~Hz) replayed from the historical hold-out at acquisition pace. Panel (c) shows the separate selected-configuration CV summary (230 patients; five fixed folds and three initialization seeds). Screenshot values use Indonesian decimal commas. The interface images show implemented behavior on public ECG data and do not establish live physical-device acquisition.}
+\label{fig:webapp}
+\end{figure*}
 
 \subsection{System Evaluation Protocol}
 All 59 historical hold-out raw records were transmitted through the gateway in 1000-time-point chunks, equivalent to 0.5~s of signal per full chunk. One warm-up replay was excluded. The principal run sends chunks without acquisition delays, once per record. A second run replays the first five records at 2000 time points/s. These five repeated records are system tests, not additional diagnostic subjects. The client and server run on the same Apple Silicon arm64 workstation with macOS 26.2, PyTorch 2.12.0, CPU inference, and four PyTorch threads. RF prediction uses one job per forest. The deployed identity is \texttt{154da12ade375dff}, using seeds 42--46.
@@ -188,6 +222,24 @@ The paired macro-F1 difference is 0.1076, with a bootstrap 95\% interval of [$-0
 
 \subsection{Gateway Prediction Consistency}
 All 59 no-delay replays complete successfully. Source durations range from 5.053 to 25.000~s, with a median of 12.943~s. Gateway and offline class predictions agree for 59/59 recordings for each model. The maximum absolute RVOT probability discrepancy is $2.51\times10^{-7}$ for CNN and zero for RF. All five acquisition-paced replays also preserve both class predictions. These results validate consistency of record transfer, canonical processing, and probability aggregation for the evaluated records. The 100\% agreement is an implementation-consistency measure; diagnostic accuracies remain 0.8644 and 0.8136, respectively.
+
+\subsection{Application Functional Verification}
+Eleven automated application tests exercise the real HTTP server and frozen model artifacts. Table~\ref{tab:functional} summarizes representative checks. The suite covers valid transfer, input rejection, duplicate handling, prediction parity, result persistence, cohort accounting, and measured-efficiency export. These checks assess software behavior; neither a passing test nor a screenshot adds new diagnostic patients or validates a physical ECG device.
+
+\begin{table}[t]
+\caption{Representative application checks from the 11-test suite.}
+\label{tab:functional}\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{.34\columnwidth}p{.46\columnwidth}c}\toprule
+Check & Expected behavior & Result\\\midrule
+Complete HTTP record & Finalize; preserve offline prediction & Pass\\
+Identical chunk retry & Accept once; no duplicated points & Pass\\
+Gap/conflicting chunk & Reject; preserve ordered buffer & Pass\\
+Incomplete record & Reject finalization & Pass\\
+Wrong rate/leads/unit & Reject incompatible model input & Pass\\
+Result export & Persist predictions, timing, provenance & Pass\\\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Processing Time and Transfer Behavior}
 Table~\ref{tab:latency} reports timing for the 59 no-delay replays. Median CNN pipeline processing is 92.3~ms per record compared with 146.0~ms for RF, a ratio of approximately 1.6. However, the CNN has a substantially longer tail: its P95 is 2370.6~ms compared with 254.4~ms for RF. Fig.~\ref{fig:latency} displays the complete empirical distributions. The median supports a favorable CNN tradeoff in this workload; the tail prevents a claim of uniformly faster or deterministic real-time inference.
