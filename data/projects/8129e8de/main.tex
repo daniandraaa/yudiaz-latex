@@ -24,86 +24,39 @@ satriamandala@telkomuniversity.ac.id}}
 \maketitle
 
 \begin{abstract}
-Translating an electrocardiogram (ECG) classifier into a connected application requires preservation of signal processing, patient-level aggregation, and model provenance. This paper presents a web-based Internet of Things (IoT) gateway framework for left/right ventricular outflow-tract (LVOT/RVOT) origin localization from 12-lead ECG. A compact one-dimensional convolutional neural network (1D CNN; 170,914 parameters per model) is compared with a Random Forest (RF) using 132 morphology and RR-interval features. The frozen study cohort contains 289 patients from a public 334-patient database. On 230 development patients, five fixed patient-level folds evaluated with three initialization seeds produced macro-F1 scores of 0.9034$\pm$0.0285 for the CNN and 0.7753$\pm$0.0815 for RF; accuracies were 0.9278 and 0.8420. These are non-nested, configuration-selected results. Five-model ensembles achieved macro-F1 values of 0.8285 and 0.7209 on a previously inspected 59-patient historical hold-out. Replaying all 59 raw recordings through a sequenced HTTP/JSON gateway reproduced every offline class prediction for both models. Median CNN and RF pipeline times were 92.3 and 146.0~ms per record, respectively, while their 95th percentiles were 2370.6 and 254.4~ms. Five additional acquisition-paced replays returned both predictions a median of 264~ms after the finish request. The results support functional integration and a favorable CNN median-time tradeoff in this local workload; physical acquisition, wireless operation, and external clinical generalization remain untested.
+Automated localization of ventricular arrhythmia origins from 12-lead electrocardiograms (ECGs) requires effective signal representation and a practical mechanism for presenting predictions to users. This study investigates a compact one-dimensional convolutional neural network (1D CNN) ensemble for distinguishing left and right ventricular outflow-tract (LVOT/RVOT) origins and integrates the predictor into a web-based Internet of Things (IoT) gateway framework. Each CNN contains 170,914 trainable parameters. A Random Forest using 132 morphology and RR-interval features serves as the comparator. On 230 development patients, five fixed patient-level folds evaluated with three initialization seeds yielded a macro-F1 of 0.9034 for the selected CNN configuration and 0.7753 for Random Forest. Configuration selection was non-nested. Five-model ensembles obtained macro-F1 values of 0.8285 and 0.7209 on a previously inspected 59-patient historical hold-out. The deployed application preserved all offline class predictions when the 59 recordings were replayed through its HTTP gateway. Median CNN and Random Forest pipeline times were 92.3 and 146.0~ms per record, respectively, although the CNN exhibited a higher 95th-percentile latency. These findings demonstrate the evaluated CNN pipeline's localization performance and its functional integration into a web application. Physical-device acquisition and external predictive validation remain to be evaluated.
 \end{abstract}
 \begin{IEEEkeywords}
 Internet of Things, 12-lead ECG, ventricular arrhythmia, outflow-tract localization, convolutional neural network, Random Forest
 \end{IEEEkeywords}
 
 \section{Introduction}
-Localization of an idiopathic ventricular arrhythmia to the left or right ventricular outflow tract (LVOT or RVOT) is a distinct task from identifying an abnormal beat. The former estimates an anatomical origin from the 12-lead electrocardiogram (ECG), whereas the latter identifies a rhythm or beat category. The public Ningbo database provides recordings of premature ventricular contractions (PVCs) and ventricular tachycardia (VT), with origin labels associated with successful ablation sites~\cite{zheng2020}. It offers a basis for developing automated origin-localization methods and studying how they can be integrated into a connected application.
+Localizing an idiopathic ventricular arrhythmia to the left or right ventricular outflow tract (LVOT or RVOT) requires interpretation of morphology across the 12-lead electrocardiogram (ECG). This anatomical target complements beat or rhythm identification: the desired output is the origin associated with a recording. The public Ningbo database contains premature ventricular contraction (PVC) and ventricular tachycardia (VT) recordings with origin labels associated with successful ablation sites~\cite{zheng2020}, enabling development of data-driven localization pipelines.
 
-Established ECG criteria include the V2 transition ratio~\cite{betensky2011} and the V2S/V3R index~\cite{yoshida2014}. These criteria encode relationships between precordial morphologies. Machine learning can combine a larger feature set: Zheng \emph{et al.}~\cite{zheng2021} developed a multistage approach using ECG morphology features for LVOT/RVOT discrimination. Deep neural networks have also been investigated for ECG rhythm classification~\cite{hannun2019} and 12-lead diagnosis~\cite{ribeiro2020}. Those tasks motivate learned signal representations, but their reported performance cannot be transferred directly to anatomical origin localization.
+Established ECG criteria include the V2 transition ratio~\cite{betensky2011} and V2S/V3R index~\cite{yoshida2014}. Feature-based machine learning can combine a broader morphological representation, as investigated by Zheng \emph{et al.}~\cite{zheng2021}. Deep learning studies of rhythm classification~\cite{hannun2019} and 12-lead diagnosis~\cite{ribeiro2020} motivate learning signal representations directly. However, performance on those targets does not determine performance on LVOT/RVOT localization. Patient-level evaluation and minority-class sensitivity are particularly relevant for a cohort with fewer LVOT cases.
 
-A usable connected system also needs a defined path from incoming signals to the model. Lead ordering, units, filtering, scaling, window aggregation, and artifact versions must agree with the offline experiment. A dashboard alone does not establish that agreement. Similarly, a fast isolated forward pass does not measure the complete cost of preprocessing and inference. For an Internet of Things (IoT) application, a gateway interface and measurements across the communication-to-inference path provide more concrete integration evidence.
+A compact convolutional predictor offers a concrete approach to learning ECG morphology with a defined parameter budget. Its practical evaluation should include the complete signal-processing pipeline and a feature-based comparator, together with the cost of inference. Deployment introduces a further requirement: incoming ECG records must undergo the same lead ordering, filtering, scaling, windowing, and probability aggregation used during model development. A web interface and IoT gateway can expose the resulting prediction to users, provided this processing path is verified.
 
-This work develops a web application and HTTP gateway around a compact CNN-only inference model, with a feature-based Random Forest (RF) comparator. Its scope is the application and the measured behavior of two frozen pipelines. The contributions are: (1) a sequenced, chunk-based interface for 12-lead ECG and record-level localization; (2) an explicitly qualified patient-level comparison of CNN and RF configurations; and (3) replay-based validation of prediction consistency and processing latency. The current gateway source is the actual public dataset, rather than a physical ECG acquisition device. This distinction defines what the experiments demonstrate.
+This study investigates a compact 1D CNN ensemble for record-level LVOT/RVOT origin localization and implements the predictor in a web-based gateway framework. The contributions are:
+\begin{itemize}
+\item A CNN-based localization pipeline combining canonical ECG preprocessing, window-level representation learning, and patient-level probability aggregation.
+\item A patient-level evaluation against a morphology-based Random Forest (RF) using matched data partitions, including discrimination performance and processing-time measurements.
+\item A functioning web application and HTTP gateway evaluated through prediction-consistency checks, functional tests, and acquisition-paced dataset replay.
+\end{itemize}
+The study focuses on application and evaluation of the CNN pipeline and its deployment. Public ECG data provide the completed experiments; live physical-device acquisition remains an integration step for subsequent evaluation.
 
 \section{Related Work}
-Betensky \emph{et al.}~\cite{betensky2011} and Yoshida \emph{et al.}~\cite{yoshida2014} proposed ECG indices that use precordial morphology to distinguish outflow-tract origins. Zheng \emph{et al.} released a 334-patient 12-lead database~\cite{zheng2020} and subsequently investigated feature extraction and machine learning for left/right origin classification~\cite{zheng2021}. Their feature-engineering strategy differs from the 132-feature RF implemented here. Consequently, the present RF is a reproducible local comparator, rather than a reproduction of that published classifier or a claim about the strongest available feature-based method.
+Conventional localization criteria express relationships among precordial ECG morphologies, including the V2 transition ratio~\cite{betensky2011} and V2S/V3R index~\cite{yoshida2014}. Zheng \emph{et al.} released a 334-patient database~\cite{zheng2020} and investigated feature extraction and machine learning for left/right origin classification~\cite{zheng2021}. Their engineered representation differs from the 132-feature RF used here. Our RF is therefore a local comparator with explicitly stated settings, rather than a reproduction of their classifier.
 
-Hannun \emph{et al.}~\cite{hannun2019} studied deep learning for ambulatory rhythm classification, and Ribeiro \emph{et al.}~\cite{ribeiro2020} studied automated 12-lead ECG diagnosis. In a related connected-system setting, Ardian and Mandala~\cite{ardian2025} integrated a modified Transformer decoder and conditional ECG-GAN into an IoT-oriented arrhythmia detection application. That study addresses beat classes; the present output is a binary LVOT/RVOT origin at recording level. We therefore evaluate origin discrimination and gateway consistency separately, without treating performance across these different targets and cohorts as directly comparable. The CNN architecture and conditional augmentation are established building blocks; the emphasis here is their integration and the measured CNN/RF tradeoff.
+Hannun \emph{et al.}~\cite{hannun2019} studied deep learning for ambulatory rhythm classification, while Ribeiro \emph{et al.}~\cite{ribeiro2020} studied automated 12-lead diagnosis. These studies support investigation of learned ECG representations but address different outcomes and cohorts. The present CNN is evaluated specifically for record-level LVOT/RVOT discrimination; performance is not ranked directly against rhythm-classification results.
 
-\section{Materials and Methods}
-\subsection{Dataset, Cohort, and Evaluation Units}
-The source database contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. The local diagnosis spreadsheet has a coarse left/right label for every subject. However, the frozen cohort inherited from earlier experiments was defined using its local \texttt{Sublocation} field: five Summit records were excluded, and 40 records lacked that field. Thus, the latter records do have coarse left/right labels; their exclusion reflects the earlier cohort definition, not absence of a binary origin in the public resource. We retain this fixed cohort to compare the existing model artifacts without changing the evaluation population after observing results.
+For application deployment, Ardian and Mandala~\cite{ardian2025} coupled a modified Transformer decoder and conditional ECG-GAN with an IoT-oriented web application for beat classification. Their evaluated target is beat classification, while the present output is anatomical origin at recording level. We retain established CNN and conditional-augmentation components and examine both patient-level performance and preservation of the offline prediction after gateway transfer.
 
-The resulting 289-patient cohort contains 71 LVOT and 218 RVOT cases, including 286 PVC and three VT records. It is therefore described as ventricular arrhythmia origin localization, rather than exclusively PVC localization. Table~\ref{tab:cohort} gives the fixed partitions. The 59-patient partition was separated during prior work and has since been inspected in exploratory analyses. It is reported as a \emph{historical hold-out}, not as a new independent or external test. Development-set cross-validation (CV) is the principal descriptive comparison, with selection-related limitations stated below. Every split is by patient; overlapping windows from a patient never appear on both sides of a fold.
+\section{Methodology}
+\subsection{System Overview}
+The study follows a model-development path and an application-inference path. During development, patient-disjoint partitions define training and validation data. Records are filtered, denoised, standardized with training-patient statistics, and segmented into complete windows. Conditional augmentation is applied to training bags, and CNN probabilities are pooled at patient level. Matched patient partitions support comparison with a morphology-based RF. The final deployment freezes five fitted CNNs and their development scaler.
 
-\begin{table}[t]
-\caption{Frozen cohort and partition counts.}
-\label{tab:cohort}\centering
-\begin{tabular}{lrrr}\toprule
-Partition & LVOT & RVOT & Total\\\midrule
-Development & 57 & 173 & 230\\
-Historical hold-out & 14 & 45 & 59\\\midrule
-Included cohort & 71 & 218 & 289\\\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Canonical CNN Signal Processing}
-The lead order is I, II, III, aVR, aVL, aVF, and V1--V6. Native dataset amplitudes and sampling frequency are preserved. The complete record is high-pass filtered with a fourth-order Butterworth filter at 0.5~Hz using forward--backward filtering. A level-five coif5 discrete wavelet transform applies level-wise SURE soft thresholding, following the wavelet-shrinkage principle~\cite{donoho1995}. Processing produces float32 values. These operations use the complete record and are noncausal.
-
-The denoised signal is divided into 5000-point windows (2.5~s), with a 2500-point step. Only complete windows are used; an incomplete trailing window is discarded. Each lead is standardized using means and scales estimated exclusively from the training patients for that fold. Final deployment uses the scaler fitted on the 230 development patients. Whole-record filtering, window boundaries, and lead scaling are reused in the server rather than replaced with browser-side approximations.
-
-\subsection{CNN Architecture and Patient Aggregation}
-Four convolutional blocks use 32, 64, 128, and 256 channels, with respective kernel lengths 7, 5, 3, and 3. Each block contains same-padded convolution, batch normalization, ReLU, and factor-two max pooling. Global temporal averaging feeds a head consisting of layer normalization, a 256-to-128 linear layer, ReLU, dropout of 0.3, and a two-output linear layer. Each model has 170,914 trainable parameters; the five deployed CNNs therefore contain 854,570 trainable parameters in total. ``Compact'' describes the individual architecture's parameter count, rather than a measured energy or embedded-device advantage. The deployed predictor uses CNN blocks only; no Transformer is used at inference.
-
-Let $p_{s,w}(c)$ denote the softmax probability for class $c$ from window $w$ and model seed $s$. With $W_i$ complete windows in patient $i$, its single-model probability is
-\begin{equation}
-\bar p_{i,s}(c)=\frac{1}{W_i}\sum_{w=1}^{W_i}p_{s,w}(c).
-\label{eq:pool}
-\end{equation}
-For deployment, the five seeds $\{42,43,44,45,46\}$ are averaged:
-\begin{equation}
-\hat p_i(c)=\frac{1}{5}\sum_s\bar p_{i,s}(c).
-\label{eq:ensemble}
-\end{equation}
-RVOT is assigned when $\hat p_i(\mathrm{RVOT})>0.5$; otherwise the result is LVOT. Probabilities are not calibrated risk estimates. The CV results below describe individual fitted models, whereas the historical hold-out and gateway results describe five-model ensembles.
-
-\subsection{Training and Conditional Augmentation}
-Training uses patient bags of up to four windows and a class-weighted patient negative log-likelihood after probability pooling. A conditional generative adversarial network (GAN)~\cite{mirza2014}, fitted only to the training patients of the corresponding fold, supplies class-matched synthetic windows. When a four-window bag is available, one window is replaced with a generated window. This is a training augmentation step: validation, historical hold-out, and gateway inference use only real ECG. The augmentation is retained in this description even though the deployed predictor itself is CNN-only.
-
-The CNN setting was selected from a nine-point grid of learning rates $\{10^{-4},5\times10^{-4},10^{-3}\}$ and window batch budgets $\{16,32,64\}$ with augmentation, plus a no-augmentation baseline at $10^{-3}$ and 32. The selected setting uses $5\times10^{-4}$ and 16. AdamW has weight decay $10^{-4}$, cosine learning-rate decay to $10^{-6}$ over at most 100 epochs, gradient clipping at 1.0, and early stopping with patience 15 using validation macro-F1. No pretrained weights are used. The final five CNN models were fitted on all development patients for the selected 16 epochs. Their augmentation generator was fitted on the development partition only.
-
-\subsection{Random Forest Comparator}
-The RF~\cite{breiman2001} uses 132 morphology and RR-interval features measured from the full raw recording by a separate beat-delineation pipeline. Per-lead descriptors include QRS width, relative R and S amplitudes, R fraction, and signed QRS area. Global descriptors include robust QRS span, precordial transition, V2S/V3R, and three RR measurements. The median and interquartile range over detected beats form the fixed feature vector. Missing features are median-imputed using training-patient values only.
-
-Each forest has 500 trees, balanced class weights, and otherwise default scikit-learn settings. The RF was not hyperparameter-tuned and does not use GAN augmentation. It uses the same patient folds and initialization seeds as the CNN; final deployment averages five forest probabilities. This comparison therefore concerns the two implemented pipelines, including their training choices. It does not isolate architecture from augmentation and tuning effort.
-
-\subsection{Metrics and Exploratory Uncertainty}
-Five fixed stratified folds on 230 patients are evaluated with three initialization seeds, 42--44, giving 15 fits per model. The fold partitions do not change with the initialization seed. Reported means and standard deviations summarize those fits; they are not results from 15 independent patient cohorts. The primary descriptive metric is macro-F1, the unweighted mean of class-specific F1 scores. Accuracy, balanced accuracy, LVOT/RVOT sensitivity, and ROC AUC based on RVOT probability provide complementary measures for the imbalanced cohort.
-
-For paired macro-F1 differences $d_j$ across the 15 fold/seed fits, an approximate corrected standard error is
-\begin{equation}
-\operatorname{SE}_{\mathrm{corr}}=\sqrt{\left(\frac{1}{15}+\frac{46}{184}\right)s_d^2},
-\label{eq:se}
-\end{equation}
-with a $t_{14}$ reference, following the dependence correction of Nadeau and Bengio~\cite{nadeau2003}. The approximation acknowledges overlapping training sets but does not make the fixed-fold seed results independent. More importantly, the same CV results were used to select the CNN setting. Intervals and $p$-values are therefore exploratory and not adjusted for configuration selection; nested CV is needed for a less selection-biased estimate. Historical hold-out ensemble differences use a paired, class-stratified bootstrap with 5000 resamples and an exact McNemar test~\cite{mcnemar1947}. Prior inspection also limits interpretation of those intervals.
-
-\section{Gateway and Web Application}
-\subsection{Record Transfer and Inference}
-Fig.~\ref{fig:system} places ECG acquisition upstream of the IoT gateway, preprocessing, inference, and user interface. In the target acquisition path, electrodes and a 12-lead ECG device capture and digitize the patient signal; the gateway transports the resulting record to the server. ECG acquisition supplies the signal, while the CNN performs anatomical origin localization. In this study, real recordings from the public database are injected at the same gateway boundary to evaluate the downstream application. The physical device interface and live acquisition have not been characterized in these experiments. A Python gateway reads a real 12-lead dataset file and opens an HTTP/JSON session containing sampling rate, lead order, amplitude-unit metadata, and expected recording length. Chunks contain a sequence number, sample offset, and a matrix of ECG values. The server supports up to 8000 time points per chunk. An identical retransmission is handled idempotently; a gap, conflicting retransmission, or inconsistent offset is rejected. Finalization checks completeness before running the inference pipelines.
+Fig.~\ref{fig:system} shows the acquisition-to-user path around that predictor. A complete 12-lead record enters through an HTTP gateway, receives canonical preprocessing, and is processed by the CNN ensemble. The browser presents the LVOT/RVOT output and timing; the RF branch provides a separately measured comparator. A physical ECG device is the intended upstream acquisition source. The experiments use real public-dataset recordings at the gateway boundary, evaluating the solid paths in the figure. Physical-device capture and wireless transport are not measured here.
 
 \begin{figure*}[t]
 \centering
@@ -136,40 +89,112 @@ Fig.~\ref{fig:system} places ECG acquisition upstream of the IoT gateway, prepro
 \label{fig:system}
 \end{figure*}
 
-The Python server uses PyTorch for CNN inference, scikit-learn for RF, and a browser-based dashboard. Both predictions, class probabilities, waveform previews, and stage timings are returned through the application. The catalog exposes all 334 source records while distinguishing the 289 supported cohort entries from the excluded entries. Catalog visibility is separate from the number of patients used to train or evaluate a model. The application also distinguishes the frozen CV summary from the historical hold-out summary; displaying a CV macro-F1 of approximately 0.90 does not make that value the accuracy of an individual gateway prediction.
+\subsection{Dataset and Patient Partitions}
+The source database contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. The local diagnosis spreadsheet has a coarse left/right label for every subject. However, the frozen cohort inherited from earlier experiments was defined using its local \texttt{Sublocation} field: five Summit records were excluded, and 40 records lacked that field. Thus, the latter records do have coarse left/right labels; their exclusion reflects the earlier cohort definition, not absence of a binary origin in the public resource. We retain this fixed cohort to compare the existing model artifacts without changing the evaluation population after observing results.
 
-The CNN checkpoints and scaler are verified against their recorded SHA-256 provenance at startup; RF artifact hashes are recorded as part of the deployed artifact identity. Session summaries retain results and timing without storing the full raw waveform. The interface supports bearer-token access when serving a local network. Authentication capability is not evidence of an evaluated production security deployment: the experiments here use loopback HTTP, and do not measure encrypted wireless transfer or remote operation.
+The resulting 289-patient cohort contains 71 LVOT and 218 RVOT cases, including 286 PVC and three VT records. It is therefore described as ventricular arrhythmia origin localization, rather than exclusively PVC localization. Table~\ref{tab:cohort} gives the fixed partitions. The 59-patient partition was separated during prior work and has since been inspected in exploratory analyses. It is reported as a \emph{historical hold-out}, not as a new independent or external test. Development-set cross-validation (CV) is the principal descriptive comparison, with selection-related limitations stated below. Every split is by patient; overlapping windows from a patient never appear on both sides of a fold.
 
-\subsection{Web Interface and Implementation Evidence}
-Fig.~\ref{fig:webapp} documents the running application using an actual historical hold-out recording, ECG-231. The interface displays all 12 received leads, the completed acquisition status, and a record-level RVOT output with a CNN probability of 98.0\% and RF probability of 82.2\%. These are rounded model outputs for one recording, rather than estimates of diagnostic accuracy. The heart graphic is a schematic orientation cue, not a reconstructed patient-specific anatomical map. A separate CV summary panel displays the fixed 230-patient evaluation, so population metrics remain distinguishable from the selected record's prediction.
+\begin{table}[t]
+\caption{Frozen cohort and partition counts.}
+\label{tab:cohort}\centering
+\begin{tabular}{lrrr}\toprule
+Partition & LVOT & RVOT & Total\\\midrule
+Development & 57 & 173 & 230\\
+Historical hold-out & 14 & 45 & 59\\\midrule
+Included cohort & 71 & 218 & 289\\\bottomrule
+\end{tabular}
+\end{table}
 
-The user workflow is to select or upload a record, start transfer, inspect the received waveform, and review the final localization after preprocessing and inference. The dashboard also exposes stage timings, session history, and result export. The screenshots substantiate an implemented user interface; end-to-end replay and automated functional checks provide separate evidence that its server path executes the frozen models.
+\subsection{ECG Preprocessing}
+The lead order is I, II, III, aVR, aVL, aVF, and V1--V6. Native dataset amplitudes and sampling frequency are preserved. The complete record is high-pass filtered with a fourth-order Butterworth filter at 0.5~Hz using forward--backward filtering. A level-five coif5 discrete wavelet transform applies level-wise SURE soft thresholding, following the wavelet-shrinkage principle~\cite{donoho1995}. Processing produces float32 values. These operations use the complete record and are noncausal.
 
-\begin{figure*}[t]
+The denoised signal is divided into 5000-point windows (2.5~s), with a 2500-point step. Only complete windows are used; an incomplete trailing window is discarded. Each lead is standardized using means and scales estimated exclusively from the training patients for that fold. Final deployment uses the scaler fitted on the 230 development patients. Whole-record filtering, window boundaries, and lead scaling are reused in the server rather than replaced with browser-side approximations.
+
+\subsection{Training-Only Conditional Augmentation}
+Training uses patient bags of up to four windows and a class-weighted patient negative log-likelihood after probability pooling. A conditional generative adversarial network (GAN)~\cite{mirza2014}, fitted only to the training patients of the corresponding fold, supplies class-matched synthetic windows. When a four-window bag is available, one window is replaced with a generated window. This is a training augmentation step: validation, historical hold-out, and gateway inference use only real ECG.
+
+\subsection{Compact CNN Ensemble}
+Fig.~\ref{fig:cnnarchitecture} details the predictor, and Table~\ref{tab:configuration} summarizes its configuration. Four convolutional blocks use 32, 64, 128, and 256 channels, with respective kernel lengths 7, 5, 3, and 3. Each block contains same-padded convolution, batch normalization, ReLU, and factor-two max pooling. Global temporal averaging feeds a head consisting of layer normalization, a 256-to-128 linear layer, ReLU, dropout of 0.3, and a two-output linear layer. Each model has 170,914 trainable parameters; the five deployed CNNs therefore contain 854,570 trainable parameters in total. ``Compact'' describes the individual architecture's parameter count, rather than a measured energy or embedded-device advantage. The deployed predictor uses CNN blocks only; no Transformer is used at inference.
+
+\begin{figure}[t]
 \centering
-\begin{minipage}[t]{0.63\textwidth}
-\centering
-{\footnotesize\textbf{(a) Received 12-lead ECG and completed transfer}}\\[2pt]
-\includegraphics[width=\linewidth]{web_signal.png}\\[5pt]
-{\footnotesize\textbf{(c) Separate development-CV summary}}\\[2pt]
-\includegraphics[width=\linewidth]{web_cv_summary.png}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.34\textwidth}
-\centering
-{\footnotesize\textbf{(b) Record-level localization output}}\\[2pt]
-\includegraphics[width=\linewidth]{web_result.png}
-\end{minipage}
-\caption{Cropped screenshots from the functioning web application. Panels (a) and (b) show ECG-231 (5.3755~s, 12 leads, 2000~Hz) replayed from the historical hold-out at acquisition pace. Panel (c) shows the separate selected-configuration CV summary (230 patients; five fixed folds and three initialization seeds). Screenshot values use Indonesian decimal commas. The interface images show implemented behavior on public ECG data and do not establish live physical-device acquisition.}
-\label{fig:webapp}
-\end{figure*}
+\begin{tikzpicture}[font=\scriptsize,
+ box/.style={draw,rounded corners=2pt,align=center,text width=69mm,minimum height=7mm,inner sep=3pt},
+ arr/.style={-{Stealth[length=1.7mm]},thick}]
+\node[box] (input) at (0,0) {Standardized ECG window: $12\times5000$};
+\node[box,fill=blue!6] (conv) at (0,-1.1) {Four Conv1D blocks: channels $32\rightarrow64\rightarrow128\rightarrow256$\\Kernels $7,5,3,3$; each block: BN, ReLU, MaxPool(2)};
+\node[box] (gap) at (0,-2.2) {Global temporal average: 256 features};
+\node[box,fill=blue!6] (head) at (0,-3.3) {LayerNorm $\rightarrow$ Linear(128) $\rightarrow$ ReLU $\rightarrow$ Dropout(0.3)\\$\rightarrow$ Linear(2) $\rightarrow$ window softmax probabilities};
+\node[box,fill=green!6] (pool) at (0,-4.5) {Mean over complete windows per patient\\Deployment: mean of five independently initialized CNNs};
+\node[box] (out) at (0,-5.6) {Record-level LVOT/RVOT probability and class};
+\draw[arr] (input)--(conv); \draw[arr] (conv)--(gap);
+\draw[arr] (gap)--(head); \draw[arr] (head)--(pool); \draw[arr] (pool)--(out);
+\end{tikzpicture}
+\caption{Compact CNN predictor and deployment aggregation. Each individual CNN has 170,914 trainable parameters. Training-only GAN augmentation is outside the inference path.}
+\label{fig:cnnarchitecture}
+\end{figure}
 
-\subsection{System Evaluation Protocol}
+\begin{table}[t]
+\caption{CNN configuration used in the evaluated pipeline.}
+\label{tab:configuration}\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{ll}\toprule
+Component & Setting\\\midrule
+Input window / step & $12\times5000$ / 2500 points\\
+Convolution channels & 32, 64, 128, 256\\
+Kernel lengths / pooling & 7, 5, 3, 3 / factor 2 per block\\
+Temporal aggregation & Global mean\\
+Classifier hidden width / dropout & 128 / 0.3\\
+Parameters per CNN & 170,914\\
+Learning rate / window batch budget & $5\times10^{-4}$ / 16\\
+Optimizer / weight decay & AdamW / $10^{-4}$\\
+Selection limit / stopping patience & 100 epochs / 15 epochs\\
+Final fit / ensemble size & 16 epochs / five CNNs\\\bottomrule
+\end{tabular}
+\end{table}
+
+Let $p_{s,w}(c)$ denote the softmax probability for class $c$ from window $w$ and model seed $s$. With $W_i$ complete windows in patient $i$, its single-model probability is
+\begin{equation}
+\bar p_{i,s}(c)=\frac{1}{W_i}\sum_{w=1}^{W_i}p_{s,w}(c).
+\label{eq:pool}
+\end{equation}
+For deployment, the five seeds $\{42,43,44,45,46\}$ are averaged:
+\begin{equation}
+\hat p_i(c)=\frac{1}{5}\sum_s\bar p_{i,s}(c).
+\label{eq:ensemble}
+\end{equation}
+RVOT is assigned when $\hat p_i(\mathrm{RVOT})>0.5$; otherwise the result is LVOT. Probabilities are not calibrated risk estimates. The CV results below describe individual fitted models, whereas the historical hold-out and gateway results describe five-model ensembles.
+
+\subsection{Random Forest Comparator}
+The RF~\cite{breiman2001} uses 132 morphology and RR-interval features measured from the full raw recording by a separate beat-delineation pipeline. Per-lead descriptors include QRS width, relative R and S amplitudes, R fraction, and signed QRS area. Global descriptors include robust QRS span, precordial transition, V2S/V3R, and three RR measurements. The median and interquartile range over detected beats form the fixed feature vector. Missing features are median-imputed using training-patient values only.
+
+Each forest has 500 trees, balanced class weights, and otherwise default scikit-learn settings. The RF was not hyperparameter-tuned and does not use GAN augmentation. It uses the same patient folds and initialization seeds as the CNN; final deployment averages five forest probabilities. This comparison therefore concerns the two implemented pipelines, including their training choices. It does not isolate architecture from augmentation and tuning effort.
+
+\subsection{Training and Evaluation}
+The CNN setting was selected from a nine-point grid of learning rates $\{10^{-4},5\times10^{-4},10^{-3}\}$ and window batch budgets $\{16,32,64\}$ with augmentation, plus a no-augmentation baseline at $10^{-3}$ and 32. The selected setting uses $5\times10^{-4}$ and 16. AdamW has weight decay $10^{-4}$, cosine learning-rate decay to $10^{-6}$ over at most 100 epochs, gradient clipping at 1.0, and early stopping with patience 15 using validation macro-F1. No pretrained weights are used. The final five CNN models were fitted on all development patients for the selected 16 epochs. Their augmentation generator was fitted on the development partition only.
+
+Five fixed stratified folds on 230 patients are evaluated with three initialization seeds, 42--44, giving 15 fits per model. The fold partitions do not change with the initialization seed. Reported means and standard deviations summarize those fits; they are not results from 15 independent patient cohorts. The primary descriptive metric is macro-F1, the unweighted mean of class-specific F1 scores. Accuracy, balanced accuracy, LVOT/RVOT sensitivity, and ROC AUC based on RVOT probability provide complementary measures for the imbalanced cohort.
+
+For paired macro-F1 differences $d_j$ across the 15 fold/seed fits, an approximate corrected standard error is
+\begin{equation}
+\operatorname{SE}_{\mathrm{corr}}=\sqrt{\left(\frac{1}{15}+\frac{46}{184}\right)s_d^2},
+\label{eq:se}
+\end{equation}
+with a $t_{14}$ reference, following the dependence correction of Nadeau and Bengio~\cite{nadeau2003}. The approximation acknowledges overlapping training sets but does not make the fixed-fold seed results independent. More importantly, the same CV results were used to select the CNN setting. Intervals and $p$-values are therefore exploratory and not adjusted for configuration selection; nested CV is needed for a less selection-biased estimate. Historical hold-out ensemble differences use a paired, class-stratified bootstrap with 5000 resamples and an exact McNemar test~\cite{mcnemar1947}. Prior inspection also limits interpretation of those intervals.
+
+\subsection{Web and IoT Deployment}
+The predictor is deployed with a Python HTTP server, PyTorch CNN inference, a scikit-learn RF comparator, and a browser dashboard. A gateway opens a session declaring sampling rate, lead order, amplitude units, and expected record length. Sequenced JSON chunks contain sample offsets and at most 8000 time points. Identical retransmissions are accepted idempotently; gaps, conflicts, and inconsistent offsets are rejected. Finalization checks completeness before whole-record preprocessing and inference.
+
+The user selects or uploads a record, starts transfer, inspects the received waveform, and reviews the final localization. The dashboard provides model probabilities, stage timings, session history, and export. Its catalog exposes all 334 source records and identifies the 289 supported cohort entries. CV summaries and historical hold-out summaries are displayed separately from predictions on the selected record. Screenshots and observed application behavior are reported with the experimental results.
+
+CNN checkpoints and scaler are verified against recorded SHA-256 provenance; RF hashes contribute to the deployed artifact identity. Summaries retain predictions and timing without full raw waveforms. Bearer-token access is supported for local-network serving, while the reported evaluation uses loopback HTTP. A future physical acquisition interface must supply compatible 12-lead records; its live operation is outside this evaluation.
+
 All 59 historical hold-out raw records were transmitted through the gateway in 1000-time-point chunks, equivalent to 0.5~s of signal per full chunk. One warm-up replay was excluded. The principal run sends chunks without acquisition delays, once per record. A second run replays the first five records at 2000 time points/s. These five repeated records are system tests, not additional diagnostic subjects. The client and server run on the same Apple Silicon arm64 workstation with macOS 26.2, PyTorch 2.12.0, CPU inference, and four PyTorch threads. RF prediction uses one job per forest. The deployed identity is \texttt{154da12ade375dff}, using seeds 42--46.
 
 For each record, CNN pipeline time is preprocessing plus inference by the five CNN models. RF pipeline time is feature extraction plus inference by the five forests. Their distributions are computed from these per-record sums, rather than by adding marginal stage medians. The finish-request round trip measures the final request and response, including processing both models. Client end-to-end time also includes session creation, chunk serialization and transfer, and, for paced replays, acquisition waiting. These definitions prevent acquisition time from being confused with model inference time.
 
-\section{Results}
-\subsection{Development-Set Comparison}
+\section{Experiments and Results Analysis}
+\subsection{Development Cross-Validation Performance}
 Table~\ref{tab:cv} reports the 15-fit summaries. CNN macro-F1 is 0.9034 compared with 0.7753 for RF, with a mean paired difference of 0.1281. The exploratory corrected 95\% interval is [0.0247, 0.2314], with $p=0.0188$. CNN has higher macro-F1 in 13 fits and ties in two. Fig.~\ref{fig:cv} shows the paired results rather than treating the aggregate mean as a result attained identically by every fit.
 
 \begin{table}[t]
@@ -193,7 +218,7 @@ RVOT sensitivity & $0.9500\pm0.0300$ & $0.9148\pm0.0607$\\\bottomrule
 
 The larger descriptive difference occurs in LVOT sensitivity: 0.8591 for CNN compared with 0.6197 for RF. RVOT sensitivity remains 0.9500 and 0.9148, respectively. Thus, accuracy alone would understate the RF's minority-class errors. CNN macro-F1 also varies less across these fits (SD 0.0285 compared with 0.0815). The mean AUC difference is 0.0839, but its exploratory corrected interval includes zero ([$-0.0241$, 0.1920]). These results support describing the observed configuration comparison without asserting a selection-adjusted statistical superiority claim.
 
-\subsection{Historical Hold-Out Ensembles}
+\subsection{Historical Hold-Out Performance}
 Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the five-model ensembles on 59 patients. CNN correctly classifies 12 of 14 LVOT and 39 of 45 RVOT cases; RF correctly classifies seven LVOT and 41 RVOT cases. The higher CNN minority-class sensitivity accompanies two fewer correct RVOT classifications, rather than improvement for every class and patient.
 
 \begin{table}[t]
@@ -220,7 +245,29 @@ Single-model F1$^{*}$ & $0.7930\pm0.0382$ & $0.7144\pm0.0192$\\\bottomrule
 
 The paired macro-F1 difference is 0.1076, with a bootstrap 95\% interval of [$-0.0263$, 0.2568]. Seven patients are correct only with CNN, and four only with RF; exact McNemar $p=0.5488$. The AUC difference is 0.2000, with interval [0.0667, 0.3492]. The macro-F1 interval includes zero, and only 14 LVOT patients are available. These small, previously inspected data do not establish an independent confirmatory advantage. The lower hold-out F1 than development CV also illustrates why 0.9034 must be presented specifically as a selected-configuration CV mean.
 
-\subsection{Gateway Prediction Consistency}
+\subsection{Web Application and Gateway Consistency}
+Fig.~\ref{fig:webapp} documents the running application using an actual historical hold-out recording, ECG-231. The interface displays all 12 received leads, the completed acquisition status, and a record-level RVOT output with a CNN probability of 98.0\% and RF probability of 82.2\%. These are rounded model outputs for one recording, rather than estimates of diagnostic accuracy. The heart graphic is a schematic orientation cue, not a reconstructed patient-specific anatomical map. A separate CV summary panel displays the fixed 230-patient evaluation, so population metrics remain distinguishable from the selected record's prediction.
+
+The screenshots substantiate an implemented user interface; end-to-end replay and automated functional checks provide separate evidence that its server path executes the frozen models.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.63\textwidth}
+\centering
+{\footnotesize\textbf{(a) Received 12-lead ECG and completed transfer}}\\[2pt]
+\includegraphics[width=\linewidth]{web_signal.png}\\[5pt]
+{\footnotesize\textbf{(c) Separate development-CV summary}}\\[2pt]
+\includegraphics[width=\linewidth]{web_cv_summary.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+{\footnotesize\textbf{(b) Record-level localization output}}\\[2pt]
+\includegraphics[width=\linewidth]{web_result.png}
+\end{minipage}
+\caption{Cropped screenshots from the functioning web application. Panels (a) and (b) show ECG-231 (5.3755~s, 12 leads, 2000~Hz) replayed from the historical hold-out at acquisition pace. Panel (c) shows the separate selected-configuration CV summary (230 patients; five fixed folds and three initialization seeds). Screenshot values use Indonesian decimal commas. The interface images show implemented behavior on public ECG data and do not establish live physical-device acquisition.}
+\label{fig:webapp}
+\end{figure*}
+
 All 59 no-delay replays complete successfully. Source durations range from 5.053 to 25.000~s, with a median of 12.943~s. Gateway and offline class predictions agree for 59/59 recordings for each model. The maximum absolute RVOT probability discrepancy is $2.51\times10^{-7}$ for CNN and zero for RF. All five acquisition-paced replays also preserve both class predictions. These results validate consistency of record transfer, canonical processing, and probability aggregation for the evaluated records. The 100\% agreement is an implementation-consistency measure; diagnostic accuracies remain 0.8644 and 0.8136, respectively.
 
 \subsection{Application Functional Verification}
@@ -241,7 +288,7 @@ Result export & Persist predictions, timing, provenance & Pass\\\bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Processing Time and Transfer Behavior}
+\subsection{Processing Efficiency}
 Table~\ref{tab:latency} reports timing for the 59 no-delay replays. Median CNN pipeline processing is 92.3~ms per record compared with 146.0~ms for RF, a ratio of approximately 1.6. However, the CNN has a substantially longer tail: its P95 is 2370.6~ms compared with 254.4~ms for RF. Fig.~\ref{fig:latency} displays the complete empirical distributions. The median supports a favorable CNN tradeoff in this workload; the tail prevents a claim of uniformly faster or deterministic real-time inference.
 
 \begin{table}[t]
@@ -268,10 +315,10 @@ Client end-to-end, no delay & 551.6 & 3032.5\\\bottomrule
 
 The median across per-record median chunk round trips is 10.2~ms for chunks representing 500~ms of acquisition. For the five acquisition-paced records, both-model finish-request round trips have median 264~ms and maximum 427~ms. The largest within-record chunk P95 in that paced subset is 51.6~ms, below its 500~ms acquisition interval. This shows the implemented local transfer path keeping pace for those five records. It does not characterize wireless delays, packet loss, concurrent clients, or an unmeasured acquisition device. Because full-record noncausal processing precedes localization, the measured response is a post-acquisition record result, not continuous PVC detection.
 
-\section{Discussion and Limitations}
-The application connects frozen offline classifiers to an explicit gateway protocol and exposes both diagnostic and operational measurements. A practical strength is reproducibility of the same patient-level decision after chunked transfer. Small probability discrepancies without label changes are consistent with floating-point execution differences. Reporting artifact identity, cohort boundaries, and the evaluation unit makes the displayed performance traceable to an experiment rather than to an arbitrary dashboard value.
-
+\subsection{Discussion and Limitations}
 The CNN has higher observed macro-F1 and LVOT sensitivity in the selected CV configuration. Learned morphology may capture information omitted by the fixed feature extractor, but this experiment does not establish that mechanism. CNN tuning and conditional augmentation differ from the untuned RF training. A tuned RF, alternative feature selection, matched augmentation, or nested selection could change the comparison. The earlier dataset study also uses a different engineered representation~\cite{zheng2021}; the current numbers should not be interpreted as a state-of-the-art ranking across papers.
+
+The application connects frozen offline classifiers to an explicit gateway protocol and exposes both diagnostic and operational measurements. A practical strength is reproducibility of the same patient-level decision after chunked transfer. Small probability discrepancies without label changes are consistent with floating-point execution differences. Reporting artifact identity, cohort boundaries, and the evaluation unit makes the displayed performance traceable to an experiment rather than to an arbitrary dashboard value.
 
 Runtime has a similarly qualified interpretation. Avoiding explicit beat-feature extraction reduces one CNN preprocessing component, yet RF inference itself has a larger median cost than RF feature extraction. Feature extraction therefore does not dominate every RF stage. Conversely, the CNN latency tail is substantial. The single-pass, varying-duration workload lacks controlled background CPU load and repeated per-record trials; its measurements cannot attribute that tail to a particular scheduler or implementation component. Neither energy consumption nor edge-device execution was measured. The compact per-model parameter count alone does not prove efficiency of the full five-model deployment on an embedded device.
 
@@ -280,8 +327,8 @@ The data originate from one clinical center. The historical hold-out has been in
 Finally, physical acquisition, cross-device amplitude calibration, wireless transport, concurrency, calibrated confidence, and external validation remain open. The HTTP interface supplies an integration boundary for a future acquisition gateway, but loopback replay is the completed IoT-system evidence. A future study should freeze the cohort and preprocessing prospectively, compare equally tuned alternatives, evaluate a causal processing path if continuous output is required, and validate on an independently collected center/device cohort. The current application is a research system and has not been evaluated for clinical decision-making.
 
 \balance
-\section{Conclusion}
-A web-based IoT gateway framework was implemented for record-level LVOT/RVOT origin localization using a compact CNN-only predictor and an RF comparator. The selected CNN configuration achieved development CV macro-F1 of 0.9034 compared with 0.7753 for RF; historical hold-out ensemble values were 0.8285 and 0.7209. All 59 gateway replays preserved offline class predictions. CNN median pipeline time was lower (92.3 compared with 146.0~ms), while its P95 was higher (2370.6 compared with 254.4~ms). The study supports functional integration and a measured local tradeoff, with independent predictive validation and physical IoT acquisition as necessary next steps.
+\section{Conclusion and Future Work}
+A compact CNN ensemble was evaluated for record-level LVOT/RVOT origin localization and deployed through a web-based IoT gateway, with a morphology-based RF comparator. The selected CNN configuration achieved development CV macro-F1 of 0.9034 compared with 0.7753 for RF; historical hold-out ensemble values were 0.8285 and 0.7209. All 59 gateway replays preserved offline class predictions. CNN median pipeline time was lower (92.3 compared with 146.0~ms), while its P95 was higher (2370.6 compared with 254.4~ms). The study supports application of the evaluated CNN pipeline and preservation of its decisions through gateway transfer. Future work will prospectively define an expanded cohort, compare equally tuned alternatives, integrate physical ECG acquisition, and validate predictions on an independent center/device cohort.
 
 \begin{thebibliography}{00}
 \bibitem{zheng2020} J. Zheng, G. Fu, K. Anderson, H. Chu, and C. Rakovski, ``A 12-lead ECG database to identify origins of idiopathic ventricular arrhythmia containing 334 patients,'' \emph{Sci. Data}, vol. 7, Art. no. 98, 2020, doi: 10.1038/s41597-020-0440-8.
