@@ -2,13 +2,15 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
+\graphicspath{{assets/}{./}}
 \usepackage{booktabs}
+\usepackage{balance}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
 \usepackage[hidelinks]{hyperref}
 
 \begin{document}
-\title{A Web-Based IoT Framework for Outflow-Tract Arrhythmia Localization: Compact 1D CNN versus Random Forest}
+\title{A Web-Based IoT Framework for Outflow-Tract Arrhythmia Localization Using a Compact 1D CNN}
 \author{
 \IEEEauthorblockN{Daniandra Prayudisty Ilham}
 \IEEEauthorblockA{\textit{Informatics, School of Computing}\\
@@ -22,7 +24,7 @@ satriamandala@telkomuniversity.ac.id}}
 \maketitle
 
 \begin{abstract}
-Translating an electrocardiogram (ECG) classifier into a connected application requires preservation of signal processing, patient-level aggregation, and model provenance. This paper presents a web-based Internet of Things (IoT) gateway framework for left versus right ventricular outflow-tract (LVOT/RVOT) origin localization from 12-lead ECG. A compact one-dimensional convolutional neural network (1D CNN; 170,914 parameters per model) is compared with a Random Forest (RF) using 132 morphology and RR-interval features. The frozen study cohort contains 289 patients from a public 334-patient database. On 230 development patients, five fixed patient-level folds evaluated with three initialization seeds produced macro-F1 scores of 0.9034$\pm$0.0285 for the CNN and 0.7753$\pm$0.0815 for RF; accuracies were 0.9278 and 0.8420. These are non-nested, configuration-selected results. Five-model ensembles achieved macro-F1 values of 0.8285 and 0.7209 on a previously inspected 59-patient historical hold-out. Replaying all 59 raw recordings through a sequenced HTTP/JSON gateway reproduced every offline class prediction for both models. Median CNN and RF pipeline times were 92.3 and 146.0~ms per record, respectively, while their 95th percentiles were 2370.6 and 254.4~ms. Five additional acquisition-paced replays returned both predictions a median of 264~ms after the finish request. The results support functional integration and a favorable CNN median-time tradeoff in this local workload; physical acquisition, wireless operation, and external clinical generalization remain untested.
+Translating an electrocardiogram (ECG) classifier into a connected application requires preservation of signal processing, patient-level aggregation, and model provenance. This paper presents a web-based Internet of Things (IoT) gateway framework for left/right ventricular outflow-tract (LVOT/RVOT) origin localization from 12-lead ECG. A compact one-dimensional convolutional neural network (1D CNN; 170,914 parameters per model) is compared with a Random Forest (RF) using 132 morphology and RR-interval features. The frozen study cohort contains 289 patients from a public 334-patient database. On 230 development patients, five fixed patient-level folds evaluated with three initialization seeds produced macro-F1 scores of 0.9034$\pm$0.0285 for the CNN and 0.7753$\pm$0.0815 for RF; accuracies were 0.9278 and 0.8420. These are non-nested, configuration-selected results. Five-model ensembles achieved macro-F1 values of 0.8285 and 0.7209 on a previously inspected 59-patient historical hold-out. Replaying all 59 raw recordings through a sequenced HTTP/JSON gateway reproduced every offline class prediction for both models. Median CNN and RF pipeline times were 92.3 and 146.0~ms per record, respectively, while their 95th percentiles were 2370.6 and 254.4~ms. Five additional acquisition-paced replays returned both predictions a median of 264~ms after the finish request. The results support functional integration and a favorable CNN median-time tradeoff in this local workload; physical acquisition, wireless operation, and external clinical generalization remain untested.
 \end{abstract}
 \begin{IEEEkeywords}
 Internet of Things, 12-lead ECG, ventricular arrhythmia, outflow-tract localization, convolutional neural network, Random Forest
@@ -134,7 +136,7 @@ For each record, CNN pipeline time is preprocessing plus inference by the five C
 
 \section{Results}
 \subsection{Development-Set Comparison}
-Table~\ref{tab:cv} reports the 15-fit summaries. CNN macro-F1 is 0.9034 versus 0.7753 for RF, with a mean paired difference of 0.1281. The exploratory corrected 95\% interval is [0.0247, 0.2314], with $p=0.0188$. CNN has higher macro-F1 in 13 fits and ties in two. Fig.~\ref{fig:cv} shows the paired results rather than treating the aggregate mean as a result attained identically by every fit.
+Table~\ref{tab:cv} reports the 15-fit summaries. CNN macro-F1 is 0.9034 compared with 0.7753 for RF, with a mean paired difference of 0.1281. The exploratory corrected 95\% interval is [0.0247, 0.2314], with $p=0.0188$. CNN has higher macro-F1 in 13 fits and ties in two. Fig.~\ref{fig:cv} shows the paired results rather than treating the aggregate mean as a result attained identically by every fit.
 
 \begin{table}[t]
 \caption{Development CV: mean $\pm$ SD over five fixed patient folds and three initialization seeds. Selection was not nested.}
@@ -155,7 +157,7 @@ RVOT sensitivity & $0.9500\pm0.0300$ & $0.9148\pm0.0607$\\\bottomrule
 \label{fig:cv}
 \end{figure}
 
-The larger descriptive difference occurs in LVOT sensitivity: 0.8591 for CNN versus 0.6197 for RF. RVOT sensitivity remains 0.9500 and 0.9148, respectively. Thus, accuracy alone would understate the RF's minority-class errors. CNN macro-F1 also varies less across these fits (SD 0.0285 versus 0.0815). The mean AUC difference is 0.0839, but its exploratory corrected interval includes zero ([$-0.0241$, 0.1920]). These results support describing the observed configuration comparison without asserting a selection-adjusted statistical superiority claim.
+The larger descriptive difference occurs in LVOT sensitivity: 0.8591 for CNN compared with 0.6197 for RF. RVOT sensitivity remains 0.9500 and 0.9148, respectively. Thus, accuracy alone would understate the RF's minority-class errors. CNN macro-F1 also varies less across these fits (SD 0.0285 compared with 0.0815). The mean AUC difference is 0.0839, but its exploratory corrected interval includes zero ([$-0.0241$, 0.1920]). These results support describing the observed configuration comparison without asserting a selection-adjusted statistical superiority claim.
 
 \subsection{Historical Hold-Out Ensembles}
 Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the five-model ensembles on 59 patients. CNN correctly classifies 12 of 14 LVOT and 39 of 45 RVOT cases; RF correctly classifies seven LVOT and 41 RVOT cases. The higher CNN minority-class sensitivity accompanies two fewer correct RVOT classifications, rather than improvement for every class and patient.
@@ -163,6 +165,7 @@ Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the five-model ensembles
 \begin{table}[t]
 \caption{Historical hold-out: 59 patients, including 14 LVOT. Values describe five-seed ensembles, unless indicated.}
 \label{tab:holdout}\centering\small
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lcc}\toprule
 Metric & 1D CNN & Random Forest\\\midrule
 Macro-F1 & 0.8285 & 0.7209\\
@@ -171,8 +174,9 @@ Accuracy & 0.8644 & 0.8136\\
 Balanced accuracy & 0.8619 & 0.7056\\
 LVOT sensitivity & 0.8571 & 0.5000\\
 RVOT sensitivity & 0.8667 & 0.9111\\
-Single-model F1, mean$\pm$SD & $0.7930\pm0.0382$ & $0.7144\pm0.0192$\\\bottomrule
+Single-model F1$^{*}$ & $0.7930\pm0.0382$ & $0.7144\pm0.0192$\\\bottomrule
 \end{tabular}
+\\[2pt]{\footnotesize $^{*}$Mean$\pm$SD across five individual models.}
 \end{table}
 \begin{figure}[t]\centering
 \includegraphics[width=\columnwidth]{holdout_confusion.pdf}
@@ -186,7 +190,7 @@ The paired macro-F1 difference is 0.1076, with a bootstrap 95\% interval of [$-0
 All 59 no-delay replays complete successfully. Source durations range from 5.053 to 25.000~s, with a median of 12.943~s. Gateway and offline class predictions agree for 59/59 recordings for each model. The maximum absolute RVOT probability discrepancy is $2.51\times10^{-7}$ for CNN and zero for RF. All five acquisition-paced replays also preserve both class predictions. These results validate consistency of record transfer, canonical processing, and probability aggregation for the evaluated records. The 100\% agreement is an implementation-consistency measure; diagnostic accuracies remain 0.8644 and 0.8136, respectively.
 
 \subsection{Processing Time and Transfer Behavior}
-Table~\ref{tab:latency} reports timing for the 59 no-delay replays. Median CNN pipeline processing is 92.3~ms per record versus 146.0~ms for RF, a ratio of approximately 1.6. However, the CNN has a substantially longer tail: its P95 is 2370.6~ms versus 254.4~ms for RF. Fig.~\ref{fig:latency} displays the complete empirical distributions. The median supports a favorable CNN tradeoff in this workload; the tail prevents a claim of uniformly faster or deterministic real-time inference.
+Table~\ref{tab:latency} reports timing for the 59 no-delay replays. Median CNN pipeline processing is 92.3~ms per record compared with 146.0~ms for RF, a ratio of approximately 1.6. However, the CNN has a substantially longer tail: its P95 is 2370.6~ms compared with 254.4~ms for RF. Fig.~\ref{fig:latency} displays the complete empirical distributions. The median supports a favorable CNN tradeoff in this workload; the tail prevents a claim of uniformly faster or deterministic real-time inference.
 
 \begin{table}[t]
 \caption{Local no-delay gateway timing over 59 recordings (ms per record). Pipeline percentiles use per-record stage sums.}
@@ -223,8 +227,9 @@ The data originate from one clinical center. The historical hold-out has been in
 
 Finally, physical acquisition, cross-device amplitude calibration, wireless transport, concurrency, calibrated confidence, and external validation remain open. The HTTP interface supplies an integration boundary for a future acquisition gateway, but loopback replay is the completed IoT-system evidence. A future study should freeze the cohort and preprocessing prospectively, compare equally tuned alternatives, evaluate a causal processing path if continuous output is required, and validate on an independently collected center/device cohort. The current application is a research system and has not been evaluated for clinical decision-making.
 
+\balance
 \section{Conclusion}
-A web-based IoT gateway framework was implemented for record-level LVOT/RVOT origin localization using a compact CNN-only predictor and an RF comparator. The selected CNN configuration achieved development CV macro-F1 of 0.9034 versus 0.7753 for RF; historical hold-out ensemble values were 0.8285 and 0.7209. All 59 gateway replays preserved offline class predictions. CNN median pipeline time was lower (92.3 versus 146.0~ms), while its P95 was higher (2370.6 versus 254.4~ms). The study supports functional integration and a measured local tradeoff, with independent predictive validation and physical IoT acquisition as necessary next steps.
+A web-based IoT gateway framework was implemented for record-level LVOT/RVOT origin localization using a compact CNN-only predictor and an RF comparator. The selected CNN configuration achieved development CV macro-F1 of 0.9034 compared with 0.7753 for RF; historical hold-out ensemble values were 0.8285 and 0.7209. All 59 gateway replays preserved offline class predictions. CNN median pipeline time was lower (92.3 compared with 146.0~ms), while its P95 was higher (2370.6 compared with 254.4~ms). The study supports functional integration and a measured local tradeoff, with independent predictive validation and physical IoT acquisition as necessary next steps.
 
 \begin{thebibliography}{00}
 \bibitem{zheng2020} J. Zheng, G. Fu, K. Anderson, H. Chu, and C. Rakovski, ``A 12-lead ECG database to identify origins of idiopathic ventricular arrhythmia containing 334 patients,'' \emph{Sci. Data}, vol. 7, Art. no. 98, 2020, doi: 10.1038/s41597-020-0440-8.
