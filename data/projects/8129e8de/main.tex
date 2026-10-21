@@ -10,7 +10,7 @@
 \usepackage[hidelinks]{hyperref}
 
 \begin{document}
-\title{A Web-Based IoT Framework for Outflow-Tract Arrhythmia Localization Using a Compact 1D CNN Ensemble}
+\title{Outflow-Tract Arrhythmia Localization Using a Compact 1D CNN Ensemble with a Web-Based IoT Gateway}
 \author{
 \IEEEauthorblockN{Daniandra Prayudisty Ilham}
 \IEEEauthorblockA{\textit{Informatics, School of Computing}\\
@@ -90,9 +90,9 @@ Fig.~\ref{fig:system} shows the acquisition-to-user path around that predictor. 
 \end{figure*}
 
 \subsection{Dataset and Patient Partitions}
-The source database contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. The local diagnosis spreadsheet has a coarse left/right label for every subject. However, the frozen cohort inherited from earlier experiments was defined using its local \texttt{Sublocation} field: five Summit records were excluded, and 40 records lacked that field. Thus, the latter records do have coarse left/right labels; their exclusion reflects the earlier cohort definition, not absence of a binary origin in the public resource. We retain this fixed cohort to compare the existing model artifacts without changing the evaluation population after observing results.
+The public Ningbo resource contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. The frozen cohort inherited from earlier experiments uses the local \texttt{Sublocation} field: five Summit records and 40 records missing that field were excluded. All 334 subjects have a coarse left/right label, so the latter exclusion is a cohort-definition choice, not absence of a binary origin. Retaining this fixed population preserves comparability of the existing model artifacts.
 
-The resulting 289-patient cohort contains 71 LVOT and 218 RVOT cases, including 286 PVC and three VT records. It is therefore described as ventricular arrhythmia origin localization, rather than exclusively PVC localization. Table~\ref{tab:cohort} gives the fixed partitions. The 59-patient partition was separated during prior work and has since been inspected in exploratory analyses. It is reported as a \emph{historical hold-out}, not as a new independent or external test. Development-set cross-validation (CV) is the principal descriptive comparison, with selection-related limitations stated below. Every split is by patient; overlapping windows from a patient never appear on both sides of a fold.
+The included 289 patients comprise 71 LVOT and 218 RVOT cases, with 286 PVC and three VT records. Table~\ref{tab:cohort} gives the 230-patient development and 59-patient historical hold-out partitions. The hold-out was inspected during prior exploratory work and provides secondary evidence. Development CV is the principal descriptive comparison, subject to the selection limitations below. All splits are by patient; overlapping windows remain within their patient's partition.
 
 \begin{table}[t]
 \caption{Frozen cohort and partition counts.}
@@ -142,13 +142,13 @@ Fig.~\ref{fig:cnnarchitecture} details the predictor, and Table~\ref{tab:configu
 Component & Setting\\\midrule
 Input window / step & $12\times5000$ / 2500 points\\
 Convolution channels & 32, 64, 128, 256\\
-Kernel lengths / pooling & 7, 5, 3, 3 / factor 2 per block\\
+Kernel lengths / pooling & 7, 5, 3, 3 / 2 per block\\
 Temporal aggregation & Global mean\\
-Classifier hidden width / dropout & 128 / 0.3\\
+Classifier width / dropout & 128 / 0.3\\
 Parameters per CNN & 170,914\\
-Learning rate / window batch budget & $5\times10^{-4}$ / 16\\
+Learning rate / window budget & $5\times10^{-4}$ / 16\\
 Optimizer / weight decay & AdamW / $10^{-4}$\\
-Selection limit / stopping patience & 100 epochs / 15 epochs\\
+Selection limit / patience & 100 epochs / 15 epochs\\
 Final fit / ensemble size & 16 epochs / five CNNs\\\bottomrule
 \end{tabular}
 \end{table}
@@ -316,15 +316,13 @@ Client end-to-end, no delay & 551.6 & 3032.5\\\bottomrule
 The median across per-record median chunk round trips is 10.2~ms for chunks representing 500~ms of acquisition. For the five acquisition-paced records, both-model finish-request round trips have median 264~ms and maximum 427~ms. The largest within-record chunk P95 in that paced subset is 51.6~ms, below its 500~ms acquisition interval. This shows the implemented local transfer path keeping pace for those five records. It does not characterize wireless delays, packet loss, concurrent clients, or an unmeasured acquisition device. Because full-record noncausal processing precedes localization, the measured response is a post-acquisition record result, not continuous PVC detection.
 
 \subsection{Discussion and Limitations}
-The CNN has higher observed macro-F1 and LVOT sensitivity in the selected CV configuration. Learned morphology may capture information omitted by the fixed feature extractor, but this experiment does not establish that mechanism. CNN tuning and conditional augmentation differ from the untuned RF training. A tuned RF, alternative feature selection, matched augmentation, or nested selection could change the comparison. The earlier dataset study also uses a different engineered representation~\cite{zheng2021}; the current numbers should not be interpreted as a state-of-the-art ranking across papers.
+The selected CNN configuration has higher observed macro-F1 and LVOT sensitivity than the implemented RF. Learned morphology may retain information omitted by the fixed feature extractor, but the experiment does not establish that mechanism. CNN tuning and conditional augmentation differ from the untuned RF training; equally tuned alternatives and nested selection could change the comparison. Published feature-based localization also uses a different engineered representation~\cite{zheng2021}, preventing a direct state-of-the-art ranking.
 
-The application connects frozen offline classifiers to an explicit gateway protocol and exposes both diagnostic and operational measurements. A practical strength is reproducibility of the same patient-level decision after chunked transfer. Small probability discrepancies without label changes are consistent with floating-point execution differences. Reporting artifact identity, cohort boundaries, and the evaluation unit makes the displayed performance traceable to an experiment rather than to an arbitrary dashboard value.
+Processing efficiency is workload-dependent. RF inference has a larger median cost than feature extraction, while CNN inference exhibits a substantial tail. The single-pass measurements span varying record durations without controlled background CPU load or repeated trials per record. They therefore cannot attribute the tail to a particular component or scheduler. Energy consumption and edge-device execution were not measured, and parameter count alone does not establish embedded efficiency.
 
-Runtime has a similarly qualified interpretation. Avoiding explicit beat-feature extraction reduces one CNN preprocessing component, yet RF inference itself has a larger median cost than RF feature extraction. Feature extraction therefore does not dominate every RF stage. Conversely, the CNN latency tail is substantial. The single-pass, varying-duration workload lacks controlled background CPU load and repeated per-record trials; its measurements cannot attribute that tail to a particular scheduler or implementation component. Neither energy consumption nor edge-device execution was measured. The compact per-model parameter count alone does not prove efficiency of the full five-model deployment on an embedded device.
+The single-center data, previously inspected historical hold-out, non-nested CNN selection, and fixed folds reused across initialization seeds restrict generalization claims. Excluding 40 records despite available coarse labels also limits representativeness. Reintegrating eligible records requires a prospectively specified cohort and fresh evaluation. The three included VT records require describing a ventricular-arrhythmia population rather than an exclusively PVC population.
 
-The data originate from one clinical center. The historical hold-out has been inspected previously, CV selection is non-nested, and initialization repetitions reuse the same patient folds. Excluding 40 records because of a local sublocation field despite available coarse labels also restricts representativeness. Reintegrating eligible records requires a prospectively specified cohort and fresh evaluation, rather than adding them only to the displayed patient count. The three retained VT records further prevent a PVC-only population claim.
-
-Finally, physical acquisition, cross-device amplitude calibration, wireless transport, concurrency, calibrated confidence, and external validation remain open. The HTTP interface supplies an integration boundary for a future acquisition gateway, but loopback replay is the completed IoT-system evidence. A future study should freeze the cohort and preprocessing prospectively, compare equally tuned alternatives, evaluate a causal processing path if continuous output is required, and validate on an independently collected center/device cohort. The current application is a research system and has not been evaluated for clinical decision-making.
+The gateway preserves the offline decision for the tested recordings, but physical-device acquisition, amplitude calibration across devices, wireless transfer, concurrency, and external validation remain open. Whole-record noncausal preprocessing produces post-acquisition localization. Probabilities are uncalibrated, and clinical decision-making has not been evaluated. Subsequent work should freeze the protocol prospectively and test independent patients and devices, with causal processing studied separately if continuous output is required.
 
 \balance
 \section{Conclusion and Future Work}
