@@ -120,9 +120,9 @@ Fig.~\ref{fig:system} places ECG acquisition upstream of the IoT gateway, prepro
 \node[box,text width=20mm,fill=green!5] (output) at (14.1,0) {LVOT/RVOT\\probabilities\\and timing};
 \node[box,text width=15mm,fill=green!5] (user) at (16.65,0) {User\\browser view\\and export};
 \node[box,text width=29mm,fill=orange!8] (dataset) at (2.25,-2.0) {Public 12-lead dataset\\evaluated signal source};
-\node[box,text width=33mm,fill=orange!8] (rf) at (11.3,-2.0) {Benchmark branch: raw record\\132 morphology/RR features\\five Random Forests};
+\node[box,text width=39mm,fill=orange!8] (rf) at (11.3,-2.0) {RF benchmark (132 features)\\morphology and RR extraction\\five Random Forests};
 \draw[target] (patient)--(device);
-\draw[target] (device)--node[above,font=\scriptsize]{device interface}(gateway);
+\draw[target] (device)--(gateway);
 \draw[arr] (gateway)--(pre);
 \draw[arr] (pre)--(cnn);
 \draw[arr] (cnn)--(output);
