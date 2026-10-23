@@ -21,6 +21,7 @@
 \renewcommand{\headrulewidth}{0pt}
 \setlist[enumerate]{nosep,leftmargin=1.5em,topsep=2pt}
 \newcommand{\grafik}[2]{\par\noindent\begin{minipage}{\textwidth}\centering\includegraphics[width=\textwidth]{assets/#1}\captionof{figure}{#2}\end{minipage}\par}
+\newcommand{\bab}[2]{\clearpage\begingroup\centering\large\bfseries BAB #1\par\nobreak\vspace{3pt}#2\par\endgroup\nobreak\vspace{8pt}}
 \begin{document}
 \hypersetup{pageanchor=false}
 \begin{titlepage}
@@ -54,7 +55,7 @@ Safira & 103012330038
 \hypersetup{pageanchor=true}
 \section*{Abstrak}
 Laporan ini mengeksplorasi suhu dan presipitasi harian reanalisis ERA5 dari Open-Meteo untuk grid yang mewakili sekitar Bandung selama 1 Januari 2020--31 Desember 2024. Sebanyak 1.827 observasi dianalisis menggunakan grafik garis, area, perbandingan beberapa deret, grafik musiman, serta moving average 7 dan 30 hari. Validasi tidak menemukan nilai hilang, tanggal duplikat, tanggal terlewat, atau pelanggaran batas fisik yang diperiksa. Rata-rata suhu harian seluruh periode adalah 24,06~$^\circ$C; total presipitasi mencapai 18.140,2~mm. Rata-rata total presipitasi bulanan paling tinggi terjadi pada November (497,84~mm) dan paling rendah pada Agustus (97,58~mm). Hasil menunjukkan variasi musiman dan antartahun, tetapi lima tahun data pada satu grid tidak cukup untuk menyimpulkan perubahan iklim, sebab-akibat, atau kondisi seluruh Kota Bandung.
-\section*{BAB I\quad PENDAHULUAN}
+\bab{I}{PENDAHULUAN}
 \subsection*{1.1 Latar belakang dan tujuan}
 Cuaca memengaruhi penjadwalan kegiatan luar ruang dan kebutuhan pengelolaan air. Data time series membantu membedakan variasi harian dari pola musiman sehingga ringkasan tidak bergantung pada satu kejadian. Tujuan kajian ini ialah memvalidasi data, menyajikan empat bentuk visualisasi wajib, dan membaca kecenderungan suhu menggunakan dua jendela smoothing secara hati-hati.
 \subsection*{1.2 Pertanyaan penelitian}
@@ -64,7 +65,7 @@ Cuaca memengaruhi penjadwalan kegiatan luar ruang dan kebutuhan pengelolaan air.
 \item Bagaimana perbandingan rerata bulanan suhu minimum dan maksimum harian?
 \item Bagaimana MA 7/30 hari membantu memisahkan kecenderungan dari variasi harian?
 \end{enumerate}
-\section*{BAB II\quad EKSPLORASI DAN PEMBERSIHAN DATA}
+\bab{II}{EKSPLORASI DAN PEMBERSIHAN DATA}
 \textbf{Sumber dan cakupan.} JSON Historical Weather API Open-Meteo dengan parameter \texttt{models=era5} [1]. Koordinat permintaan $(-6{,}9175;107{,}6191)$ dikembalikan sebagai grid $(-7;107{,}5)$, elevasi respons 703~m, zona waktu Asia/Jakarta. Data ini merupakan reanalisis berbasis model, bukan pengukuran stasiun ataupun representasi seragam seluruh kota. Tabel hasil ekstraksi berukuran \textbf{1.827 baris $\times$ 5 kolom}, termasuk tanggal; interval harian menghasilkan 60 bulan lengkap.
 \begin{center}\small
 \begin{tabularx}{\textwidth}{@{}l l X@{}}\toprule
@@ -76,8 +77,7 @@ Kolom asli & Tipe/satuan & Makna dan agregasi bulanan\\\midrule
 \texttt{precipitation\_sum} & numerik/mm & Total presipitasi harian; dijumlahkan.\\\bottomrule
 \end{tabularx}\end{center}
 \textbf{Prosedur dan hasil validasi.} Tanggal diurai menjadi datetime, diurutkan, lalu dibandingkan dengan kalender harian lengkap (termasuk 29 Februari 2020 dan 2024). Ditemukan 0 null, 0 nilai non-finite, 0 tanggal duplikat, dan 0 tanggal hilang. Seluruh 1.827 baris memenuhi $T_{\min}\le T_{\mathrm{mean}}\le T_{\max}$ dan presipitasi $\ge0$. Tidak ada penghapusan, imputasi, atau penggantian nilai ekstrem. Total bulanan memakai penjumlahan, bukan rerata; suhu bulanan memakai rerata, bukan penjumlahan.
-\clearpage
-\section*{BAB III\quad HASIL DAN PEMBAHASAN}
+\bab{III}{HASIL DAN PEMBAHASAN}
 \subsection*{3.1 Pola suhu harian dan akumulasi presipitasi}
 \grafik{line.png}{Suhu rata-rata harian pada grid Bandung, 2020--2024.}
 \textbf{Insight 1 --- rentang suhu.} Rata-rata seluruh hari adalah 24,06~$^\circ$C. Suhu rata-rata harian terendah 21,6~$^\circ$C tercatat pada 2 Maret 2023, sedangkan tertinggi 26,4~$^\circ$C pada 29 April 2024. Keduanya adalah ekstrem \emph{suhu rata-rata harian}, bukan ekstrem suhu minimum/maksimum sesaat. Fluktuasi rapat menunjukkan bahwa pembacaan satu hari tidak cukup untuk menilai arah umum.
@@ -85,7 +85,6 @@ Kolom asli & Tipe/satuan & Makna dan agregasi bulanan\\\midrule
 \textbf{Insight 2 --- bulan ekstrem.} Dari 60 bulan, total tertinggi terdapat pada November 2024 (673,3~mm), dan terendah September 2023 (46,4~mm). Luas bidang mempertegas besarnya total tiap bulan, bukan akumulasi berjalan sejak awal periode. Total seluruh periode 18.140,2~mm konsisten dengan penjumlahan nilai harian.
 
 \textbf{Insight 3 --- kejadian harian dan skala waktu.} Presipitasi harian terbesar adalah 127,4~mm pada 25 Mei 2021. Bulan dengan total tertinggi justru November 2024: ekstrem harian dan akumulasi bulanan menjawab pertanyaan yang berbeda. Nilai besar dipertahankan karena tidak melanggar pemeriksaan numerik; validasi ini tidak membuktikan akurasi terhadap alat ukur lapangan.
-\clearpage
 \subsection*{3.2 Perbandingan suhu dan pola musiman presipitasi}
 \grafik{multiple.png}{Rerata bulanan suhu minimum dan maksimum harian; label langsung pada ujung garis.}
 \textbf{Insight 4 --- dua deret suhu.} Pada Desember 2024, rerata minimum harian 22,32~$^\circ$C dan rerata maksimum harian 27,56~$^\circ$C. Rata-rata selisih maksimum--minimum harian sepanjang periode adalah 6,58~$^\circ$C. Ini merupakan rentang dalam hari, bukan selisih ekstrem sepanjang lima tahun. Dua deret tidak berpotongan karena urutan minimum--maksimum valid di semua hari.
@@ -93,7 +92,6 @@ Kolom asli & Tipe/satuan & Makna dan agregasi bulanan\\\midrule
 \textbf{Insight 5 --- seasonality.} Rerata lima total November adalah 497,84~mm, sedangkan rerata lima total Agustus hanya 97,58~mm. Pola lebih kering sekitar Juli--Agustus dan lebih basah menuju akhir tahun tampak, namun tinggi dan waktu puncak berbeda antartahun. Ini bukan normal klimatologis jangka panjang.
 
 \textbf{Insight 6 --- perbedaan antartahun.} Total presipitasi 2023 sebesar 2.690,1~mm, terendah di antara lima tahun; 2020 tertinggi dengan 4.012,5~mm. Tahun 2024 kembali mencapai 3.773,7~mm. Grafik tidak mengidentifikasi penyebab meteorologis perubahan tersebut dan tidak menguji kaitan dengan fenomena iklim tertentu.
-\clearpage
 \subsection*{3.3 Analisis tren: moving average trailing 7 dan 30 hari}
 \grafik{moving_average.png}{Suhu asli dengan MA trailing 7 dan 30 hari; hanya jendela penuh.}
 Untuk setiap tanggal $t$, smoothing dihitung sebagai $\mathrm{MA}_{w}(t)=\frac{1}{w}\sum_{i=0}^{w-1}T_{t-i}$ dengan $w=7$ atau $30$ hari, \texttt{min\_periods} sama dengan ukuran jendela, dan tanpa pemusatan. MA 7 hari meredam gejolak pendek; MA 30 hari memberi gambaran lebih halus pada skala sekitar satu bulan. Karena memakai hari berjalan dan hari sebelumnya, keduanya merupakan ringkasan retrospektif, bukan prediksi.
@@ -109,9 +107,8 @@ Untuk setiap tanggal $t$, smoothing dihitung sebagai $\mathrm{MA}_{w}(t)=\frac{1
 \textbf{Cyclic.} Fluktuasi antartahun terlihat, tetapi panjang dan keteraturan siklus jangka panjang tidak dapat diidentifikasi secara andal dari hanya lima tahun. Karena itu tidak ada klaim siklus multi-tahun.
 
 \textbf{Noise/variasi jangka pendek.} Deviasi harian terhadap MA mengandung variasi cuaca yang tidak terjelaskan oleh ringkasan ini. Istilah noise di sini bersifat deskriptif: residu tersebut tidak diuji sebagai gangguan acak murni, dan dapat mencakup sinyal cuaca nyata maupun ketidakpastian reanalisis.
-\clearpage
 \setstretch{1.05}
-\section*{BAB IV\quad KESIMPULAN DAN REKOMENDASI}
+\bab{IV}{KESIMPULAN DAN REKOMENDASI}
 \subsection*{4.1 Jawaban atas pertanyaan penelitian}
 \begin{enumerate}[itemsep=3pt]
 \item \textbf{Pola suhu harian.} Suhu rata-rata harian berkisar 21,6--26,4~$^\circ$C, dengan rerata periode 24,06~$^\circ$C. Tahun 2024 memiliki rerata tahunan tertinggi (24,42~$^\circ$C), namun urutan tahunan tidak selalu naik. Temuan ini menggambarkan catatan ERA5, bukan bukti perubahan iklim kota.
