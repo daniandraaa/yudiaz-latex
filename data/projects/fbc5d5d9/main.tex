@@ -27,7 +27,7 @@
 \AtBeginEnvironment{table}{\singlespacing}
 \AtEndEnvironment{table}{\par\vspace{4pt}\noindent{\footnotesize Sumber: pengolahan data Open-Meteo/ERA5, 2020--2024.}\par}
 \newcommand{\grafik}[2]{\begin{figure}[!htbp]\centering\includegraphics[width=\textwidth,height=9cm,keepaspectratio]{assets/#1}\caption{#2}\par\vspace{3pt}{\footnotesize Sumber: pengolahan data Open-Meteo/ERA5, 2020--2024.}\end{figure}}
-\newcommand{\bab}[2]{\clearpage\refstepcounter{section}\setcounter{subsection}{0}\phantomsection\addcontentsline{toc}{section}{BAB #1\quad #2}\begingroup\centering\normalsize\bfseries BAB #1\par\nobreak\vspace{6pt}#2\par\endgroup\nobreak\vspace{18pt}}
+\newcommand{\bab}[2]{\clearpage\refstepcounter{section}\setcounter{subsection}{0}\phantomsection\addcontentsline{toc}{section}{BAB #1 --- #2}\begingroup\centering\normalsize\bfseries BAB #1\par\nobreak\vspace{6pt}#2\par\endgroup\nobreak\vspace{18pt}}
 \renewcommand{\refname}{DAFTAR PUSTAKA}
 \renewcommand{\contentsname}{DAFTAR ISI}
 \renewcommand{\listfigurename}{DAFTAR GAMBAR}
@@ -196,7 +196,7 @@ Maksimum & 26,40 & 23,80 & 31,40 & 127,40\\\bottomrule
 \end{table}
 Sebaran presipitasi memperlihatkan ekor kanan yang lebih panjang. Rerata 9,93~mm berada di atas median 6,10~mm; maksimum 127,40~mm jauh melampaui kuartil ketiga 14,40~mm. Hari dengan jumlah besar menaikkan rerata sehingga median memberi pelengkap untuk menggambarkan nilai tipikal. Ada 81 hari dengan presipitasi tepat nol pada presisi sumber. Jumlah tersebut menyatakan hari tanpa presipitasi tercatat pada grid, bukan kepastian bahwa semua lokasi di Bandung bebas hujan.
 
-Korelasi harian memperlihatkan perbedaan hubungan antarukuran suhu. Pasangan suhu rata-rata dan maksimum memiliki koefisien absolut terbesar, $r=0{,}74$, sedangkan suhu minimum dengan maksimum dekat nol, $r=-0{,}03$ (Tabel~\ref{tab:corr}). Hubungan suhu rata-rata dengan minimum bernilai 0,53. Ketiganya tidak dapat dianggap bergerak dengan cara yang sama meskipun memiliki satuan identik.
+Hubungan antarukuran suhu berbeda pada data harian. Korelasi absolut terbesar terdapat pada suhu rata-rata dan maksimum, $r=0{,}74$, sedangkan suhu minimum dengan maksimum dekat nol, $r=-0{,}03$ (Tabel~\ref{tab:corr}). Hubungan suhu rata-rata dengan minimum bernilai 0,53. Ketiganya tidak dapat dianggap bergerak dengan cara yang sama meskipun memiliki satuan identik.
 \begin{table}[htbp]\centering\footnotesize
 \caption{Korelasi Pearson data harian; pembulatan dua desimal.}\label{tab:corr}
 \begin{tabular}{@{}lrrrr@{}}\toprule
