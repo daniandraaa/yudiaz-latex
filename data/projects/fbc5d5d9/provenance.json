@@ -1,0 +1,8 @@
+{
+  "weather_url": "https://archive-api.open-meteo.com/v1/archive?latitude=-6.9175&longitude=107.6191&start_date=2020-01-01&end_date=2024-12-31&daily=temperature_2m_mean%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum&timezone=Asia%2FJakarta&models=era5",
+  "logo_landing": "https://telkomuniversity.ac.id/logo-official/",
+  "logo_dataset": "https://doi.org/10.34820/FK2/AKI7B8",
+  "logo_download": "https://dataverse.telkomuniversity.ac.id/api/access/datafile/4",
+  "logo_sha256": "4412625e8adc8195d1322b5e6b7f10a2eb0016ac97567338bbb8af1c96e90102",
+  "cover": "Self-designed conventional academic cover, not a verified official course template."
+}

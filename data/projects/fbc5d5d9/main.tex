@@ -1,0 +1,138 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\pdfminorversion=7
+\emergencystretch=1.5em
+\usepackage{mathptmx}
+\usepackage[margin=2.4cm,top=2.2cm,bottom=2.2cm]{geometry}
+\usepackage{graphicx,booktabs,tabularx,array,enumitem,setspace,titlesec,caption,fancyhdr,xurl,hyperref,needspace}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black,pdftitle={Pola Suhu dan Presipitasi pada Grid Bandung 2020--2024},pdfauthor={Kelompok Visualisasi Data}}
+\setstretch{1.12}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{5pt}
+\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+\captionsetup{font=small,labelfont=bf,skip=4pt,hypcap=false}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlist[enumerate]{nosep,leftmargin=1.5em,topsep=2pt}
+\newcommand{\grafik}[2]{\par\noindent\begin{minipage}{\textwidth}\centering\includegraphics[width=\textwidth]{assets/#1}\captionof{figure}{#2}\end{minipage}\par}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\centering
+{\large\bfseries LAPORAN UJIAN TENGAH SEMESTER\par}
+\vspace{0.4cm}
+{\large Visualisasi Data Time Series\par}
+{\normalsize CAK4XBB3 --- Visualisasi Data\par}
+\vspace{1.1cm}
+{\LARGE\bfseries Pola Suhu dan Presipitasi\par pada Grid Bandung\par}
+\vspace{0.25cm}
+{\Large Analisis Data Reanalisis ERA5\par Periode 2020--2024\par}
+\vspace{1.2cm}
+\includegraphics[width=6.0cm]{assets/telkom_logo.pdf}\par
+\vspace{1.2cm}
+{\normalsize Disusun oleh:\par}
+\vspace{0.35cm}
+\begin{tabular}{@{}lr@{}}
+Daniandra Prayudisty Ilham & 103012300052\\[5pt]
+Celsyka Zahra Sabila & 103012300144\\[5pt]
+Zafira Nur Kamila & 103012330195\\[5pt]
+Ainun Widyah Astanti & 103012300101\\[5pt]
+Safira & 103012330038
+\end{tabular}
+\vfill
+{\large\bfseries PROGRAM STUDI INFORMATIKA\par FAKULTAS INFORMATIKA\par TELKOM UNIVERSITY\par}
+\vspace{0.4cm}
+{\large Bandung\par 2026\par}
+\end{titlepage}
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+\section*{Abstrak}
+Laporan ini mengeksplorasi suhu dan presipitasi harian reanalisis ERA5 dari Open-Meteo untuk grid yang mewakili sekitar Bandung selama 1 Januari 2020--31 Desember 2024. Sebanyak 1.827 observasi dianalisis menggunakan grafik garis, area, perbandingan beberapa deret, grafik musiman, serta moving average 7 dan 30 hari. Validasi tidak menemukan nilai hilang, tanggal duplikat, tanggal terlewat, atau pelanggaran batas fisik yang diperiksa. Rata-rata suhu harian seluruh periode adalah 24,06~$^\circ$C; total presipitasi mencapai 18.140,2~mm. Rata-rata total presipitasi bulanan paling tinggi terjadi pada November (497,84~mm) dan paling rendah pada Agustus (97,58~mm). Hasil menunjukkan variasi musiman dan antartahun, tetapi lima tahun data pada satu grid tidak cukup untuk menyimpulkan perubahan iklim, sebab-akibat, atau kondisi seluruh Kota Bandung.
+\section*{BAB I\quad PENDAHULUAN}
+\subsection*{1.1 Latar belakang dan tujuan}
+Cuaca memengaruhi penjadwalan kegiatan luar ruang dan kebutuhan pengelolaan air. Data time series membantu membedakan variasi harian dari pola musiman sehingga ringkasan tidak bergantung pada satu kejadian. Tujuan kajian ini ialah memvalidasi data, menyajikan empat bentuk visualisasi wajib, dan membaca kecenderungan suhu menggunakan dua jendela smoothing secara hati-hati.
+\subsection*{1.2 Pertanyaan penelitian}
+\begin{enumerate}
+\item Bagaimana pola dan rentang suhu rata-rata harian selama 2020--2024?
+\item Kapan akumulasi presipitasi bulanan tinggi/rendah dan bagaimana perbedaan antartahun?
+\item Bagaimana perbandingan rerata bulanan suhu minimum dan maksimum harian?
+\item Bagaimana MA 7/30 hari membantu memisahkan kecenderungan dari variasi harian?
+\end{enumerate}
+\section*{BAB II\quad EKSPLORASI DAN PEMBERSIHAN DATA}
+\textbf{Sumber dan cakupan.} JSON Historical Weather API Open-Meteo dengan parameter \texttt{models=era5} [1]. Koordinat permintaan $(-6{,}9175;107{,}6191)$ dikembalikan sebagai grid $(-7;107{,}5)$, elevasi respons 703~m, zona waktu Asia/Jakarta. Data ini merupakan reanalisis berbasis model, bukan pengukuran stasiun ataupun representasi seragam seluruh kota. Tabel hasil ekstraksi berukuran \textbf{1.827 baris $\times$ 5 kolom}, termasuk tanggal; interval harian menghasilkan 60 bulan lengkap.
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}l l X@{}}\toprule
+Kolom asli & Tipe/satuan & Makna dan agregasi bulanan\\\midrule
+\texttt{time} & tanggal ISO & Tanggal lokal; indeks waktu terurut.\\
+\texttt{temperature\_2m\_mean} & numerik/$^\circ$C & Suhu rata-rata harian 2 m; dirata-ratakan.\\
+\texttt{temperature\_2m\_min} & numerik/$^\circ$C & Suhu minimum harian 2 m; dirata-ratakan.\\
+\texttt{temperature\_2m\_max} & numerik/$^\circ$C & Suhu maksimum harian 2 m; dirata-ratakan.\\
+\texttt{precipitation\_sum} & numerik/mm & Total presipitasi harian; dijumlahkan.\\\bottomrule
+\end{tabularx}\end{center}
+\textbf{Prosedur dan hasil validasi.} Tanggal diurai menjadi datetime, diurutkan, lalu dibandingkan dengan kalender harian lengkap (termasuk 29 Februari 2020 dan 2024). Ditemukan 0 null, 0 nilai non-finite, 0 tanggal duplikat, dan 0 tanggal hilang. Seluruh 1.827 baris memenuhi $T_{\min}\le T_{\mathrm{mean}}\le T_{\max}$ dan presipitasi $\ge0$. Tidak ada penghapusan, imputasi, atau penggantian nilai ekstrem. Total bulanan memakai penjumlahan, bukan rerata; suhu bulanan memakai rerata, bukan penjumlahan.
+\clearpage
+\section*{BAB III\quad HASIL DAN PEMBAHASAN}
+\subsection*{3.1 Pola suhu harian dan akumulasi presipitasi}
+\grafik{line.png}{Suhu rata-rata harian pada grid Bandung, 2020--2024.}
+\textbf{Insight 1 --- rentang suhu.} Rata-rata seluruh hari adalah 24,06~$^\circ$C. Suhu rata-rata harian terendah 21,6~$^\circ$C tercatat pada 2 Maret 2023, sedangkan tertinggi 26,4~$^\circ$C pada 29 April 2024. Keduanya adalah ekstrem \emph{suhu rata-rata harian}, bukan ekstrem suhu minimum/maksimum sesaat. Fluktuasi rapat menunjukkan bahwa pembacaan satu hari tidak cukup untuk menilai arah umum.
+\grafik{area.png}{Total presipitasi bulanan; bidang diisi dari baseline nol.}
+\textbf{Insight 2 --- bulan ekstrem.} Dari 60 bulan, total tertinggi terdapat pada November 2024 (673,3~mm), dan terendah September 2023 (46,4~mm). Luas bidang mempertegas besarnya total tiap bulan, bukan akumulasi berjalan sejak awal periode. Total seluruh periode 18.140,2~mm konsisten dengan penjumlahan nilai harian.
+
+\textbf{Insight 3 --- kejadian harian dan skala waktu.} Presipitasi harian terbesar adalah 127,4~mm pada 25 Mei 2021. Bulan dengan total tertinggi justru November 2024: ekstrem harian dan akumulasi bulanan menjawab pertanyaan yang berbeda. Nilai besar dipertahankan karena tidak melanggar pemeriksaan numerik; validasi ini tidak membuktikan akurasi terhadap alat ukur lapangan.
+\clearpage
+\subsection*{3.2 Perbandingan suhu dan pola musiman presipitasi}
+\grafik{multiple.png}{Rerata bulanan suhu minimum dan maksimum harian; label langsung pada ujung garis.}
+\textbf{Insight 4 --- dua deret suhu.} Pada Desember 2024, rerata minimum harian 22,32~$^\circ$C dan rerata maksimum harian 27,56~$^\circ$C. Rata-rata selisih maksimum--minimum harian sepanjang periode adalah 6,58~$^\circ$C. Ini merupakan rentang dalam hari, bukan selisih ekstrem sepanjang lima tahun. Dua deret tidak berpotongan karena urutan minimum--maksimum valid di semua hari.
+\grafik{seasonal.png}{Total presipitasi bulanan menurut tahun pada sumbu Januari--Desember yang sama.}
+\textbf{Insight 5 --- seasonality.} Rerata lima total November adalah 497,84~mm, sedangkan rerata lima total Agustus hanya 97,58~mm. Pola lebih kering sekitar Juli--Agustus dan lebih basah menuju akhir tahun tampak, namun tinggi dan waktu puncak berbeda antartahun. Ini bukan normal klimatologis jangka panjang.
+
+\textbf{Insight 6 --- perbedaan antartahun.} Total presipitasi 2023 sebesar 2.690,1~mm, terendah di antara lima tahun; 2020 tertinggi dengan 4.012,5~mm. Tahun 2024 kembali mencapai 3.773,7~mm. Grafik tidak mengidentifikasi penyebab meteorologis perubahan tersebut dan tidak menguji kaitan dengan fenomena iklim tertentu.
+\clearpage
+\subsection*{3.3 Analisis tren: moving average trailing 7 dan 30 hari}
+\grafik{moving_average.png}{Suhu asli dengan MA trailing 7 dan 30 hari; hanya jendela penuh.}
+Untuk setiap tanggal $t$, smoothing dihitung sebagai $\mathrm{MA}_{w}(t)=\frac{1}{w}\sum_{i=0}^{w-1}T_{t-i}$ dengan $w=7$ atau $30$ hari, \texttt{min\_periods} sama dengan ukuran jendela, dan tanpa pemusatan. MA 7 hari meredam gejolak pendek; MA 30 hari memberi gambaran lebih halus pada skala sekitar satu bulan. Karena memakai hari berjalan dan hari sebelumnya, keduanya merupakan ringkasan retrospektif, bukan prediksi.
+
+\textbf{Insight 7 --- trade-off smoothing.} MA 7 hari pertama tersedia pada 7 Januari 2020 (6 nilai awal tidak terdefinisi); MA 30 hari baru tersedia pada 30 Januari 2020 (29 nilai awal tidak terdefinisi). Simpangan baku sampel turun dari 0,716~$^\circ$C pada data harian menjadi 0,569~$^\circ$C pada MA 7 dan 0,482~$^\circ$C pada MA 30. Perbandingan ini memakai seluruh nilai valid masing-masing deret, sehingga jumlah tanggal sedikit berbeda. Jendela lebih besar menurunkan variasi, tetapi mengaburkan ekstrem dan menunda respons kurva terhadap perubahan.
+
+\textbf{Insight 8 --- kecenderungan deskriptif.} Rerata tahunan suhu adalah 24,07~$^\circ$C (2020), 23,85~$^\circ$C (2021), 23,88~$^\circ$C (2022), 24,08~$^\circ$C (2023), dan 24,42~$^\circ$C (2024). Jadi suhu tidak meningkat secara monoton sepanjang periode; terjadi penurunan pada 2021 lalu kenaikan pada tahun-tahun berikutnya. Rerata bulanan terendah 23,20~$^\circ$C pada Januari 2021 dan tertinggi 25,27~$^\circ$C pada Mei 2024.
+\subsection*{3.4 Komponen time series dan batas interpretasi}
+\textbf{Trend.} MA dan rerata tahunan memperlihatkan kecenderungan suhu lebih tinggi di akhir catatan dibanding beberapa tahun sebelumnya. Tidak dilakukan uji signifikansi atau estimasi tren klimatologis; lima tahun tidak memadai untuk atribusi perubahan iklim.
+
+\textbf{Seasonality.} Grafik musiman presipitasi mengindikasikan pengulangan tahunan, dengan pertengahan tahun relatif lebih kering. Pengulangan tidak berarti jumlah presipitasi setiap bulan sama dari tahun ke tahun.
+
+\textbf{Cyclic.} Fluktuasi antartahun terlihat, tetapi panjang dan keteraturan siklus jangka panjang tidak dapat diidentifikasi secara andal dari hanya lima tahun. Karena itu tidak ada klaim siklus multi-tahun.
+
+\textbf{Noise/variasi jangka pendek.} Deviasi harian terhadap MA mengandung variasi cuaca yang tidak terjelaskan oleh ringkasan ini. Istilah noise di sini bersifat deskriptif: residu tersebut tidak diuji sebagai gangguan acak murni, dan dapat mencakup sinyal cuaca nyata maupun ketidakpastian reanalisis.
+\clearpage
+\setstretch{1.05}
+\section*{BAB IV\quad KESIMPULAN DAN REKOMENDASI}
+\subsection*{4.1 Jawaban atas pertanyaan penelitian}
+\begin{enumerate}[itemsep=3pt]
+\item \textbf{Pola suhu harian.} Suhu rata-rata harian berkisar 21,6--26,4~$^\circ$C, dengan rerata periode 24,06~$^\circ$C. Tahun 2024 memiliki rerata tahunan tertinggi (24,42~$^\circ$C), namun urutan tahunan tidak selalu naik. Temuan ini menggambarkan catatan ERA5, bukan bukti perubahan iklim kota.
+\item \textbf{Akumulasi dan musim presipitasi.} November 2024 menjadi bulan dengan total terbesar (673,3~mm), September 2023 terkecil (46,4~mm). Secara rerata per bulan kalender, November lebih basah daripada Agustus (497,84 berbanding 97,58~mm). Variasi antartahun besar: total 2023 lebih rendah daripada empat tahun lainnya.
+\item \textbf{Perbandingan minimum--maksimum.} Selisih maksimum dan minimum harian rata-rata 6,58~$^\circ$C. Pada akhir periode, rerata minimum dan maksimum Desember 2024 masing-masing 22,32 dan 27,56~$^\circ$C. Label ujung garis memudahkan identifikasi tanpa pencocokan legenda.
+\item \textbf{Manfaat dan keterbatasan MA.} MA 7 hari mempertahankan perubahan lebih cepat, sedangkan MA 30 hari lebih halus tetapi lebih lambat merespons. Kehilangan 6 versus 29 observasi awal adalah konsekuensi jendela penuh, bukan data sumber yang hilang. Keduanya membantu eksplorasi, bukan peramalan.
+\end{enumerate}
+\subsection*{4.2 Implikasi praktis, kendala, dan pengembangan}
+Untuk perencanaan awal kegiatan luar ruang, pola relatif kering Juli--Agustus dapat menjadi pertimbangan, tetapi tidak menjamin hari tertentu bebas hujan. Pada periode yang historis lebih basah, siapkan opsi kegiatan dalam ruang dan pemeriksaan drainase. Keputusan operasional harus tetap memakai prakiraan/peringatan BMKG terkini serta kondisi setempat; grafik ini bukan sistem peringatan banjir.
+
+Kendala utama ialah satu grid reanalisis, resolusi spasial terbatas, agregasi harian, dan panjang catatan lima tahun. Tidak ada data stasiun pembanding, uji atribusi, ataupun model prediksi. Pengembangan yang disarankan ialah memperpanjang periode hingga beberapa dekade, membandingkan dengan stasiun BMKG yang relevan, serta mengevaluasi ketidakpastian antargrid sebelum menyusun rekomendasi berskala kota.
+\subsection*{Daftar pustaka dan sumber}
+\begingroup\small
+[1] Open-Meteo. \emph{Historical Weather API: ERA5, daily weather variables}. Dokumentasi: \url{https://open-meteo.com/en/docs/historical-weather-api}. Endpoint: \url{https://archive-api.open-meteo.com/v1/archive}. Parameter penelitian: 2020-01-01--2024-12-31; latitude=-6.9175; longitude=107.6191; timezone=Asia/Jakarta; models=era5; empat variabel pada Bab II. URL permintaan lengkap disimpan dalam paket sumber sebagai \texttt{source\_url.txt}.
+
+[2] Hersbach, H., dkk. (2020). The ERA5 global reanalysis. \emph{Quarterly Journal of the Royal Meteorological Society}, 146, 1999--2049. \url{https://doi.org/10.1002/qj.3803}.
+
+[3] Setiawan, D. (2021). \emph{Telkom University Official Logo}. Telkom University Dataverse, V1. \url{https://doi.org/10.34820/FK2/AKI7B8}. Laman resmi: \url{https://telkomuniversity.ac.id/logo-official/}. Logo asli digunakan; sampul disusun mandiri, bukan templat resmi mata kuliah yang terverifikasi.
+
+[4] Fakultas Informatika, Telkom University. \emph{Midterm Project --- CAK4XBB3 Visualisasi Data}. Rubrik tugas yang diberikan pengguna.
+\endgroup
+\subsection*{Catatan penggunaan AI}
+\small AI generatif Hermes Agent membantu penyusunan kode analisis, visualisasi, LaTeX, dan draf narasi. Angka dihitung dari JSON sumber, bukan dibuat oleh AI. Anggota kelompok perlu memeriksa, memahami, dan mengesahkan interpretasi serta deklarasi individual sesuai rubrik. Bukti tangkapan layar prompt/respons masih menunggu lampiran autentik; tidak direkayasa dan belum dinyatakan lengkap.
+\end{document}
