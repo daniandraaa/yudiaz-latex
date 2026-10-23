@@ -68,7 +68,7 @@ Temuan mendukung pembacaan pola kalender dan variasi antartahun dalam catatan in
 \clearpage
 \renewcommand{\contentsname}{Daftar Isi}
 \renewcommand{\listfigurename}{Daftar Gambar}
-\tableofcontents
+{\small\setstretch{1.0}\tableofcontents}
 \clearpage
 \listoffigures
 
@@ -348,6 +348,7 @@ Tahun kabisat memiliki satu hari tambahan. Tabel menyertakan presipitasi per har
 
 Temuan terukur dan hipotesis perlu dipisahkan pada kalimat kesimpulan. Yang terukur adalah tanggal, jumlah, rerata, korelasi, dan penanda yang ditampilkan. Dugaan bahwa awan memperkecil rentang suhu, bahwa fenomena iklim tertentu menjelaskan 2023, atau bahwa satu lingkungan di Bandung mengikuti pola grid yang sama masih berupa pertanyaan. Tidak ada eksperimen baru dalam laporan ini yang menyelesaikan dugaan tersebut.
 
+\setstretch{1.06}
 \bab{IV}{KESIMPULAN DAN REKOMENDASI}
 \subsection{Jawaban atas pertanyaan penelitian}
 \textbf{Pertanyaan 1: kelayakan dan kesetiaan sumber.} CSV terbaru cocok dengan array JSON setelah pemetaan nama kolom. Tiga hash sumber sesuai. Ada 1.827 hari berturut-turut, 60 bulan lengkap, dan tidak ada kegagalan pada uji kosong, duplikat, kalender, finite, urutan suhu, atau presipitasi nonnegatif. Dua eksekusi ulang menyelesaikan seluruh 15 sel kode dengan tujuh gambar tertanam. Data layak untuk analisis deskriptif yang dilakukan, tanpa imputasi atau pemotongan; kecocokan dengan stasiun tetap belum diuji.
@@ -419,6 +420,7 @@ Pembulatan rentang & Desember 2024: 22,32 dan 27,56 adalah label terbulat; renta
 \end{table}
 Output numerik utama unggahan sesuai dengan reproduksi pada skala pembulatan yang disajikan. Perbedaan lingkungan dan byte gambar tidak dianggap perubahan cuaca. Rekaman lengkap seluruh output dan diff sumber tersimpan lokal agar pembaca dapat menelusuri perubahan tanpa menjadikan naskah ini dump notebook. Ketidakpastian administratif pada checklist tetap dibiarkan terbuka.
 
+\clearpage
 \section*{Lampiran B. Manifest dan replikasi}
 \addcontentsline{toc}{section}{Lampiran B. Manifest dan replikasi}
 \begin{table}[htbp]\centering\small
@@ -427,7 +429,7 @@ Output numerik utama unggahan sesuai dengan reproduksi pada skala pembulatan yan
 Berkas atau direktori & Fungsi\\\midrule
 \texttt{notebook.ipynb} & Sumber analisis terbaru; 15 sel kode beserta markdown dan keluaran tersimpan.\\
 \texttt{data/weather\_raw.json} & Respons sumber yang dipertahankan.\\
-\texttt{data/bandung\_daily\_2020\_2024.csv} & Tabel lokal yang dipakai Run All.\\
+\path{data/bandung_daily_2020_2024.csv} & Tabel lokal yang dipakai Run All.\\
 \texttt{data/provenance.json}, \texttt{source\_url.txt} di \texttt{data/} & Metadata, hash, dan permintaan sumber lengkap.\\
 \texttt{requirements*.txt} & Dependensi langsung dan versi lingkungan awal.\\
 \texttt{DATA\_DICTIONARY.md}, \texttt{CHECKLIST.md} & Definisi variabel serta pekerjaan administratif yang tertunda.\\
