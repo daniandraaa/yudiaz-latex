@@ -1,43 +1,52 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \pdfminorversion=7
-\emergencystretch=1.5em
 \usepackage{mathptmx}
-\usepackage[margin=2.4cm,top=2.2cm,bottom=2.2cm]{geometry}
-\usepackage{amsmath,graphicx,booktabs,tabularx,array,enumitem,setspace,titlesec,caption,fancyhdr,xurl,hyperref,needspace}
-\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black,pdftitle={Pola Suhu dan Presipitasi pada Grid Bandung 2020--2024},pdfauthor={Kelompok Visualisasi Data}}
-\setstretch{1.18}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{5pt}
-\titleformat{\section}{\large\bfseries}{}{0pt}{}
-\titlespacing*{\section}{0pt}{9pt}{5pt}
+\usepackage[top=4cm,left=4cm,right=3cm,bottom=3cm,footskip=1.2cm]{geometry}
+\usepackage{amsmath,graphicx,booktabs,tabularx,array,enumitem,setspace,titlesec,caption,fancyhdr,xurl,hyperref,needspace,placeins,etoolbox}
+\hypersetup{hidelinks,pdftitle={Pola Suhu dan Presipitasi pada Grid Bandung 2020--2024},pdfauthor={Kelompok Visualisasi Data}}
+\onehalfspacing
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0pt}
+\emergencystretch=2em
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+\titleformat{\section}{\centering\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{12pt}{12pt}
 \titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.7em}{}
-\titlespacing*{\subsection}{0pt}{6pt}{3pt}
-\captionsetup{font=small,labelfont=bf,skip=4pt,hypcap=false}
+\titlespacing*{\subsection}{0pt}{15pt}{6pt}
+\captionsetup{font=small,labelfont=normalfont,skip=6pt,hypcap=false}
+\captionsetup[table]{position=top}
 \renewcommand{\figurename}{Gambar}
 \renewcommand{\tablename}{Tabel}
-\pagestyle{fancy}\fancyhf{}\fancyfoot[C]{\thepage}
+\pagestyle{fancy}\fancyhf{}\fancyfoot[R]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
-\setlist[enumerate]{nosep,leftmargin=1.5em,topsep=2pt}
-\newcommand{\grafik}[2]{\par\noindent\begin{minipage}{\textwidth}\centering\includegraphics[width=\textwidth,height=10.5cm,keepaspectratio]{assets/#1}\captionof{figure}{#2}\end{minipage}\par}
-\newcommand{\bab}[2]{\clearpage\stepcounter{section}\setcounter{subsection}{0}\addcontentsline{toc}{section}{BAB #1 --- #2}\begingroup\centering\large\bfseries BAB #1\par\nobreak\vspace{3pt}#2\par\endgroup\nobreak\vspace{8pt}}
-\renewcommand{\refname}{Daftar Pustaka}
+\setlist[enumerate]{leftmargin=1.5em,itemsep=2pt,topsep=6pt,parsep=0pt}
+\AtBeginEnvironment{table}{\singlespacing}
+\AtEndEnvironment{table}{\par\vspace{4pt}\noindent{\footnotesize Sumber: pengolahan data Open-Meteo/ERA5, 2020--2024.}\par}
+\newcommand{\grafik}[2]{\begin{figure}[!htbp]\centering\includegraphics[width=\textwidth,height=9cm,keepaspectratio]{assets/#1}\caption{#2}\par\vspace{3pt}{\footnotesize Sumber: pengolahan data Open-Meteo/ERA5, 2020--2024.}\end{figure}}
+\newcommand{\bab}[2]{\clearpage\refstepcounter{section}\setcounter{subsection}{0}\phantomsection\addcontentsline{toc}{section}{BAB #1\quad #2}\begingroup\centering\normalsize\bfseries BAB #1\par\nobreak\vspace{6pt}#2\par\endgroup\nobreak\vspace{18pt}}
+\renewcommand{\refname}{DAFTAR PUSTAKA}
+\renewcommand{\contentsname}{DAFTAR ISI}
+\renewcommand{\listfigurename}{DAFTAR GAMBAR}
+\renewcommand{\listtablename}{DAFTAR TABEL}
 \begin{document}
 \hypersetup{pageanchor=false}
 \begin{titlepage}
-\centering
+\centering\singlespacing
 {\large\bfseries LAPORAN UJIAN TENGAH SEMESTER\par}
 \vspace{0.4cm}
 {\large Visualisasi Data Time Series\par}
 {\normalsize CAK4XBB3 --- Visualisasi Data\par}
-\vspace{1.1cm}
-{\LARGE\bfseries Pola Suhu dan Presipitasi\par pada Grid Bandung\par}
+\vspace{0.8cm}
+{\Large\bfseries Pola Suhu dan Presipitasi\par pada Grid Bandung\par}
 \vspace{0.25cm}
 {\Large Analisis Data Reanalisis ERA5\par Periode 2020--2024\par}
-\vspace{1.2cm}
+\vspace{0.8cm}
 \includegraphics[width=6.0cm]{assets/telkom_logo.pdf}\par
-\vspace{1.2cm}
+\vspace{0.8cm}
 {\normalsize Disusun oleh:\par}
 \vspace{0.35cm}
 \begin{tabular}{@{}lr@{}}
@@ -52,74 +61,58 @@ Safira & 103012330038
 \vspace{0.4cm}
 {\large Bandung\par 2026\par}
 \end{titlepage}
-\pagenumbering{arabic}
-\hypersetup{pageanchor=true}
-\section*{Abstrak}
-\addcontentsline{toc}{section}{Abstrak}
-Penelitian deskriptif ini menelaah suhu dan presipitasi pada grid ERA5 di sekitar titik permintaan Bandung selama 1 Januari 2020--31 Desember 2024. Sumber analisis adalah CSV lokal yang dicocokkan kembali dengan respons JSON Open-Meteo, bukan pengukuran stasiun. Sebanyak 1.827 hari dan 60 bulan lengkap dianalisis melalui statistik deskriptif, korelasi Pearson, tujuh visualisasi, serta rata-rata bergerak trailing 7 dan 30 hari. Pemeriksaan tidak menemukan nilai kosong, tanggal hilang atau ganda, nilai tidak berhingga, presipitasi negatif, maupun pelanggaran urutan suhu minimum--rata-rata--maksimum. Karena itu, tidak dilakukan imputasi atau penghapusan observasi. Dua eksekusi ulang notebook terbaru pada kernel terpisah menghasilkan keluaran teks dan tujuh gambar tertanam yang identik pada lingkungan verifikasi yang sama.
+\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}
+\section*{ABSTRAK}\addcontentsline{toc}{section}{Abstrak}
+\begin{singlespace}
+Penelitian ini mengkaji variasi suhu dan presipitasi pada grid ERA5 di sekitar titik permintaan Bandung selama 2020--2024. Data Open-Meteo mencakup 1.827 hari dan 60 bulan lengkap, dengan variabel suhu rata-rata, minimum, maksimum, dan presipitasi harian. Analisis menggunakan statistik deskriptif, korelasi Pearson, agregasi bulanan dan tahunan, serta rata-rata bergerak 7 dan 30 hari. Ketujuh grafik menyajikan perubahan harian, perbandingan seri, pola kalender, penghalusan, dan kejadian ekstrem. CSV sesuai dengan respons JSON; pemeriksaan kalender dan numerik tidak menemukan masalah yang memerlukan imputasi atau penghapusan data.
 
-Rata-rata suhu harian seluruh periode adalah 24,06~$^\circ$C. Rata-rata tahunan 2024 sebesar 24,423~$^\circ$C lebih tinggi 0,355~$^\circ$C daripada 2020, tetapi urutan tahunannya tidak meningkat secara monoton. Total presipitasi lima tahun mencapai 18.140,2~mm; November 2024 merupakan bulan terbasah (673,3~mm), sedangkan September 2023 paling rendah (46,4~mm). Rerata lima total November sebesar 497,84~mm jauh di atas Agustus sebesar 97,58~mm. Pagar IQR 33,45~mm menandai 79 hari untuk ditinjau, bukan dibuang. MA30 menghaluskan perubahan lebih kuat daripada MA7 dengan konsekuensi keterlambatan respons dan 29 nilai awal yang belum terdefinisi.
+Rata-rata suhu harian mencapai 24,06~$^\circ$C. Rerata tahunan 2024 sebesar 24,423~$^\circ$C lebih tinggi 0,355~$^\circ$C daripada 2020, setelah sempat turun pada 2021. Total presipitasi lima tahun adalah 18.140,2~mm. November 2024 memiliki total bulanan tertinggi, 673,3~mm, sedangkan September 2023 terendah, 46,4~mm. Rerata lima total November sebesar 497,84~mm melebihi Agustus yang mencapai 97,58~mm, meskipun jumlah pada bulan yang sama berbeda antartahun. Korelasi suhu maksimum dengan presipitasi bernilai $-0{,}32$. Sebanyak 79 hari melampaui pagar IQR 33,45~mm dan tetap disertakan. MA30 meredam perubahan harian lebih kuat daripada MA7, dengan respons lebih lambat dan 29 nilai awal belum terdefinisi.
 
-Temuan mendukung pembacaan pola kalender dan variasi antartahun dalam catatan ini. Hasil tidak mengidentifikasi penyebab meteorologis, tidak menghasilkan ramalan, dan tidak membuktikan perubahan iklim atau keadaan seluruh Bandung. Kontribusi laporan terletak pada kesesuaian antara definisi variabel, agregasi, tampilan grafik, dan batas klaim. Bantuan AI pada analisis serta penulisan diungkapkan secara terbuka; persetujuan dan pemahaman individual anggota masih memerlukan tinjauan manusia.
+Hasil menunjukkan pola kalender presipitasi dan variasi suhu antartahun pada rekaman grid ini. Cakupan lima tahun tanpa pembanding stasiun membatasi generalisasi spasial, penjelasan kausal, dan penilaian perubahan iklim.
 
-\textbf{Kata kunci:} deret waktu; ERA5; Open-Meteo; presipitasi; moving average; reproduksibilitas.
-
-\textbf{Catatan bentuk laporan.} Naskah ini merupakan versi komprehensif sesuai permintaan terbaru pengguna, bukan versi ringkas 3--5 halaman yang tercatat dalam rubrik/notebook. Penyesuaian panjang untuk pengumpulan resmi perlu diputuskan bersama dosen. Kelengkapan teknis tidak menggantikan persetujuan administratif tersebut.
+\noindent Kata kunci: deret waktu, ERA5, presipitasi, korelasi, rata-rata bergerak.
+\end{singlespace}
 \clearpage
-\renewcommand{\contentsname}{Daftar Isi}
-\renewcommand{\listfigurename}{Daftar Gambar}
-{\small\setstretch{1.0}\tableofcontents}
+{\singlespacing\tableofcontents}
 \clearpage
-\listoffigures
+{\singlespacing\listoffigures\vspace{18pt}\listoftables}
+\clearpage\pagenumbering{arabic}
 
 \bab{I}{PENDAHULUAN}
 \subsection{Latar belakang}
-Pembicaraan mengenai cuaca sering berangkat dari pengalaman yang sangat dekat: beberapa hari terasa lebih panas, satu hujan lebat mengganggu perjalanan, atau kegiatan luar ruang tertunda. Pengalaman seperti itu penting, tetapi mudah membuat satu kejadian dianggap mewakili satu bulan atau bahkan satu tahun. Deret waktu memberi cara yang lebih tertib untuk menempatkan kejadian pada urutannya. Pertanyaan tentang hari terpanas berbeda dari pertanyaan tentang rata-rata tahun yang lebih hangat; demikian pula hujan harian tertinggi tidak harus berada pada bulan dengan total presipitasi terbesar.
+Suhu dan presipitasi berubah pada skala waktu yang berbeda. Suhu tinggi pada satu hari belum tentu menandai tahun yang lebih hangat, sedangkan hujan harian terbesar belum tentu terjadi pada bulan dengan akumulasi tertinggi. Analisis deret waktu diperlukan untuk menempatkan kejadian tersebut dalam urutan pengamatan dan membandingkannya pada skala yang sesuai.
 
-Perbedaan skala waktu menjadi alasan utama penelitian ini. Suhu harian berguna untuk melihat perubahan cepat, tetapi 1.827 titik yang diletakkan pada satu grafik menghasilkan garis yang rapat. Ringkasan bulanan mengurangi kepadatan itu, sekaligus mengubah pertanyaan yang dijawab. Presipitasi perlu dijumlahkan ketika yang dicari adalah akumulasi satu bulan, sedangkan suhu dirata-ratakan ketika yang dibandingkan adalah tingkat suhunya. Pemilihan grafik tanpa memperhatikan definisi agregasi dapat menghasilkan judul yang meyakinkan tetapi salah secara makna.
+Data harian 2020--2024 menyediakan lima tahun kalender penuh untuk mengamati perbedaan itu. Grafik dengan 1.827 titik mempertahankan variasi harian, tetapi kepadatannya menyulitkan pembacaan perubahan yang lebih lambat. Agregasi bulanan dan rata-rata bergerak menawarkan ringkasan dengan fungsi berbeda. Agregasi menetapkan satu nilai bagi setiap bulan kalender; rata-rata bergerak mempertahankan sumbu harian sambil menghaluskan perubahan. Keduanya perlu dibaca bersama seri asli agar kejadian singkat tetap terlihat.
 
-Bandung dipakai sebagai konteks lokasi permintaan data. Namun, sumber yang tersedia bukan jaringan stasiun yang menggambarkan variasi seluruh wilayahnya. Respons API memberikan koordinat grid yang berbeda dari titik permintaan. Di wilayah dengan variasi topografi, perbedaan antara representasi grid dan kondisi lokal tidak dapat diabaikan. Oleh sebab itu, laporan mempertahankan istilah ``grid sekitar Bandung'' dan tidak mengubahnya menjadi rerata administratif Kota Bandung.
-
-Notebook yang diperbarui pengguna menambahkan analisis korelasi antarvariabel dan memperbaiki cara menjelaskan hasil. Revisi laporan ini mengikuti sumber terbaru tersebut, bukan hanya memperpanjang naskah lama. Grafik heatmap dan peninjauan ekstrem yang sebelumnya belum dibahas dalam laporan kini ditempatkan sebagai bagian analisis, bersama statistik dan definisi yang diperlukan untuk membacanya. Keberadaan output tersimpan tetap tidak dianggap sebagai bukti eksekusi baru; penghitungan direproduksi sebelum narasi disusun.
+Penelitian ini menggunakan data reanalisis ERA5 melalui Open-Meteo. Istilah Bandung merujuk pada konteks titik permintaan, bukan cakupan pengukuran seluruh kota. Koordinat grid yang dikembalikan layanan berbeda dari koordinat permintaan. Karena itu, pertanyaan penelitian dibatasi pada pola dalam rekaman grid dan tidak diarahkan untuk menilai perbedaan cuaca antarlingkungan di Bandung.
 
 \subsection{Rumusan masalah}
-Penelitian diarahkan oleh lima pertanyaan berikut. Urutannya bergerak dari kelayakan sumber menuju interpretasi, sehingga kesimpulan tidak dibangun sebelum kualitas dan cakupan data jelas.
-\begin{enumerate}[itemsep=4pt]
-\item Apakah sumber lokal konsisten dengan respons API, lengkap menurut kalender, dan memenuhi pemeriksaan numerik dasar untuk dianalisis sebagai deret harian?
-\item Bagaimana sebaran, ekstrem bertanggal, dan hubungan linear suhu serta presipitasi pada data harian, termasuk perbandingan suhu minimum dan maksimum pada skala bulanan?
-\item Bagaimana akumulasi presipitasi berubah menurut bulan dan tahun, dan seberapa jauh pola kalender yang berulang tetap menyisakan perbedaan antartahun?
-\item Apa yang diperjelas dan apa yang hilang ketika suhu diperhalus menggunakan MA7 dan MA30 dengan jendela penuh?
-\item Bagaimana hari di atas pagar IQR dan komponen deret waktu harus ditafsirkan tanpa mengubah penanda statistik menjadi kesalahan data, sebab-akibat, atau klaim iklim?
+Analisis disusun untuk menjawab pertanyaan berikut.
+\begin{enumerate}
+\item Apakah data lokal sesuai dengan respons sumber dan lengkap sebagai rangkaian harian?
+\item Bagaimana sebaran, ekstrem bertanggal, dan hubungan linear suhu serta presipitasi, termasuk perbandingan suhu minimum dan maksimum bulanan?
+\item Bagaimana total presipitasi berubah menurut bulan dan tahun; pola kalender apa yang berulang dan bagian mana yang berbeda antartahun?
+\item Bagaimana jendela 7 dan 30 hari memengaruhi penghalusan suhu serta ketersediaan nilai pada awal periode?
+\item Bagaimana kejadian ekstrem dan komponen deret waktu dapat dijelaskan dalam batas data yang tersedia?
 \end{enumerate}
 
-\subsection{Tujuan dan manfaat}
-Tujuan pertama adalah memastikan bahwa tabel analisis masih setia pada sumber yang dipaketkan. Tujuan berikutnya ialah menyajikan ringkasan harian, bulanan, dan tahunan dengan definisi yang dapat diulang; menjelaskan tujuh grafik secara substantif; serta menjawab kelima pertanyaan dengan bukti angka dan tanggal. Penggunaan dua jendela rolling dimaksudkan untuk membandingkan tingkat penghalusan, bukan memilih model ramalan terbaik.
+\subsection{Tujuan dan ruang lingkup}
+Penelitian bertujuan menjelaskan perubahan suhu dan presipitasi melalui ukuran harian, bulanan, dan tahunan yang konsisten. Statistik deskriptif dan korelasi digunakan untuk menelaah sebaran serta keterkaitan variabel. Tujuh visualisasi kemudian memperlihatkan urutan kejadian, perbandingan batas suhu, pola kalender, dan pengaruh penghalusan. Peninjauan ekstrem mempertahankan seluruh hari agar akumulasi presipitasi tetap mewakili rekaman sumber.
 
-Bagi pembaca, manfaat utamanya adalah memperoleh gambaran cuaca historis pada satu representasi spasial beserta cara memeriksa klaimnya. Bagi kelompok, proyek ini menjadi latihan membedakan total dari rerata, ekstrem dari nilai tipikal, dan pola visual dari pembuktian statistik. Untuk perencanaan kegiatan, hasil hanya menawarkan konteks historis awal. Ia tidak menggantikan prakiraan atau peringatan cuaca yang berlaku pada hari pelaksanaan.
+Unit observasi adalah satu hari lokal Asia/Jakarta selama 1 Januari 2020--31 Desember 2024. Empat variabel yang dianalisis ialah suhu rata-rata, minimum, maksimum pada ketinggian 2~m, dan total presipitasi harian. Analisis bersifat eksploratif-deskriptif; korelasi tidak disertai inferensi kausal dan rata-rata bergerak tidak digunakan sebagai ramalan. Data stasiun pembanding dan interval ketidakpastian harian tidak tersedia.
 
-\subsection{Ruang lingkup dan batas keputusan}
-Unit observasi adalah satu hari lokal Asia/Jakarta pada keluaran grid yang dinyatakan dalam respons. Periode dibatasi pada lima tahun kalender penuh, dengan empat variabel ukur: suhu rata-rata, minimum, maksimum pada ketinggian 2~m, dan total presipitasi harian. Tidak tersedia sampel stasiun pembanding, pengukuran antarwilayah, atau interval ketidakpastian harian dalam paket ini.
+Ringkasan historis ini dapat menjadi konteks awal perencanaan kegiatan yang peka terhadap cuaca. Penggunaannya tetap memerlukan informasi lokasi dan prakiraan aktual. Susunan pembahasan mengikuti kebutuhan analisis: Bab II memuat sumber dan metode pengolahan, Bab III mengembangkan hasil dari skala harian hingga tahunan, dan Bab IV merangkum temuan serta pengembangan yang relevan. Ruang lingkup visualisasi mengikuti ketentuan tugas~\cite{rubrik}.
 
-Analisis bersifat eksploratif-deskriptif. Korelasi tidak disertai uji inferensial, rolling bukan peramalan, dan variasi antartahun bukan identifikasi siklus panjang. Tidak dilakukan regresi tren iklim, dekomposisi formal, PCA, atau eksperimen baru. Pembahasan faktor seperti tutupan awan atau sirkulasi atmosfer hanya layak menjadi hipotesis penelitian lanjutan, bukan hasil penelitian sekarang.
+\bab{II}{DATA DAN METODE ANALISIS}
+\subsection{Sumber dan cakupan data}
+Open-Meteo Historical Weather API menyediakan data yang digunakan dengan parameter \texttt{models=era5}. ERA5 merupakan produk reanalisis: rekonstruksi cuaca historis yang memadukan observasi dan model~\cite{openmeteo,ecmwf}. Respons yang disimpan dalam \texttt{weather\_raw.json} dikonversi menjadi CSV sebagai dasar perhitungan. Akses proyek melalui Open-Meteo mengikuti atribusi perangkat lunak dan dataset yang disediakan dokumentasinya~\cite{zippenfenig,era5}.
 
-\subsection{Sistematika dan status naskah}
-Bab II menjelaskan asal data, kamus variabel, validasi, metode, dan reproduksi. Bab III menyatukan statistik dengan ketujuh grafik dan membedakan hasil dari hipotesis. Bab IV menjawab pertanyaan penelitian, merumuskan keterbatasan, dan memberi saran yang sesuai dengan bukti. Lampiran menyajikan audit pembaruan, peta berkas, serta langkah replikasi tanpa menyalin seluruh notebook. Lima identitas pada sampul sama dengan identitas dalam notebook terbaru; tidak ada nama atau NIM yang diganti.
+Permintaan menggunakan koordinat $-6{,}9175$, $107{,}6191$, sedangkan respons mencatat $-7{,}0$, $107{,}5$. Metadata menyatakan zona waktu \texttt{Asia/Jakarta}, offset UTC 25.200 detik, dan elevasi 703~m. Elevasi ini berasal dari layanan, bukan pengukuran lapangan. Resolusi ERA5 sekitar $0{,}25^\circ$ menurut dokumentasi API menjelaskan mengapa hasil perlu diperlakukan sebagai representasi grid. Cakupan ini berbeda dari rerata administratif Kota Bandung maupun pencatatan satu stasiun.
 
-\bab{II}{EKSPLORASI DAN PEMBERSIHAN DATA}
-\subsection{Asal-usul data dan representasi spasial}
-Data berasal dari Open-Meteo Historical Weather API dengan parameter \texttt{models=era5}. Dokumentasi penyedia menjelaskan reanalisis sebagai rekonstruksi kondisi historis yang menggabungkan informasi observasi dan model \cite{openmeteo,ecmwf}. Produk ini tidak identik dengan pencatatan satu termometer atau penakar hujan. Jalur akses proyek adalah Open-Meteo, bukan pengunduhan langsung kelompok dari Copernicus Climate Data Store.
-
-Permintaan menggunakan lintang $-6{,}9175$ dan bujur $107{,}6191$. Respons mentah menyatakan lintang $-7{,}0$ dan bujur $107{,}5$, zona waktu \texttt{Asia/Jakarta}, offset UTC 25.200 detik, dan elevasi metadata 703~m. Koordinat respons dicatat apa adanya; tidak diganti dengan koordinat permintaan agar tampak lebih tepat berada di kota. Elevasi tersebut juga bukan hasil pengukuran kelompok. Dokumentasi API menyebut resolusi ERA5 sekitar $0{,}25^\circ$; keterangan produk ini tidak membuktikan bahwa setiap lingkungan di Bandung terwakili dengan ketelitian yang sama.
-
-Berkas \texttt{weather\_raw.json}, \texttt{source\_url.txt}, CSV, dan \texttt{provenance.json} menjaga jejak transformasi. Waktu pengunduhan asli tidak tercatat. Tanggal pembuatan paket atau waktu eksekusi ulang tidak boleh menggantikannya. Tiga hash SHA-256 dalam provenance cocok saat diperiksa ulang. Kecocokan itu membuktikan kesamaan isi berkas dengan catatan paket, bukan akurasi fisik model terhadap lapangan.
-
-Permintaan mencakup 2020-01-01 sampai 2024-12-31, empat variabel harian, zona Asia/Jakarta, dan model ERA5. URL lengkap dipertahankan dalam berkas sumber, termasuk nama parameter asli. Dokumentasi saat audit dipakai untuk menjelaskan arti produk, sedangkan seluruh hasil numerik diambil dari salinan lokal. Dengan pemisahan ini, perubahan layanan daring di kemudian hari tidak diam-diam mengubah data yang mendasari laporan.
-
-\subsection{Kamus data mentah dan hasil transformasi}
-Tabel CSV sebelum pengindeksan berukuran 1.827 baris $\times$ 5 kolom. Setelah \texttt{date} dijadikan indeks waktu, \texttt{df} berukuran 1.827 $\times$ 4 variabel ukur. Kedua pernyataan ukuran tersebut benar pada tahap yang berbeda; tanggal bukan variabel cuaca kelima.
-\begin{table}[htbp]\centering\small
+CSV memuat 1.827 baris dan lima kolom, termasuk tanggal. Setelah tanggal diurai dan dijadikan indeks, tabel analisis memiliki empat kolom ukur bertipe \texttt{float64}. Tabel berikut memetakan nama variabel tanpa mengubah nilainya.
+\begin{table}[htbp]\centering\footnotesize
 \caption{Pemetaan nama sumber ke tabel analisis; nilai tidak diganti.}
-\begin{tabularx}{\textwidth}{@{}p{4.4cm}p{2.4cm}X@{}}\toprule
+\begin{tabularx}{\textwidth}{@{}p{4.2cm}p{2.1cm}X@{}}\toprule
 Kolom JSON \texttt{daily} & Nama CSV & Makna, tipe, satuan\\\midrule
 \texttt{time} & \texttt{date} & Teks tanggal ISO pada CSV; diurai menjadi indeks datetime harian lokal.\\
 \texttt{temperature\_2m\_mean} & \texttt{tmean\_c} & Suhu rata-rata harian 2 m; \texttt{float64}, $^\circ$C.\\
@@ -128,14 +121,14 @@ Kolom JSON \texttt{daily} & Nama CSV & Makna, tipe, satuan\\\midrule
 \texttt{precipitation\_sum} & \texttt{precip\_mm} & Total presipitasi dalam satu hari; \texttt{float64}, mm kedalaman ekuivalen air.\\\bottomrule
 \end{tabularx}
 \end{table}
-Suhu rata-rata menggunakan variabel sumber, bukan hasil $(T_{\min}+T_{\max})/2$. Presipitasi dinyatakan dalam mm, bukan volume m$^3$ dan bukan laju sesaat. Nol presipitasi merupakan nilai pada presisi sumber, bukan kode missing. Nilai harian dipertahankan sesuai satu desimal sumber; pembulatan tabel laporan hanya mengubah penyajian.
+Suhu rata-rata harian memakai variabel sumber, bukan pendekatan $(T_{\min}+T_{\max})/2$. Presipitasi dinyatakan sebagai kedalaman ekuivalen air dalam mm. Nilai nol tetap dipertahankan sebagai nol pada presisi sumber, bukan sebagai penanda data hilang. Satu desimal pada nilai harian mengikuti sumber; pembulatan tambahan hanya digunakan pada tabel dan label tampilan.
 
-\texttt{monthly} mempunyai 60 baris dan enam kolom: tiga rerata suhu, total presipitasi, \texttt{n\_days}, serta \texttt{range\_mean\_c}. Indeks \texttt{MS} memberi label awal bulan. Baris 2024-11-01 merangkum seluruh November, bukan hanya 1 November. \texttt{seasonal} berbentuk 12 nomor bulan $\times$ 5 tahun; \texttt{heat} adalah transposenya. \texttt{rolling} memuat suhu asli, MA7, dan MA30 pada kalender harian. \texttt{annual} memuat lima tahun dengan enam ukuran: rerata suhu, total presipitasi, jumlah hari, presipitasi per hari, perubahan suhu dari 2020, dan perubahan dari tahun sebelumnya.
+Berkas URL permintaan dan provenance menyertai JSON serta CSV. Tiga hash SHA-256 sesuai dengan catatan paket dan nilai CSV cocok dengan array JSON setelah pemetaan kolom. Waktu unduh asli tidak tercatat. Perhitungan laporan menggunakan salinan lokal tersebut sehingga tidak bergantung pada perubahan respons layanan di kemudian hari.
 
-\subsection{Pemeriksaan kualitas dan tindakan yang benar-benar dilakukan}
-Notebook membaca CSV lokal, mengurai tanggal, menjadikannya indeks, lalu mengurutkan indeks. Tabel pembanding dibangun langsung dari array JSON dan dicocokkan dengan \texttt{assert\_frame\_equal}. Nama kolom disesuaikan menurut kamus, tetapi nilai cuaca tidak diubah. Kalender lengkap dibentuk secara terpisah agar lubang di tengah periode tidak luput hanya karena tanggal awal dan akhir tampak benar.
-\begin{table}[htbp]\centering\small
-\caption{Hasil audit kualitas pada dua eksekusi ulang.}
+\subsection{Validasi dan pembentukan indeks waktu}
+Tanggal diurutkan setelah dikonversi menjadi indeks waktu. Kelengkapannya diperiksa terhadap kalender harian tersendiri, termasuk hari kabisat pada 2020 dan 2024. Pemeriksaan numerik meliputi nilai kosong, nilai tidak berhingga, presipitasi negatif, serta urutan $T_{\min}\leq T_{\mathrm{mean}}\leq T_{\max}$. Duplikat tanggal dibedakan dari kesamaan nilai cuaca pada tanggal berbeda.
+\begin{table}[htbp]\centering\footnotesize
+\caption{Hasil pemeriksaan kalender, nilai, dan kesesuaian sumber.}
 \begin{tabularx}{\textwidth}{@{}Xr@{}}\toprule
 Pemeriksaan & Hasil\\\midrule
 Observasi harian / bulan lengkap & 1.827 / 60\\
@@ -148,61 +141,47 @@ Jumlah hari Februari 2020 / Februari 2024 & 29 / 29\\
 Kecocokan hash berkas sumber & 3 dari 3\\\bottomrule
 \end{tabularx}
 \end{table}
-Karena seluruh pemeriksaan tersebut lolos, tidak ada baris yang dibuang, nilai yang diimputasi, atau hujan yang diinterpolasi. Kata ``pembersihan'' pada judul bab tidak berarti harus ada koreksi data. Di sini tindakan yang diperlukan adalah penataan indeks, pemeriksaan, dan dokumentasi keputusan mempertahankan data. Dua hari dengan nilai cuaca sama juga tidak otomatis merupakan duplikat salah apabila tanggalnya berbeda.
+Seluruh 60 bulan sesuai dengan jumlah hari kalender. Tidak diperlukan imputasi, interpolasi, atau penghapusan observasi. Dengan kelengkapan ini, perbedaan total bulanan tidak berasal dari perbedaan cakupan pencatatan. Validasi tersebut memeriksa konsistensi internal; akurasi reanalisis terhadap cuaca setempat memerlukan pembandingan dengan observasi yang belum tersedia.
 
-Kelengkapan struktural mempunyai batas yang tegas. Uji urutan suhu mendeteksi inkonsistensi internal, tetapi tidak menguji bias hangat atau dingin terhadap stasiun. Presipitasi nonnegatif dapat tetap berbeda dari hujan yang dialami satu lingkungan. Karena itu, laporan membedakan ``lolos validasi dasar'' dari ``terbukti benar di lapangan''.
-
-\subsection{Agregasi dan rumus ringkasan}
-Misalkan $T_d$ adalah suhu rata-rata harian dan $P_d$ total presipitasi hari ke-$d$. Untuk himpunan hari $D_m$ pada satu bulan lengkap dengan $n_m$ hari, ringkasan yang dipakai adalah
+\subsection{Agregasi, korelasi, dan peninjauan ekstrem}
+Suhu bulanan dihitung sebagai rerata nilai harian, sementara presipitasi bulanan merupakan jumlah presipitasi seluruh hari. Untuk himpunan hari $D_m$ dengan $n_m$ hari pada bulan $m$, digunakan
 \begin{equation}
 \overline{T}_m=\frac{1}{n_m}\sum_{d\in D_m}T_d,
 \qquad P_m=\sum_{d\in D_m}P_d.
 \end{equation}
-Rumus rerata yang sama diterapkan terpisah pada minimum dan maksimum harian. Rentang bulanan didefinisikan sebagai $R_m=\overline{T_{\max}}_m-\overline{T_{\min}}_m$. Karena memakai himpunan hari yang sama dan lengkap, ukuran ini juga sama dengan rerata selisih maksimum--minimum harian. Ia bukan selisih dua ekstrem absolut yang mungkin terjadi pada tanggal berbeda.
+Rumus rerata diterapkan terpisah pada suhu minimum dan maksimum. Selisih keduanya, $R_m=\overline{T_{\max}}_m-\overline{T_{\min}}_m$, sama dengan rerata rentang harian karena kedua seri memakai himpunan hari yang identik. Ukuran ini tidak menggunakan dua ekstrem absolut pada tanggal yang mungkin berbeda.
 
-Kode menggunakan \texttt{sum(min\_count=1)} untuk presipitasi bulanan. Parameter ini mencegah kelompok seluruhnya kosong menghasilkan nol, tetapi tidak cukup untuk menjamin bulan lengkap. Jaminan kelengkapan berasal dari pemeriksaan jumlah hari terhadap kalender. Total harian, bulanan, dan tahunan kemudian dicocokkan dengan toleransi numerik \texttt{np.isclose} untuk mengakomodasi representasi pecahan pada komputer.
+Pengelompokan \texttt{MS} menghasilkan 60 baris berlabel awal bulan; 2024-11-01 mewakili seluruh November. Penjumlahan presipitasi memakai \texttt{min\_count=1}, disertai pemeriksaan jumlah hari agar bulan kosong atau tidak lengkap tidak tampak sah sebagai total. Identitas jumlah harian, bulanan, dan tahunan diperiksa dengan toleransi numerik \texttt{np.isclose}. Suhu tahunan dihitung langsung dari hari, setara dengan rerata bulanan berbobot panjang bulan.
 
-Suhu tahunan dihitung langsung dari seluruh hari. Cara yang setara ialah merata-ratakan rerata bulan dengan bobot jumlah harinya, bukan memberi bobot sama pada dua belas bulan. Rerata total presipitasi menurut nomor bulan $k$ adalah
+Perbandingan kalender menggunakan rerata lima total bagi setiap nomor bulan $k$:
 \begin{equation}
 \overline{P}_{k,2020:2024}=\frac{1}{5}\sum_{y=2020}^{2024}P_{y,k}.
 \end{equation}
-Lima nilai yang masuk rumus itu adalah lima total bulan yang sama pada tahun berbeda. Hasilnya bukan total lima tahun untuk bulan tersebut dan bukan normal iklim jangka panjang. Total antarbulan juga dipengaruhi panjang bulan; pembacaan intensitas per hari membutuhkan pembagi jumlah hari yang sesuai.
+Matriks seasonal memiliki 12 baris bulan dan lima kolom tahun; transposenya digunakan untuk heatmap. Rerata ini merangkum 2020--2024 dan tidak diperlakukan sebagai normal iklim. Karena panjang bulan berbeda, total bulanan juga dibedakan dari presipitasi rata-rata per hari.
 
-\subsection{Statistik deskriptif, korelasi, dan pagar peninjauan}
-Notebook merangkum mean, simpangan baku sampel, minimum, kuartil, median, dan maksimum seluruh hari. Tanggal ekstrem ditambahkan agar besarnya nilai tidak terlepas dari waktu kejadian. \texttt{idxmin} dan \texttt{idxmax} hanya menampilkan tanggal pertama jika ada nilai seri; khusus maksimum suhu rata-rata dan presipitasi, daftar tanggal setara juga dicetak.
-
-Korelasi Pearson dihitung pada empat variabel ukur harian, tidak pada tanggal atau kode bulan. Untuk dua variabel $x$ dan $y$, koefisiennya adalah
+Statistik harian mencakup rerata, simpangan baku sampel, kuartil, median, dan ekstrem bertanggal. Korelasi Pearson dihitung pada empat variabel ukur:
 \begin{equation}
 r_{xy}=\frac{\sum_d(x_d-\bar{x})(y_d-\bar{y})}{\sqrt{\sum_d(x_d-\bar{x})^2\sum_d(y_d-\bar{y})^2}}.
 \end{equation}
-Koefisien merangkum asosiasi linear seluruh hari. Ia dapat dipengaruhi musim dan keterkaitan antartanggal; jumlah observasi yang besar tidak serta-merta membuat setiap pasangan hari independen. Tidak dihitung nilai-$p$, interval kepercayaan, atau efek kausal. Korelasi yang kecil juga tidak membuktikan tidak ada hubungan nonlinier.
+Koefisien menyatakan asosiasi linear seluruh hari. Perhitungan tidak mengendalikan musim atau ketergantungan antartanggal dan tidak disertai nilai-$p$ maupun interval kepercayaan. Nilai dekat nol karena itu hanya menunjukkan hubungan linear lemah dalam agregat ini, bukan ketiadaan setiap bentuk hubungan.
 
-Untuk meninjau presipitasi tinggi digunakan $\mathrm{IQR}=Q_3-Q_1$ dan pagar $U=Q_3+1{,}5\,\mathrm{IQR}$. Penanda memakai pertidaksamaan ketat $P_d>U$. Semua 1.827 hari tetap masuk ringkasan. Pagar tunggal dari seluruh periode ini tidak menyesuaikan musim dan bukan ambang bahaya resmi. Tujuannya mengarahkan perhatian ke rekaman yang perlu diperiksa, bukan mengubah data ekstrem menjadi data salah.
+Hari dengan presipitasi tinggi ditandai menggunakan pagar atas $U=Q_3+1{,}5(Q_3-Q_1)$, dengan syarat ketat $P_d>U$. Semua observasi tetap digunakan dalam statistik. Pagar dihitung dari distribusi seluruh periode, tanpa penyesuaian musim; fungsinya sebagai penanda pemeriksaan, bukan kategori bahaya meteorologis.
 
-\subsection{Rata-rata bergerak dan konsekuensi jendela penuh}
-Untuk $w\in\{7,30\}$, notebook memakai rolling trailing tanpa pemusatan:
+\subsection{Rata-rata bergerak dan penyajian grafik}
+Penghalusan suhu menggunakan jendela trailing 7 dan 30 hari. Nilai ditempatkan pada tanggal akhir jendela tanpa memakai hari setelahnya:
 \begin{equation}
 \mathrm{MA}_{w}(t)=\frac{1}{w}\sum_{i=0}^{w-1}T_{t-i},\qquad t\geq w.
 \end{equation}
-\texttt{center=False} menempatkan hasil pada tanggal akhir jendela. \texttt{min\_periods=w} mengharuskan semua nilai dalam jendela tersedia. Kalender yang lengkap membuat tujuh baris setara dengan tujuh hari. Enam posisi awal MA7 dan 29 posisi awal MA30 belum memiliki jendela penuh; NaN ini berasal dari metode, bukan dari kehilangan data sumber.
+Parameter \texttt{min\_periods=w} mensyaratkan jendela penuh. Enam nilai awal MA7 dan 29 nilai awal MA30 belum terdefinisi, meskipun data sumber lengkap. Bobot setiap hari sebesar $1/7$ dan $1/30$ menjadikan MA30 kurang peka terhadap lonjakan singkat. Sebaliknya, informasi yang lebih lama bertahan lebih lama pula ketika arah suhu berubah. Ukuran 7 hari dipilih sebagai pembanding penghalusan, bukan hasil identifikasi musim mingguan.
 
-Bobot satu hari adalah $1/7$ pada MA7 dan $1/30$ pada MA30. Jendela lebih panjang menekan pengaruh lonjakan singkat, tetapi membawa informasi hari-hari yang lebih lama ketika arah berubah. Karena itu, puncak rolling dapat muncul setelah puncak suhu asli. Jeda ini tidak dihitung sebagai parameter lag tetap dan tidak dinyatakan sebagai keterlambatan yang sudah diestimasi secara statistik. Jendela tujuh hari juga bukan bukti adanya musim mingguan; ukuran jendela dipilih untuk membandingkan skala penghalusan.
+Penyajian memisahkan suhu dan presipitasi karena satuan serta maknanya berbeda. Grafik garis mempertahankan urutan harian; area menekankan total bulanan dengan dasar nol. Dua seri suhu minimum dan maksimum diberi label langsung pada ujung garis. Seasonal plot membandingkan bulan yang sama antartahun, sedangkan heatmap memudahkan pencarian pasangan tahun--bulan dengan skala warna bersama. Grafik rolling menyertakan data asli dan pembesaran Januari--Juni 2024. Grafik terakhir menunjukkan letak hari di atas pagar IQR pada rekaman lengkap.
 
-\subsection{Rancangan visual dan alur reproduksi}
-Ketujuh gambar mempunyai tugas yang berbeda. Garis harian mempertahankan urutan dan ekstrem suhu. Area bulanan menekankan jumlah presipitasi dengan baseline nol. Dua garis suhu minimum--maksimum memakai satu satuan dan label langsung di ujung agar identitas seri tidak bergantung pada pencocokan legenda. Seasonal plot menempatkan Januari--Desember pada sumbu yang sama untuk membandingkan tahun. Grafik MA mempertahankan data asli dan menambahkan pembesaran 2024. Heatmap memudahkan pencarian sel tahun--bulan, sedangkan grafik IQR menunjukkan posisi hari yang ditandai pada rekaman lengkap.
-
-Untuk keterbacaan laporan, ketujuh grafik diekspor ulang dengan ukuran huruf yang diperbesar. Perubahan ini hanya pada penyajian; data, agregasi, jendela rolling, dan penanda IQR tetap sama. Notebook unggahan dan kedua salinan verifikasi tanpa perubahan dipertahankan.
-
-Suhu dan presipitasi tidak digabung dengan sumbu ganda. Skala dan maknanya berbeda, sehingga penggabungan mudah memberi kesan hubungan yang bergantung pada pilihan batas sumbu. Sumbu suhu garis harian tidak dimulai dari nol karena yang dibaca adalah perubahan pada rentang sempit; batasnya dinyatakan terang. Area dan heatmap presipitasi menggunakan nol sebagai acuan. Label bulat heatmap hanya untuk tampilan; nilai analisis tetap satu desimal.
-
-Arsip terbaru diinspeksi terhadap jalur absolut, traversal, dan symlink sebelum diekstrak. Entri \texttt{\_\_MACOSX} dan AppleDouble \texttt{.\_} dilewati. Seluruh sel notebook dibaca dan kode ditinjau: operasi yang ditemukan berupa impor pustaka, pembacaan data lokal, penghitungan, assertion, dan penyimpanan PNG di direktori kerja. Skrip bantuan yang disertakan pengguna tidak dijalankan begitu saja. Dua salinan eksekusi ditempatkan pada direktori terpisah agar notebook asli dan gambar arsip tetap utuh.
-
-Kedua eksekusi menggunakan Python 3.12.3, pandas 2.3.3, NumPy 2.3.4, dan Matplotlib 3.10.7. Kernel diikat pada interpreter lingkungan verifikasi, bukan pada kernelspec global yang mungkin menunjuk versi lain. Masing-masing menyelesaikan 15 sel kode dan menghasilkan 7 PNG tertanam tanpa error. Hash keluaran teks serta hash gambar tertanam sama antara kedua run. Kesamaan ini menyatakan reproduksibilitas pada lingkungan tersebut, bukan jaminan bahwa setiap versi pustaka akan menghasilkan byte PNG identik. Perbedaan versi pada output unggahan dijelaskan pada lampiran audit.
+Sumbu suhu harian dibatasi pada 21--27~$^\circ$C untuk menampilkan variasi dalam rentang data; jarak vertikalnya tidak menyatakan proporsi terhadap nol. Heatmap menggunakan skala 0--700~mm dan membulatkan label ke mm terdekat. Warna tetap berasal dari nilai sebelum pembulatan. Grafik laporan mempertahankan penghitungan notebook, dengan ukuran huruf yang disesuaikan untuk cetak.
 
 \bab{III}{HASIL DAN PEMBAHASAN}
-\subsection{Sebaran harian dan hubungan antarvariabel}
-Pemeriksaan awal menghasilkan catatan yang lengkap, tetapi kelengkapan tidak berarti semua hari serupa. Tabel~\ref{tab:desc} memperlihatkan bahwa sebaran presipitasi jauh lebih tidak simetris daripada suhu rata-rata. Rerata presipitasi 9,93~mm lebih tinggi daripada median 6,10~mm. Hari-hari dengan jumlah besar ikut menarik rerata ke atas; satu angka rerata tidak mewakili hari tipikal secara utuh.
-\begin{table}[htbp]\centering\small
+\subsection{Sebaran dan hubungan suhu dengan presipitasi}
+Rata-rata suhu harian selama lima tahun adalah 24,06~$^\circ$C dengan simpangan baku 0,72~$^\circ$C. Sebarannya lebih rapat daripada suhu minimum dan maksimum, yang masing-masing memiliki simpangan baku 1,00 dan 1,24~$^\circ$C. Variasi batas dingin dan hangat harian karena itu dibahas terpisah dari tingkat suhu rata-rata.
+\begin{table}[htbp]\centering\footnotesize
 \caption{Statistik 1.827 hari; suhu dalam $^\circ$C dan presipitasi dalam mm.}\label{tab:desc}
 \begin{tabular}{@{}lrrrr@{}}\toprule
 Ukuran & Suhu mean & Suhu min & Suhu maks & Presipitasi\\\midrule
@@ -215,9 +194,10 @@ Kuartil 3 & 24,60 & 22,00 & 28,80 & 14,40\\
 Maksimum & 26,40 & 23,80 & 31,40 & 127,40\\\bottomrule
 \end{tabular}
 \end{table}
-Ada 81 hari dengan presipitasi tepat nol pada presisi sumber. Istilah yang sesuai adalah ``tanpa presipitasi tercatat pada grid'', bukan jaminan seluruh wilayah Bandung bebas hujan. Nilai positif yang sangat kecil tidak ikut dimasukkan ke kategori nol. Pada suhu, simpangan baku minimum harian lebih besar daripada simpangan baku suhu rata-rata; penggabungan ketiganya sebagai satu variabel ``suhu'' akan menyembunyikan perbedaan tersebut.
+Sebaran presipitasi memperlihatkan ekor kanan yang lebih panjang. Rerata 9,93~mm berada di atas median 6,10~mm; maksimum 127,40~mm jauh melampaui kuartil ketiga 14,40~mm. Hari dengan jumlah besar menaikkan rerata sehingga median memberi pelengkap untuk menggambarkan nilai tipikal. Ada 81 hari dengan presipitasi tepat nol pada presisi sumber. Jumlah tersebut menyatakan hari tanpa presipitasi tercatat pada grid, bukan kepastian bahwa semua lokasi di Bandung bebas hujan.
 
-\begin{table}[htbp]\centering\small
+Korelasi harian memperlihatkan perbedaan hubungan antarukuran suhu. Pasangan suhu rata-rata dan maksimum memiliki koefisien absolut terbesar, $r=0{,}74$, sedangkan suhu minimum dengan maksimum dekat nol, $r=-0{,}03$ (Tabel~\ref{tab:corr}). Hubungan suhu rata-rata dengan minimum bernilai 0,53. Ketiganya tidak dapat dianggap bergerak dengan cara yang sama meskipun memiliki satuan identik.
+\begin{table}[htbp]\centering\footnotesize
 \caption{Korelasi Pearson data harian; pembulatan dua desimal.}\label{tab:corr}
 \begin{tabular}{@{}lrrrr@{}}\toprule
  & Mean & Minimum & Maksimum & Presipitasi\\\midrule
@@ -227,42 +207,31 @@ Maksimum & 0,74 & $-0,03$ & 1,00 & $-0,32$\\
 Presipitasi & $-0,17$ & 0,34 & $-0,32$ & 1,00\\\bottomrule
 \end{tabular}
 \end{table}
-Hubungan absolut terkuat di antara pasangan berbeda adalah suhu rata-rata dengan suhu maksimum ($r=0{,}74$). Hasil ini tidak berarti suhu rata-rata dibentuk sebagai rerata minimum dan maksimum; variabel rata-rata tetap berasal dari sumber. Hubungan suhu minimum dan maksimum justru dekat nol secara linear ($r=-0{,}03$) pada keseluruhan hari. Dengan kata lain, gerakan dua batas suhu tidak dapat dianggap identik hanya karena keduanya diukur dalam $^\circ$C.
+Presipitasi berasosiasi positif dengan suhu minimum ($r=0{,}34$), tetapi negatif dengan suhu maksimum ($r=-0{,}32$) dan rata-rata ($r=-0{,}17$). Arah yang berbeda pada batas minimum dan maksimum mengarahkan perhatian pada perubahan lebar rentang suhu. Namun, matriks ini menggabungkan seluruh musim; belum diketahui apakah hubungan yang sama bertahan di dalam bulan kalender tertentu. Tutupan awan atau kelembapan dapat menjadi variabel kajian lanjutan, tetapi mekanismenya tidak diuji dalam penelitian ini.
 
-Presipitasi berasosiasi positif dengan suhu minimum ($r=0{,}34$) dan negatif dengan suhu maksimum ($r=-0{,}32$). Ini adalah deskripsi bersama, bukan mekanisme sebab-akibat. Pengaruh awan, kelembapan, musim, dan sirkulasi dapat menjadi pertanyaan lanjutan, tetapi variabel dan rancangan untuk mengujinya belum tersedia. Matriks ini juga belum memisahkan hubungan dalam bulan yang sama dari perbedaan antarmusim.
+\subsection{Variasi suhu harian dan rentang bulanan}
+Suhu rata-rata harian terendah adalah 21,6~$^\circ$C pada 2 Maret 2023 dan tertinggi 26,4~$^\circ$C pada 29 April 2024. Gambar~\ref{fig:line} mempertahankan kedua kejadian tersebut dalam rangkaian yang naik-turun. Kelompok hari relatif hangat sekitar April--Mei 2024 diikuti penurunan setelahnya, sehingga maksimum tunggal tidak menggambarkan arah perubahan seluruh periode.
+\grafik{01_line_suhu_harian.png}{Suhu rata-rata harian pada grid ERA5 sekitar Bandung.\label{fig:line}}
 
-\subsection{Grafik garis: suhu rata-rata harian}
-\grafik{01_line_suhu_harian.png}{Suhu rata-rata harian; dua ekstrem bertanggal ditandai pada data asli.}
-Suhu rata-rata harian bergerak antara 21,6 dan 26,4~$^\circ$C. Titik terendah tercatat 2 Maret 2023, sedangkan tertinggi 29 April 2024. Keduanya adalah ekstrem \emph{rata-rata harian}. Suhu maksimum harian tertinggi merupakan ukuran berbeda: 31,4~$^\circ$C pada 29 Oktober 2023. Minimum harian paling rendah adalah 17,0~$^\circ$C pada 14 September 2023. Perbedaan tanggal ini menunjukkan mengapa sebutan ``hari terpanas'' harus selalu disertai definisi variabel.
+Ekstrem itu berbeda dari maksimum suhu harian tertinggi, 31,4~$^\circ$C pada 29 Oktober 2023. Minimum suhu harian paling rendah tercatat 17,0~$^\circ$C pada 14 September 2023. Istilah hari terpanas dan terdingin dalam laporan selanjutnya merujuk pada variabel yang disebutkan secara khusus. Pada skala bulanan, Januari 2021 memiliki rerata suhu terendah, 23,20~$^\circ$C, sedangkan Mei 2024 tertinggi, 25,27~$^\circ$C. Ringkasan bulanan itu menempatkan ekstrem harian dalam tingkat suhu yang bertahan lebih lama.
 
-Gerigi garis memperlihatkan bahwa perubahan tidak berlangsung satu arah. Bagian hangat sekitar April--Mei 2024 terlihat sebagai kelompok hari yang relatif tinggi, tetapi periode setelahnya kembali turun. Rerata bulanan terendah pada ringkasan data adalah Januari 2021 (23,20~$^\circ$C), sedangkan tertinggi Mei 2024 (25,27~$^\circ$C). Informasi bulanan itu memperkuat konteks kelompok hari hangat, bukan menghapus perubahan harian di dalamnya.
+Perbandingan minimum dan maksimum bulanan memperjelas variasi yang tersembunyi di balik suhu rata-rata. September 2023 memiliki rerata minimum 19,34~$^\circ$C dan maksimum 29,00~$^\circ$C, menghasilkan rentang terbesar, 9,66~$^\circ$C. Rerata rentang harian seluruh periode adalah 6,58~$^\circ$C. Pada Desember 2024, kedua rerata mencapai 22,32 dan 27,56~$^\circ$C dengan rentang 5,25~$^\circ$C berdasarkan nilai sebelum pembulatan (Gambar~\ref{fig:multiple}).
+\grafik{03_multiple_suhu_label_ujung.png}{Rerata bulanan suhu minimum dan maksimum harian.\label{fig:multiple}}
 
-Anotasi membantu pembaca menemukan dua ekstrem tanpa menelusuri seluruh garis. Batas vertikal 21--27~$^\circ$C sengaja menonjolkan variasi pada rentang data, sehingga jarak visual tidak boleh dibaca sebagai proporsi terhadap nol mutlak. Grafik ini berguna untuk urutan dan perubahan lokal, tetapi terlalu rapat untuk membaca besar nilai setiap hari. Tabel bertanggal dan rolling diperlukan sebagai pendamping, bukan sebagai pengganti data asli.
+Selisih label Desember yang sudah dibulatkan tampak sebesar 5,24~$^\circ$C, sementara rentang yang dibulatkan terpisah bernilai 5,25~$^\circ$C. Pembulatan terpisah menjelaskan perbedaan digit terakhir tersebut. Rentang ini merangkum selisih maksimum dan minimum dalam satu hari, tanpa menentukan jam siang atau malam tertentu. Kedua garis tidak berpotongan karena minimum tidak melampaui maksimum pada setiap hari yang menjadi dasar rerata. Label pada ujung Desember mengidentifikasi seri; ruang di kanannya tidak memuat prediksi.
 
-\subsection{Grafik area: jumlah presipitasi bulanan}
-\grafik{02_area_presipitasi_bulanan.png}{Total presipitasi setiap bulan, dihitung ulang dari seluruh hari yang lengkap.}
-Dari 60 bulan, November 2024 mempunyai total tertinggi sebesar 673,3~mm dan September 2023 paling rendah sebesar 46,4~mm. Bidang kembali turun setelah bulan basah karena setiap bulan dijumlahkan terpisah. Penurunan kurva tidak berarti air yang telah turun menghilang, sebagaimana akan keliru jika gambar dibaca sebagai akumulasi berjalan sejak Januari 2020.
+September 2023 juga memiliki presipitasi bulanan terendah. Kebersamaan rentang suhu besar dan presipitasi kecil sejalan dengan perlunya menelaah kedua variabel, tetapi satu pasangan ringkasan bulanan belum cukup untuk mengidentifikasi pengaruh hujan terhadap suhu. Korelasi harian sebelumnya menggambarkan asosiasi pada skala berbeda dan tidak menyelesaikan pertanyaan kausal tersebut.
 
-Total lima tahun sebesar 18.140,2~mm cocok saat dihitung melalui tabel harian, bulanan, dan tahunan. Kesetaraan ini merupakan pemeriksaan aritmetika penting, tetapi bukan tiga bukti observasi yang independen: semuanya bersumber dari rekaman harian yang sama. Total tersebut menggambarkan kedalaman ekuivalen air yang dijumlahkan pada lokasi grid, bukan volume air untuk luas seluruh kota.
+\FloatBarrier
+\subsection{Akumulasi presipitasi dan pola kalender}
+Total presipitasi 2020--2024 mencapai 18.140,2~mm. Penjumlahan pada tabel harian, bulanan, dan tahunan menghasilkan nilai yang sama. Total ini merupakan kedalaman ekuivalen air yang terakumulasi sepanjang waktu pada representasi grid, bukan volume air bagi luas seluruh kota. Gambar~\ref{fig:area} menyajikan 60 total bulanan secara terpisah, dengan nilai tertinggi 673,3~mm pada November 2024 dan terendah 46,4~mm pada September 2023.
+\grafik{02_area_presipitasi_bulanan.png}{Jumlah presipitasi per bulan, bukan akumulasi berjalan.\label{fig:area}}
 
-Perbedaan Oktober memberi contoh yang tidak bergantung pada dua ekstrem global. Oktober 2022 mencapai 575,1~mm, sedangkan Oktober 2023 hanya 95,7~mm. Kalender yang sama tidak menjamin total yang serupa. Selain itu, rekor harian 127,4~mm terjadi 25 Mei 2021, bukan pada November 2024. Bulan terbasah dapat terbentuk oleh banyak hari basah tanpa memiliki rekor harian tertinggi.
+Perbedaan antartahun terlihat pula di luar kedua ekstrem. Oktober 2022 mencapai 575,1~mm, sedangkan Oktober 2023 hanya 95,7~mm. Penurunan bidang pada grafik area menyatakan bulan berikutnya memiliki jumlah lebih kecil; nilainya tidak bersifat kumulatif sejak awal periode. Garis penghubung membantu mengikuti urutan bulan dan tidak menggambarkan intensitas hujan di antara titik. Perbedaan panjang bulan juga tetap perlu diperhitungkan bila pertanyaannya beralih dari jumlah ke rerata per hari.
 
-Baseline nol sesuai untuk gambar yang menekankan besarnya total. Namun, garis penghubung antartitik hanyalah bantuan membaca urutan bulan; ia tidak menunjukkan hujan turun merata atau berubah linier di antara label awal bulan. Perbedaan panjang bulan juga membuat total tidak otomatis setara dengan intensitas per hari.
-
-\subsection{Grafik berganda: minimum dan maksimum harian dalam rerata bulanan}
-\grafik{03_multiple_suhu_label_ujung.png}{Dua rerata bulanan dengan identitas seri langsung di ujung Desember 2024.}
-Pada Desember 2024, rerata minimum harian adalah 22,32~$^\circ$C dan rerata maksimum harian 27,56~$^\circ$C. Rentang berdasarkan angka sebelum pembulatan sebesar 5,25~$^\circ$C. Selisih dua label yang sudah dibulatkan dapat tampak 5,24; ini bukan perubahan data. Penghitungan menggunakan presisi internal, lalu setiap hasil dibulatkan terpisah untuk penyajian.
-
-September 2023 menunjukkan rentang bulanan terbesar, 9,66~$^\circ$C, dengan rerata minimum 19,34~$^\circ$C dan maksimum 29,00~$^\circ$C. Rerata selisih maksimum--minimum harian sepanjang seluruh periode adalah 6,58~$^\circ$C. Dengan demikian, satu rerata suhu harian saja belum menjelaskan lebar perubahan dalam hari. Rentang ini tidak secara spesifik mengukur beda suhu pada jam siang dan malam tertentu karena data yang dianalisis sudah berupa ringkasan harian.
-
-Dua garis tidak berpotongan karena pemeriksaan urutan minimum--maksimum lolos pada semua hari, dan rerata memakai himpunan hari yang sama. Label langsung mengurangi kebutuhan berpindah pandang dari garis ke legenda. Ruang kosong di kanan hanya menampung label, bukan data masa depan atau perpanjangan prediksi.
-
-September 2023 juga menjadi bulan dengan total presipitasi paling rendah. Kebersamaan ini menarik sebagai bahan pertanyaan ilmiah, tetapi satu pasangan ringkasan tidak membuktikan bahwa sedikit hujan menyebabkan rentang suhu membesar. Korelasi harian pada Tabel~\ref{tab:corr} pun tidak menyelesaikan persoalan sebab-akibat tersebut. Penjelasan mekanisme memerlukan variabel tambahan dan pemisahan pengaruh musim.
-
-\subsection{Seasonal plot: pola kalender dan variasi antartahun}
-\grafik{04_seasonal_presipitasi.png}{Jumlah presipitasi bulanan pada sumbu kalender yang sama, satu garis per tahun.}
-Rerata total per nomor bulan memperlihatkan minimum pada Agustus (97,58~mm), hampir sama dengan Juli (99,64~mm), dan maksimum pada November (497,84~mm). Maret juga relatif tinggi, 426,92~mm, sebelum ringkasan periode ini bergerak ke jumlah yang lebih rendah menjelang pertengahan tahun. Tabel~\ref{tab:season} memuat seluruh dua belas nilai agar pembacaan tidak hanya memilih bulan yang mendukung satu kesan.
-\begin{table}[htbp]\centering\small
+Seasonal plot menyandingkan bulan kalender yang sama sehingga pola berulang dapat dipisahkan dari variasi antartahun (Gambar~\ref{fig:season}). Rerata lima total November, 497,84~mm, merupakan yang tertinggi. Agustus terendah dengan 97,58~mm, hampir sama dengan Juli 99,64~mm. Maret juga relatif tinggi, 426,92~mm, sebelum nilai ringkasan turun menuju pertengahan tahun. Tabel~\ref{tab:season} menyajikan seluruh bulan sebagai pembanding.
+\grafik{04_seasonal_presipitasi.png}{Perbandingan presipitasi bulanan menurut tahun pada sumbu kalender bersama.\label{fig:season}}
+\begin{table}[htbp]\centering\footnotesize
 \caption{Rerata lima total bulanan 2020--2024; bukan normal klimatologis.}\label{tab:season}
 \begin{tabular}{@{}lrlr@{}}\toprule
 Bulan & mm & Bulan & mm\\\midrule
@@ -274,36 +243,27 @@ Mei & 284,78 & November & 497,84\\
 Juni & 193,62 & Desember & 453,38\\\bottomrule
 \end{tabular}
 \end{table}
-Pola relatif kering sekitar Juli--Agustus dan lebih basah menuju akhir tahun muncul lintas beberapa tahun, bukan hanya pada satu garis. Akan tetapi, kata ``musiman'' di sini bersifat deskriptif. Tidak dilakukan uji seasonality formal atau estimasi pola yang diasumsikan tetap. Perubahan antarbulan tidak harus turun atau naik pada setiap langkah di seluruh tahun.
+Jumlah yang relatif rendah sekitar Juli--Agustus dan kenaikan menjelang akhir tahun muncul pada beberapa tahun. Namun, November tetap berkisar 347,4--673,3~mm antartahun. Rerata kalender tersebut masih menyisakan rentang antartahun yang lebar. September dan Oktober 2023, masing-masing 46,4 dan 95,7~mm, memperlihatkan bahwa penyimpangan antartahun dapat bertahan lebih dari satu bulan.
 
-November masing-masing tahun berkisar 347,4--673,3~mm. Rentang itu cukup lebar untuk mengingatkan bahwa rerata 497,84~mm bukan nilai yang akan berulang tepat setiap tahun. Tahun 2023 menonjol pada September dan Oktober yang rendah, masing-masing 46,4 dan 95,7~mm. Ketidakseragaman tersebut justru merupakan informasi utama seasonal plot: nomor bulan membantu membandingkan, tetapi tidak menghilangkan variasi antartahun.
+Heatmap pada Gambar~\ref{fig:heat} menampilkan total yang sama dalam susunan tahun dan bulan. November 2024 memiliki label 673~mm dari nilai 673,3~mm, sedangkan September 2023 berlabel 46~mm dari 46,4~mm. Pada kolom Oktober, 2020 dan 2022 tampak lebih basah daripada 2023 dan 2024. Pembacaan kolom memudahkan perbandingan tahun; pembacaan baris mengikuti perubahan kalender dalam satu tahun.
+\grafik{06_heatmap_presipitasi.png}{Kalender presipitasi bulanan dengan satu skala warna 0--700~mm.\label{fig:heat}}
 
-Hanya ada lima pengulangan kalender. Ringkasan ini tidak diberi nama normal iklim dan tidak dipakai menaksir peluang hujan untuk bulan tertentu pada tahun mendatang. Penjelasan El Ni\~no atau faktor sirkulasi lain belum diuji; penamaan penyebab hanya dari bentuk garis akan melampaui bukti yang tersedia.
+Skala warna bersama menjaga makna jumlah antartahun, berbeda dari normalisasi terpisah yang akan menonjolkan posisi relatif dalam setiap tahun. Label bulat membantu keterbacaan, tetapi selisih rinci tetap perlu dihitung dari tabel asli. Area, seasonal plot, dan heatmap menyediakan sudut baca yang saling melengkapi atas 60 nilai yang sama; kesesuaian ekstremnya merupakan konsistensi penyajian, bukan konfirmasi dari sumber data lain.
 
-\subsection{Moving average: detail, penghalusan, dan jeda respons}
-\grafik{05_moving_average_7_30.png}{Suhu harian dengan MA7 dan MA30; panel bawah memperbesar Januari--Juni 2024.}
-MA7 pertama tersedia 7 Januari 2020 dan MA30 pada 30 Januari 2020. Pada 7 Januari, suhu asli 23,5~$^\circ$C dan MA7 23,529~$^\circ$C, sedangkan MA30 belum terdefinisi. Pada 30 Januari, suhu asli 24,1~$^\circ$C, MA7 24,286~$^\circ$C, dan MA30 24,060~$^\circ$C. Angka ini memperlihatkan bahwa garis rolling bukan sekadar salinan suhu pada tanggal yang sama.
+Pola kalender dalam lima pengulangan ini mendukung deskripsi musiman pada periode pengamatan. Data belum cukup untuk menetapkan normal iklim atau peluang hujan tahun mendatang. Penyebab khusus, termasuk El Ni\~no, tidak dapat ditentukan dari bentuk garis tanpa variabel pendukung dan rancangan pengujian tambahan.
 
-Pada 29 April 2024, suhu harian mencapai 26,4~$^\circ$C, MA7 25,443~$^\circ$C, dan MA30 25,210~$^\circ$C. Nilai MA30 tertinggi baru muncul 12 Mei 2024, sebesar 25,420~$^\circ$C. Puncak rolling mengacu pada tanggal akhir jendela, bukan pernyataan bahwa seluruh hari di dalam jendela memiliki suhu tersebut. Panel pembesaran memakai perhitungan yang sama dengan panel penuh; ia bukan eksperimen atau pemodelan tambahan.
+\FloatBarrier
+\subsection{Penghalusan suhu dan kejadian ekstrem}
+Gambar~\ref{fig:ma} membandingkan dua skala penghalusan pada seri suhu yang sama. MA7 mulai tersedia pada 7 Januari 2020, ketika suhu asli 23,5~$^\circ$C dan hasil rolling 23,529~$^\circ$C. MA30 baru tersedia pada 30 Januari; pada tanggal itu suhu asli 24,1~$^\circ$C, MA7 24,286~$^\circ$C, dan MA30 24,060~$^\circ$C. Enam dan 29 nilai awal belum terdefinisi sesuai syarat jendela penuh, bukan akibat tanggal hilang.
+\grafik{05_moving_average_7_30.png}{Suhu harian, MA7, dan MA30; panel bawah memperbesar Januari--Juni 2024.\label{fig:ma}}
 
-MA7 masih mengikuti perubahan lokal lebih cepat, sementara MA30 membuat latar yang lebih halus. Keuntungan itu dibayar dengan berkurangnya keterlihatan ekstrem singkat dan respons yang cenderung terlambat saat arah berbalik. Tidak ada klaim bahwa MA30 adalah pilihan terbaik untuk semua tujuan. Apabila tujuan operasionalnya mendeteksi satu hari sangat panas, data asli tetap perlu dilihat.
+Pada maksimum suhu harian 29 April 2024, nilai asli 26,4~$^\circ$C dibandingkan dengan MA7 25,443~$^\circ$C dan MA30 25,210~$^\circ$C. MA30 mencapai maksimum 25,420~$^\circ$C pada 12 Mei 2024, setelah tanggal maksimum harian. Perbedaan ini sesuai dengan sifat jendela trailing: hasil pada setiap tanggal masih merangkum hari-hari sebelumnya. Tanggal maksimum rolling menandai akhir jendela, bukan keadaan seragam selama 30 hari.
 
-NaN awal berjumlah 6 dan 29 sesuai rancangan jendela penuh. Menggantinya dengan nol akan menciptakan suhu palsu; mengisinya memakai jendela pendek akan mengubah definisi metode. MA7 tidak membuktikan seasonality mingguan, dan MA30 bukan rerata bulan kalender: jendelanya terus bergeser melewati batas bulan. Seluruh garis bersifat retrospektif, tanpa evaluasi akurasi ramalan.
+MA7 mempertahankan lebih banyak perubahan lokal, sedangkan MA30 meredam lonjakan singkat dan memberi latar yang lebih halus. Pemilihan jendela menentukan seberapa banyak detail harian yang masih terlihat. Untuk menemukan satu hari ekstrem, seri asli tetap lebih sesuai. MA30 juga berbeda dari rerata bulan kalender karena jendelanya bergerak melintasi batas bulan. Panel pembesaran menggunakan perhitungan yang sama dan tidak menambah model baru. Tidak dilakukan evaluasi ramalan maupun estimasi jeda respons tetap.
 
-\subsection{Heatmap: melihat ulang 60 bulan tanpa mengubah ukurannya}
-\grafik{06_heatmap_presipitasi.png}{Kalender presipitasi bulanan; label sel dibulatkan, warna memakai nilai sebelum pembulatan.}
-Heatmap menempatkan tahun pada baris dan bulan pada kolom. Sel November 2024 paling kuat dengan label 673 dari nilai 673,3~mm. September 2023 paling pucat dengan label 46 dari 46,4~mm. Urutan ekstrem ini sama dengan grafik area; kesesuaian tersebut membantu memeriksa bahwa data yang dipakai tidak bergeser saat dibentuk menjadi matriks kalender.
-
-Dengan membaca kolom Oktober ke bawah, pembaca dapat membandingkan tahun tanpa mengikuti lima garis yang saling mendekat. Oktober 2020 dan 2022 tampak lebih basah daripada Oktober 2023 dan 2024. Sebaliknya, pembacaan satu baris menekankan urutan musim dalam tahun tertentu. Dua cara melihat ini saling melengkapi seasonal plot: garis lebih kuat untuk mengikuti lintasan, sedangkan matriks lebih langsung untuk mencari satu pasangan tahun--bulan.
-
-Semua sel memakai skala bersama 0--700~mm, bukan normalisasi per tahun. Karena itu warna yang sama mempunyai arti jumlah yang sama antarbaris. Nilai maksimum 673,3~mm masih berada dalam batas warna. Label dibulatkan demi keterbacaan, sehingga dua label bulat yang sama belum tentu mempunyai nilai tepat yang identik. Selisih rinci tidak dihitung dengan mengurangkan angka bulat pada gambar.
-
-Heatmap tidak menghasilkan bukti independen terhadap pola musiman. Ia memuat 60 total yang sama dengan area dan seasonal plot, hanya dengan pengkodean visual berbeda. Penegasan ini penting agar jumlah bentuk grafik tidak disamakan dengan jumlah sumber observasi yang mengonfirmasi suatu hipotesis.
-
-\subsection{Peninjauan ekstrem: 79 penanda bukan 79 kesalahan}
-\grafik{07_tinjauan_ekstrem.png}{Presipitasi harian dengan pagar IQR; seluruh titik tetap dipertahankan dalam analisis.}
-Kuartil pertama presipitasi adalah 1,7~mm dan kuartil ketiga 14,4~mm, sehingga IQR 12,7~mm serta pagar atas 33,45~mm. Sebanyak 79 hari melampaui pagar tersebut. Semua tetap berada dalam tabel, termasuk 25 Mei 2021 dengan 127,4~mm. Pemeriksaan akhir masih mencatat 1.827 hari dan total lima tahun tetap 18.140,2~mm.
-\begin{table}[htbp]\centering\small
+Presipitasi tinggi ditinjau terpisah karena ekor kanan sebarannya cukup panjang. Kuartil pertama 1,7~mm dan ketiga 14,4~mm menghasilkan IQR 12,7~mm serta pagar atas 33,45~mm. Sebanyak 79 hari melampaui pagar tersebut (Gambar~\ref{fig:iqr}). Hari tertinggi, 25 Mei 2021 dengan 127,4~mm, berbeda dari bulan terbasah November 2024. Rekor satu hari dan total sebulan menangkap bentuk kejadian yang berbeda.
+\grafik{07_tinjauan_ekstrem.png}{Hari di atas pagar IQR pada rekaman presipitasi lengkap.\label{fig:iqr}}
+\begin{table}[htbp]\centering\footnotesize
 \caption{Lima hari dengan presipitasi tertinggi beserta suhu pada hari yang sama.}
 \begin{tabular}{@{}lrrrr@{}}\toprule
 Tanggal & Presipitasi (mm) & Mean ($^\circ$C) & Min ($^\circ$C) & Maks ($^\circ$C)\\\midrule
@@ -314,14 +274,14 @@ Tanggal & Presipitasi (mm) & Mean ($^\circ$C) & Min ($^\circ$C) & Maks ($^\circ$
 2020-01-25 & 84,0 & 23,6 & 21,9 & 26,5\\\bottomrule
 \end{tabular}
 \end{table}
-Pagar IQR berasal dari distribusi seluruh hari, termasuk hari relatif kering dan basah pada berbagai musim. Dengan distribusi presipitasi yang berekor kanan, nilai di atas pagar dapat merupakan bagian penting dari proses cuaca. Menghapusnya hanya karena tidak umum akan menurunkan akumulasi dan mengubah cerita data. Sebaliknya, mempertahankan nilai juga bukan pengesahan bahwa kejadian tersebut telah dikonfirmasi alat ukur setempat.
+Kelima hari terbesar tetap berada dalam analisis bersama hari lain. Penghapusan otomatis berdasarkan pagar akan menurunkan akumulasi dan menghilangkan bagian rekaman yang justru menjadi perhatian. Sebaliknya, lolosnya pemeriksaan internal belum mengonfirmasi besarnya hujan melalui alat ukur setempat. Pagar tunggal seluruh periode juga tidak menyatakan tingkat ketidaklaziman yang sama untuk musim berbeda dan tidak setara dengan kategori peringatan BMKG.
 
-Notebook turut menghitung deviasi suhu harian terhadap MA30. Deviasi positif terbesar adalah 1,663~$^\circ$C pada 1 Maret 2021. MA30 memasukkan hari yang sedang dinilai dan 29 hari sebelumnya. Maka frasa pada narasi unggahan tentang ``30 hari sebelumnya dan hari itu'' perlu dibaca dengan hati-hati: implementasinya 30 hari \emph{total}, bukan 31. Laporan mengikuti rumus kode tanpa mengubah sumber notebook.
+Deviasi positif suhu terbesar terhadap MA30 adalah 1,663~$^\circ$C pada 1 Maret 2021. Pembandingnya mencakup hari tersebut dan 29 hari sebelumnya, sehingga selisih ini menggambarkan perbedaan dari latar 30 hari total. Ukuran tersebut bukan anomali terhadap normal iklim, dan belum merupakan residual model probabilistik yang telah diuji. Semua 1.827 hari tetap dipertahankan, dengan total presipitasi tidak berubah.
 
-Deviasi ini bukan anomali terhadap normal iklim dan bukan residual model probabilistik yang telah diuji. Demikian pula pagar 33,45~mm bukan kategori peringatan BMKG. Grafik memberi daftar perhatian untuk verifikasi lebih lanjut, bukan status bahaya atau penilaian dampak banjir.
-
-\subsection{Ringkasan tahunan: akhir periode lebih hangat, bukan kenaikan lurus}
-\begin{table}[htbp]\centering\small
+\FloatBarrier
+\subsection{Perbandingan tahunan dan komponen deret waktu}
+Rata-rata suhu turun dari 24,068~$^\circ$C pada 2020 ke 23,846~$^\circ$C pada 2021, lalu meningkat pada tiga tahun berikutnya hingga 24,423~$^\circ$C pada 2024. Perubahan tahun-ke-tahun berturut-turut adalah $-0{,}222$, $+0{,}035$, $+0{,}202$, dan $+0{,}340$~$^\circ$C. Rerata 2024 berada 0,355~$^\circ$C di atas 2020, tetapi urutannya tidak membentuk kenaikan monoton.
+\begin{table}[htbp]\centering\footnotesize
 \caption{Ringkasan tahunan dari seluruh hari; perubahan suhu dihitung sebelum pembulatan.}\label{tab:annual}
 \begin{tabular}{@{}rrrrrr@{}}\toprule
 Tahun & Hari & Suhu mean & Presipitasi & Presipitasi/hari & $\Delta T$ dari 2020\\
@@ -333,118 +293,56 @@ Tahun & Hari & Suhu mean & Presipitasi & Presipitasi/hari & $\Delta T$ dari 2020
 2024 & 366 & 24,423 & 3.773,7 & 10,311 & 0,355\\\bottomrule
 \end{tabular}
 \end{table}
-Rata-rata tahunan menurun dari 2020 ke 2021, lalu naik pada tiga tahun berikutnya. Perubahan tahun-ke-tahun berturut-turut adalah $-0{,}222$, $+0{,}035$, $+0{,}202$, dan $+0{,}340$~$^\circ$C. Selisih 2024 terhadap 2020 sebesar 0,355~$^\circ$C sah sebagai perbandingan dua rerata pada produk ini. Ia tidak diubah menjadi laju pemanasan per dekade atau klaim atribusi perubahan iklim.
+Presipitasi tahunan terendah terjadi pada 2023, 2.690,1~mm, atau 32,96\% di bawah total 2020 sebesar 4.012,5~mm. Tahun 2022 mencapai 3.977,4~mm dan 2024 kembali naik menjadi 3.773,7~mm setelah tahun 2023 yang lebih kering. Perubahan arah itu tidak mendukung penurunan presipitasi yang terus-menerus. Kolom rerata presipitasi per hari memberi konteks perbedaan panjang tahun, termasuk satu hari tambahan pada 2020 dan 2024, tanpa menjelaskan bagaimana hujan tersebar di dalamnya.
 
-Presipitasi tertinggi tahunan terjadi pada 2020, 4.012,5~mm, disusul 2022 dengan 3.977,4~mm. Tahun 2023 paling rendah, 2.690,1~mm, atau 32,96\% lebih kecil daripada total 2020. Pada 2024 totalnya naik kembali menjadi 3.773,7~mm. Karena arah kembali berubah, narasi ``hujan terus menurun'' tidak didukung rangkaian lima tahun ini.
+Penghalusan dan rerata tahunan menunjukkan perubahan tingkat suhu yang lebih lambat daripada variasi satu hari. Dalam pengertian deskriptif, bagian ini merupakan kecenderungan atau \emph{trend} lokal. Bukti musiman atau \emph{seasonality} lebih jelas pada presipitasi, melalui pengulangan nilai relatif rendah di pertengahan tahun dan lebih tinggi menjelang akhir tahun. Besar dan letak puncaknya berubah, sehingga tidak digunakan satu pola tetap untuk semua tahun.
 
-Tahun kabisat memiliki satu hari tambahan. Tabel menyertakan presipitasi per hari agar panjang tahun tidak tersembunyi, meskipun pembagi ini tetap tidak menjelaskan distribusi kejadian di dalam tahun. Suhu tahunan dihitung dari hari langsung, sehingga setiap hari mendapat bobot yang sama. Nilai perubahan dihitung pada presisi internal; pembulatan kolom secara terpisah tidak selalu merekonstruksi digit terakhir dengan tepat.
+Komponen \emph{cyclic} jangka panjang belum dapat diidentifikasi. Lima titik tahunan memperlihatkan variasi, tetapi tidak cukup untuk menentukan periode siklus yang tidak terikat kalender. Demikian pula, gerigi suhu dan lonjakan presipitasi merupakan variasi berfrekuensi tinggi yang belum dirangkum oleh penghalusan sederhana. Penyebutan \emph{noise} di sini terbatas pada variasi sisa secara deskriptif; sifat acak independennya belum diuji. Sebagian lonjakan dapat merepresentasikan kejadian cuaca, sehingga tidak diperlakukan sebagai kesalahan data.
 
-\subsection{Komponen deret waktu dan pemisahan hasil dari hipotesis}
-\textbf{Kecenderungan atau trend deskriptif.} Rolling dan rerata tahunan menunjukkan perubahan tingkat suhu yang lebih lambat dibanding gerigi satu hari. Bagian akhir rekaman lebih hangat daripada beberapa tahun sebelumnya, tetapi tidak ada uji tren jangka panjang. Kecenderungan lokal pada lima tahun tidak otomatis menjadi tren klimatologis.
+Cakupan lima tahun pada satu keluaran grid membatasi penafsiran perubahan akhir--awal. Selisih 0,355~$^\circ$C menggambarkan dua rerata dalam catatan ini dan tidak dikonversi menjadi laju pemanasan per dekade. Penelitian tidak menguji atribusi perubahan iklim ataupun penyebab tahun 2023 yang lebih kering. Hasil yang dapat dipertahankan ialah perbedaan terukur dan pola kalender pada sumber serta periode yang dianalisis.
 
-\textbf{Seasonality.} Perbandingan bulan kalender memperlihatkan pola relatif rendah sekitar pertengahan tahun dan meningkat menuju akhir tahun. Keterulangan ini cukup untuk menyebut pola kalender secara deskriptif. Besar dan waktu puncak tetap berubah, sehingga tidak dipaksakan satu bentuk musim yang identik untuk semua tahun. Jendela tujuh hari dalam MA tidak menjadi bukti pengulangan mingguan.
+\bab{IV}{KESIMPULAN DAN SARAN}
+\subsection{Kesimpulan}
+Data Open-Meteo/ERA5 membentuk rangkaian lengkap 1.827 hari dan 60 bulan selama 2020--2024. Nilai CSV sesuai dengan respons JSON, dan pemeriksaan kalender serta numerik tidak memerlukan imputasi atau penghapusan hari. Kelengkapan tersebut memungkinkan perbandingan total bulanan dengan cakupan waktu yang seragam, meskipun kesesuaiannya terhadap stasiun lokal belum diuji.
 
-\textbf{Cyclic.} Ada variasi antartahun, tetapi lima titik tahunan tidak mengidentifikasi periode atau keteraturan siklus panjang. Tahun 2023 yang lebih kering tidak cukup untuk menamai suatu osilasi tertentu. Tidak ada periode siklus yang diestimasi atau diklaim ditemukan.
+Suhu rata-rata harian mencapai 24,06~$^\circ$C, dengan minimum 21,6~$^\circ$C pada 2 Maret 2023 dan maksimum 26,4~$^\circ$C pada 29 April 2024. Rerata 2024 lebih tinggi 0,355~$^\circ$C daripada 2020, setelah penurunan pada 2021. Pada skala bulanan, rentang rerata minimum--maksimum terbesar terjadi pada September 2023, 9,66~$^\circ$C, dibandingkan 5,25~$^\circ$C pada Desember 2024. Korelasi suhu rata-rata dengan maksimum sebesar 0,74 lebih kuat daripada hubungan suhu minimum dengan maksimum yang mendekati nol. Perbedaan antarukuran ini perlu dipertahankan dalam penafsiran suhu.
 
-\textbf{Noise dan variasi sisa.} Perubahan harian yang tidak dirangkum rolling dapat disebut variasi berfrekuensi lebih tinggi. Ia belum diuji sebagai gangguan acak independen. Sebagian lonjakan dapat mencerminkan kejadian cuaca nyata atau karakter produk reanalisis; ``noise'' tidak sama dengan ``nilai boleh dibuang''.
+Presipitasi menunjukkan pengulangan kalender sekaligus perbedaan antartahun. Total lima tahun adalah 18.140,2~mm; November 2024 tertinggi bulanan dengan 673,3~mm dan September 2023 terendah dengan 46,4~mm. Rerata November 497,84~mm melebihi Agustus 97,58~mm, tetapi November sendiri berkisar 347,4--673,3~mm antartahun. Tahun 2023 memiliki total terendah, 2.690,1~mm, sebelum naik kembali pada 2024. Rekor harian 127,4~mm pada 25 Mei 2021 tidak berada pada bulan terbasah, menunjukkan perbedaan antara kejadian sesaat dan akumulasi bulanan.
 
-Temuan terukur dan hipotesis perlu dipisahkan pada kalimat kesimpulan. Yang terukur adalah tanggal, jumlah, rerata, korelasi, dan penanda yang ditampilkan. Dugaan bahwa awan memperkecil rentang suhu, bahwa fenomena iklim tertentu menjelaskan 2023, atau bahwa satu lingkungan di Bandung mengikuti pola grid yang sama masih berupa pertanyaan. Tidak ada eksperimen baru dalam laporan ini yang menyelesaikan dugaan tersebut.
+Jendela 30 hari menghasilkan kurva suhu lebih halus daripada jendela 7 hari, dengan lebih banyak nilai awal belum terdefinisi dan respons lebih lambat terhadap perubahan. MA30 mencapai maksimum 25,420~$^\circ$C pada 12 Mei 2024, setelah maksimum harian. Penghalusan membantu melihat perubahan tingkat suhu, sedangkan seri asli tetap diperlukan untuk menilai hari ekstrem. Sebanyak 79 hari di atas pagar IQR 33,45~mm dipertahankan karena penanda statistik tidak membuktikan kesalahan pencatatan.
 
-\setstretch{1.06}
-\bab{IV}{KESIMPULAN DAN REKOMENDASI}
-\subsection{Jawaban atas pertanyaan penelitian}
-\textbf{Pertanyaan 1: kelayakan dan kesetiaan sumber.} CSV terbaru cocok dengan array JSON setelah pemetaan nama kolom. Tiga hash sumber sesuai. Ada 1.827 hari berturut-turut, 60 bulan lengkap, dan tidak ada kegagalan pada uji kosong, duplikat, kalender, finite, urutan suhu, atau presipitasi nonnegatif. Dua eksekusi ulang menyelesaikan seluruh 15 sel kode dengan tujuh gambar tertanam. Data layak untuk analisis deskriptif yang dilakukan, tanpa imputasi atau pemotongan; kecocokan dengan stasiun tetap belum diuji.
+Pola musiman presipitasi dapat dijelaskan secara deskriptif dalam lima pengulangan kalender. Siklus panjang, sifat noise acak independen, serta penyebab meteorologis belum teridentifikasi. Hasil berlaku untuk representasi grid yang tersedia dan tidak menjadi bukti perubahan iklim atau kondisi seluruh Bandung.
 
-\textbf{Pertanyaan 2: sebaran dan keterkaitan variabel.} Suhu rata-rata harian bermean 24,06~$^\circ$C dan berkisar 21,6--26,4~$^\circ$C, dengan ekstrem pada 2 Maret 2023 dan 29 April 2024. Maksimum harian tertinggi 31,4~$^\circ$C pada 29 Oktober 2023 adalah statistik berbeda. Presipitasi bermean 9,93~mm, median 6,10~mm, dan mempunyai 81 hari tepat nol. Korelasi terkuat antarpasangan adalah suhu mean--maksimum ($r=0{,}74$); korelasi maksimum--presipitasi $-0{,}32$ tidak membuktikan sebab-akibat. Rentang rerata minimum--maksimum paling besar pada September 2023 (9,66~$^\circ$C), sementara Desember 2024 sebesar 5,25~$^\circ$C.
+\subsection{Keterbatasan dan pengembangan}
+Satu keluaran grid tidak memuat variasi elevasi dan hujan antarlingkungan. Ringkasan harian juga tidak menyediakan waktu, durasi, atau intensitas hujan per jam; total bulanan yang sama dapat tersusun dari kejadian harian berbeda. Tanpa pembanding stasiun dan ketidakpastian per tanggal, konsistensi internal belum dapat digunakan untuk menilai bias terhadap lapangan. Waktu unduh asli yang tidak tercatat merupakan keterbatasan dokumentasi sumber.
 
-\textbf{Pertanyaan 3: jumlah dan pengulangan kalender.} Total lima tahun adalah 18.140,2~mm. November 2024 tertinggi bulanan (673,3~mm) dan September 2023 terendah (46,4~mm). Rerata lima November sebesar 497,84~mm lebih tinggi daripada Agustus 97,58~mm, tetapi November masing-masing tahun tetap berkisar 347,4--673,3~mm. Tahun 2023 paling rendah totalnya (2.690,1~mm) dan 2020 tertinggi (4.012,5~mm). Area, seasonal plot, dan heatmap memberi pembacaan yang konsisten atas total yang sama; bukan tiga dataset konfirmasi terpisah.
+Pengembangan yang paling relevan adalah pembandingan dengan observasi stasiun pada periode yang sama, setelah satuan, zona waktu, definisi hari, lokasi, elevasi, dan nilai hilangnya diselaraskan. Periode beberapa dekade serta perbandingan antargrid akan memberi dasar yang lebih sesuai untuk menelaah kestabilan pola kalender dan sensitivitas spasial. Kajian korelasi lanjutan perlu memperhitungkan musim serta ketergantungan waktu. Bila tujuannya berubah menjadi prediksi, diperlukan pembagian data berdasarkan waktu, model pembanding, dan evaluasi di luar sampel.
 
-\textbf{Pertanyaan 4: manfaat dan biaya smoothing.} MA7 mempertahankan perubahan lebih cepat, sedangkan MA30 meredam gerigi lebih kuat. Jendela penuh menghasilkan 6 dan 29 NaN awal, dengan awal valid 7 dan 30 Januari 2020. MA30 maksimum 25,420~$^\circ$C berakhir pada 12 Mei 2024, berbeda dari tanggal maksimum suhu harian. Perbedaan itu memperjelas sifat ringkasan retrospektif dan jeda respons. Tidak ada model atau pengujian ramalan yang selesai dilakukan.
-
-\textbf{Pertanyaan 5: ekstrem dan batas komponen.} Pagar IQR 33,45~mm menandai 79 hari yang semuanya dipertahankan. Rekor harian 127,4~mm pada 25 Mei 2021 tidak otomatis menjadi kesalahan dan tidak otomatis membuktikan bahaya setempat. Pola musiman dan perubahan tingkat suhu dapat dibaca secara deskriptif, tetapi siklus panjang, noise independen, penyebab meteorologis, dan perubahan iklim belum teridentifikasi. Selisih suhu tahunan akhir--awal 0,355~$^\circ$C harus tetap dilaporkan sebagai perbandingan dalam catatan lima tahun ini.
-
-\subsection{Keterbatasan yang memengaruhi keputusan}
-Batas pertama adalah spasial: satu keluaran grid tidak menunjukkan perbedaan elevasi dan hujan antarlingkungan, apalagi menjadi rerata seluruh wilayah administratif. Koordinat permintaan dan respons berbeda serta tidak boleh dipertukarkan. Batas kedua adalah jenis sumber: reanalisis mempunyai proses pemodelan dan ketidakpastian yang tidak diukur lewat uji kelengkapan tabel.
-
-Batas ketiga adalah temporal. Lima tahun memberi lima pengulangan kalender, cukup untuk eksplorasi awal tetapi terlalu pendek bagi normal iklim atau atribusi perubahan jangka panjang. Ringkasan harian dan bulanan juga menyembunyikan intensitas per jam, waktu hujan, dan durasi kejadian. Total bulanan yang sama dapat terbentuk dari distribusi harian yang berbeda.
-
-Batas keempat adalah metode: korelasi dihitung pada seluruh hari tanpa mengendalikan musim atau autokorelasi; pagar IQR tidak disesuaikan per musim; rolling bukan estimasi tren yang unik. Tidak ada pembanding stasiun, model prediksi, penilaian dampak, maupun ketidakpastian per tanggal yang telah dikerjakan. Tidak tercatatnya waktu unduh asli adalah batas dokumentasi provenance yang tetap dinyatakan terbuka.
-
-\subsection{Rekomendasi praktis yang proporsional}
-Untuk perencanaan awal kegiatan luar ruang, pertengahan tahun yang relatif lebih kering dalam catatan ini dapat menjadi konteks memilih beberapa alternatif jadwal. Ia bukan janji hari tanpa hujan. Penyelenggara tetap perlu menyiapkan opsi ruang tertutup, mengecek kondisi lokasi, serta memantau prakiraan dan peringatan BMKG menjelang pelaksanaan. Keputusan drainase atau keselamatan tidak boleh ditetapkan hanya dari heatmap historis satu grid.
-
-Untuk pembacaan data, gunakan grafik sesuai pertanyaannya. Cari besarnya akumulasi pada area dan tabel; bandingkan bulan kalender pada seasonal plot atau heatmap; periksa rekor pada data harian; dan gunakan MA untuk latar perubahan yang lebih lambat. Jangan menghitung kembali selisih rinci dari label yang sudah dibulatkan atau menganggap area adalah total berjalan.
-
-Untuk kelompok, prioritas berikutnya bukan menambah model agar laporan terlihat rumit, melainkan meninjau definisi dan setiap klaim secara bersama. Setiap anggota perlu dapat menjelaskan alasan agregasi, makna NaN awal, beda suhu mean dengan maksimum harian, serta alasan mempertahankan 79 hari bertanda. Persetujuan dosen atas sumber reanalisis, jumlah anggota, format pengumpulan, dan panjang laporan harus dipastikan terpisah dari keberhasilan komputasi.
-
-\subsection{Pengembangan yang belum dilakukan}
-Penelitian lanjutan dapat membandingkan periode yang sama dengan stasiun BMKG yang relevan setelah izin, kualitas, lokasi, dan elevasinya diperiksa. Perbandingan perlu mencocokkan satuan, zona waktu, definisi hari, dan cakupan missing sebelum menghitung bias atau kesalahan. Ini merupakan usulan, bukan validasi lapangan yang sudah selesai.
-
-Memperpanjang periode menjadi beberapa dekade akan memberi dasar lebih baik untuk menilai kestabilan pola kalender dan perubahan tingkat suhu. Kajian antargrid dapat membantu melihat sensitivitas spasial. Pengaruh musim terhadap korelasi dapat diuji dengan rancangan yang memperhitungkan ketergantungan waktu. Jika kelak tujuan berubah menjadi prediksi, perlu pemisahan data berdasarkan waktu, baseline yang jelas, dan evaluasi di luar sampel; hasil eksplorasi sekarang belum memenuhi tahap itu.
-
-\subsection{Penggunaan AI dan kesiapan pengumpulan}
-Hermes Agent (Nous Research), dengan identitas model sesi \texttt{cx/gpt-6.1-sol}, membantu secara substansial pada implementasi Python, audit, visualisasi, pengujian, penyusunan interpretasi, serta penulisan dan kompilasi LaTeX. Ketergantungan pada tahap pembuatan ini dicatat tinggi. Narasi penelitian merupakan draf untuk ditinjau kelompok, bukan bukti bahwa seluruh anggota telah memahami dan menyetujuinya secara individual.
-
-Daniandra Prayudisty Ilham, Celsyka Zahra Sabila, Zafira Nur Kamila, Ainun Widyah Astanti, dan Safira masih perlu memeriksa isi serta mengesahkan deklarasi masing-masing sesuai rubrik. Tangkapan layar autentik platform, prompt, dan respons belum tersedia dalam arsip; folder yang ada hanya memuat petunjuk. Tidak dibuat tangkapan layar rekonstruksi, bukti persetujuan, atau tanda tangan atas nama anggota. Jika anggota memakai alat tambahan setelah revisi ini, deklarasi perlu diperbarui.
-
-Laporan komprehensif ini sengaja melampaui catatan batas 3--5 halaman karena permintaan terbaru mengutamakan pembahasan lengkap. Versi siap baca tidak berarti format pengumpulan ringkas, slide, kelas, tanggal kalender, dan seluruh administrasi telah disahkan. Arsip juga memuat dua keterangan jumlah anggota yang perlu diklarifikasi kepada dosen; kelima identitas dipertahankan tanpa menebak aturan mana yang berlaku.
-
+Untuk penggunaan praktis, pertengahan tahun yang relatif lebih kering pada rekaman ini hanya memberi konteks awal pemilihan alternatif jadwal kegiatan. Kondisi lokasi, pilihan ruang tertutup, serta prakiraan dan peringatan BMKG tetap diperlukan menjelang pelaksanaan. Ringkasan historis satu grid belum cukup untuk menetapkan keputusan drainase atau keselamatan.
 \clearpage
 \addcontentsline{toc}{section}{Daftar Pustaka}
 \begin{thebibliography}{9}
 \bibitem{openmeteo} Open-Meteo. \emph{Historical Weather API}. Dokumentasi model, satuan, agregasi harian, dan sitasi: \url{https://open-meteo.com/en/docs/historical-weather-api}. Sumber angka proyek adalah respons lokal dalam \texttt{data/weather\_raw.json}; URL spesifik pada \texttt{data/source\_url.txt}.
-\bibitem{zippenfenig} Zippenfenig, P. (2023). \emph{Open-Meteo.com Weather API} [perangkat lunak]. Zenodo. \url{https://doi.org/10.5281/zenodo.7970649}. Identitas sitasi sesuai dokumentasi Open-Meteo.
+\bibitem{zippenfenig} Zippenfenig, P. (2023). \emph{Open-Meteo.com Weather API} [perangkat lunak]. Zenodo. \url{https://doi.org/10.5281/zenodo.7970649}. 
 \bibitem{era5} Hersbach, H., dkk. (2023). \emph{ERA5 hourly data on single levels from 1940 to present} [dataset]. ECMWF. \url{https://doi.org/10.24381/cds.adbb2d47}. Data proyek diakses melalui Open-Meteo, bukan pengunduhan langsung dari CDS.
 \bibitem{ecmwf} ECMWF. \emph{ECMWF Reanalysis v5}. \url{https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5}. Laman produk mengidentifikasi ERA5 sebagai reanalisis global Copernicus Climate Change Service.
-\bibitem{logo} Telkom University. \emph{Logo Official}. \url{https://telkomuniversity.ac.id/logo-official/}. Aset logo resmi dari proyek laporan sebelumnya dipertahankan; sampul bukan klaim templat resmi mata kuliah.
-\bibitem{rubrik} Fakultas Informatika, Telkom University. \emph{Midterm Project --- CAK4XBB3 Visualisasi Data}. Instruksi tugas yang diberikan pengguna, dirujuk dalam notebook dan checklist paket. Tanggal penerbitan tidak dinyatakan. Butir administratif yang belum dipastikan tidak dianggap selesai.
+\bibitem{logo} Telkom University. \emph{Logo Official}. \url{https://telkomuniversity.ac.id/logo-official/}. Sumber aset logo pada sampul.
+\bibitem{rubrik} Fakultas Informatika, Telkom University. \emph{Midterm Project --- CAK4XBB3 Visualisasi Data}. Instruksi tugas yang diberikan pengguna, dirujuk dalam notebook dan checklist paket. Tanggal penerbitan tidak dinyatakan. 
 \bibitem{arsip} Kelompok Daniandra Prayudisty Ilham dkk. \emph{Cuaca pada grid ERA5 sekitar Bandung, 2020--2024}. Notebook, kamus data, provenance, dan berkas lokal dalam arsip terbaru pengguna \texttt{doc\_bf615140ddb7\_bandung\_project.zip}. Artefak sumber internal, bukan publikasi eksternal.
 \end{thebibliography}
 \textbf{Atribusi data.} Contains modified Copernicus Climate Change Service information, supplied through Open-Meteo. Modifikasi proyek berupa konversi format, pemetaan nama kolom, agregasi, dan visualisasi, bukan penggantian nilai harian. Copernicus/ECMWF dan Open-Meteo tidak mengesahkan interpretasi kelompok.
 
-\clearpage
-\section*{Lampiran A. Audit pembaruan dan konsistensi}
-\addcontentsline{toc}{section}{Lampiran A. Audit pembaruan dan konsistensi}
-Audit membandingkan notebook unggahan terbaru dengan notebook asli yang tersimpan sebelumnya. Nomor sel pada tabel memakai indeks nol dari struktur notebook. Berkas asli dan hasil ekstraksi tidak ditimpa. Jumlah sel yang sama tidak dipakai sebagai bukti bahwa isinya tidak berubah.
-\begin{table}[htbp]\centering\small
-\caption{Ringkasan perbedaan dan keputusan pelaporan.}
-\begin{tabularx}{\textwidth}{@{}p{3.5cm}X@{}}\toprule
-Komponen & Temuan dan konsekuensi\\\midrule
-Struktur notebook & Arsip terbaru: 48 sel, 15 sel kode, 7 output PNG; terdapat perubahan narasi dan keluaran.\\
-Kode analisis & Perubahan sumber kode hanya pada sel 17: matriks Pearson, label variabel, dan pencarian pasangan berkorelasi absolut terkuat ditambahkan. Hasil korelasi kini dibahas dalam laporan.\\
-Identitas dan data & Lima nama/NIM tidak berubah. JSON mentah, CSV, dan URL dibandingkan terhadap salinan asli; hasil rinci disimpan pada log audit.\\
-Narasi sumber & Judul/pengantar serta penjelasan hasil disunting. Pengungkapan AI masih tersedia pada bagian akhir, dan dipertahankan secara jelas dalam laporan.\\
-Versi tersimpan & Output setup unggahan menyebut Python 3.11.15, pandas 3.0.5, NumPy 2.4.6, Matplotlib 3.11.1; markdown masih menyebut lingkungan 3.12.3/2.3.3/2.3.4/3.10.7. Ini tidak disamakan diam-diam.\\
-Eksekusi audit & Dua kernel baru memakai lingkungan 3.12.3/2.3.3/2.3.4/3.10.7. Seluruh kode lolos; keluaran teks dan gambar tertanam antar-run identik. Ukuran byte PNG berbeda dari versi unggahan, sehingga gambar laporan memakai hasil reproduksi.\\
-Makna MA30 & Rumus memakai hari berjalan dan 29 hari sebelumnya. Frasa ``30 hari sebelumnya dan hari itu'' pada narasi unggahan tidak dijadikan jendela 31 hari.\\
-Pembulatan rentang & Desember 2024: 22,32 dan 27,56 adalah label terbulat; rentang dari nilai internal 5,25. Tidak dipaksa menjadi 5,24 hanya dari label.\\\bottomrule
-\end{tabularx}
-\end{table}
-Output numerik utama unggahan sesuai dengan reproduksi pada skala pembulatan yang disajikan. Perbedaan lingkungan dan byte gambar tidak dianggap perubahan cuaca. Rekaman lengkap seluruh output dan diff sumber tersimpan lokal agar pembaca dapat menelusuri perubahan tanpa menjadikan naskah ini dump notebook. Ketidakpastian administratif pada checklist tetap dibiarkan terbuka.
 
 \clearpage
-\section*{Lampiran B. Manifest dan replikasi}
-\addcontentsline{toc}{section}{Lampiran B. Manifest dan replikasi}
-\begin{table}[htbp]\centering\small
-\caption{Peta berkas proyek dan fungsinya.}
-\begin{tabularx}{\textwidth}{@{}p{5.1cm}X@{}}\toprule
-Berkas atau direktori & Fungsi\\\midrule
-\texttt{notebook.ipynb} & Sumber analisis terbaru; 15 sel kode beserta markdown dan keluaran tersimpan.\\
-\texttt{data/weather\_raw.json} & Respons sumber yang dipertahankan.\\
-\path{data/bandung_daily_2020_2024.csv} & Tabel lokal yang dipakai Run All.\\
-\texttt{data/provenance.json}, \texttt{source\_url.txt} di \texttt{data/} & Metadata, hash, dan permintaan sumber lengkap.\\
-\texttt{requirements*.txt} & Dependensi langsung dan versi lingkungan awal.\\
-\texttt{DATA\_DICTIONARY.md}, \texttt{CHECKLIST.md} & Definisi variabel serta pekerjaan administratif yang tertunda.\\
-\texttt{charts/01\_...} sampai \texttt{07\_...} & Tujuh grafik; contact sheet adalah alat QA, bukan grafik analisis kedelapan.\\
-\texttt{verification/} & Rekaman paket unggahan; dibedakan dari verifikasi baru revisi ini.\\
-\texttt{screenshots\_ai/README.md} & Petunjuk lampiran autentik, bukan bukti screenshot.\\
-\texttt{main.tex}, \texttt{assets/} pada Studio & Sumber laporan, logo, dan gambar hasil reproduksi.\\\bottomrule
-\end{tabularx}
-\end{table}
-Untuk mengulang analisis, siapkan lingkungan Python yang sesuai dengan \texttt{requirements-lock.txt}, lalu jalankan notebook dari direktori yang memuat \texttt{data/}. Data tidak perlu diunduh ulang setelah dependensi tersedia. Dependensi belum tentu dapat dipasang tanpa internet karena arsip tidak menyertakan wheel. Sel awal harus mencetak versi, hash sumber harus cocok, dan sel akhir harus menemukan tujuh PNG, 1.827 hari, 60 bulan, serta kesamaan total presipitasi.
+\section*{LAMPIRAN: REPRODUKSI DAN PENGGUNAAN AI}
+\addcontentsline{toc}{section}{Lampiran: Reproduksi dan penggunaan AI}
+\begin{singlespace}
+Analisis bersumber pada \texttt{notebook.ipynb} dalam paket terbaru~\cite{arsip}. Dua eksekusi audit sebelumnya menggunakan kernel terpisah pada Python 3.12.3, pandas 2.3.3, NumPy 2.3.4, dan Matplotlib 3.10.7; seluruh 15 sel kode selesai dan menghasilkan tujuh gambar tertanam. Keluaran teks serta hash gambar antar-run identik pada lingkungan tersebut. Versi keluaran tersimpan unggahan berbeda, sehingga kesamaan byte lintas versi tidak diasumsikan. Rekaman audit dan manifest disimpan terpisah dari naskah penelitian. Replikasi menggunakan CSV lokal dalam \texttt{data/}, dependensi pada \texttt{requirements-lock.txt}, dan direktori kerja yang memuat notebook.
 
-Pada audit ini, salinan \texttt{run\_1} dan \texttt{run\_2} memakai \texttt{nbclient} dengan kernel terpisah yang diikat ke interpreter lingkungan. Keluaran kosong dibersihkan hanya pada salinan sebelum eksekusi, bukan pada notebook pengguna. Hasil eksekusi, keluaran teks, hash gambar, diff sel, dan manifest arsip disimpan dalam direktori revisi laporan. Skrip \texttt{verify\_project.py} dari unggahan tidak dijalankan secara buta; log baru berasal dari pelaksana audit terpisah setelah peninjauan kode notebook.
+Bantuan AI digunakan secara substansial melalui Hermes Agent (Nous Research), dengan identitas model sesi \texttt{cx/gpt-6.1-sol}. Cakupannya meliputi implementasi Python, audit, pengembangan tujuh visualisasi, pengujian, interpretasi, penyusunan narasi, serta penataan dan kompilasi LaTeX. Tingkat ketergantungan pada tahap pembuatan dicatat tinggi. Penyuntingan bahasa tidak mengubah status bantuan tersebut.
 
-Replikasi laporan memakai sumber \texttt{main.tex} dan aset Studio, lalu kompilasi backend dengan shell escape dinonaktifkan. Daftar isi dan daftar gambar dibangun dinamis. PDF hasil ekspor dibandingkan dengan PDF proyek dan preview publik agar tautan yang diberikan memang menunjuk build yang diverifikasi. Tabel audit lengkap, sumber sebelum perubahan, serta ZIP sumber sesudah revisi disimpan lokal sebagai jejak perubahan; tidak ada proyek lain yang diperbarui.
+Konfirmasi pemahaman dan persetujuan individual kelima anggota belum tersedia. Naskah ini tidak menyatakan bahwa seluruh interpretasi telah menjadi pemahaman mandiri setiap anggota. Tangkapan layar autentik platform, prompt, dan respons AI juga belum tersedia; folder terkait baru berisi petunjuk. Deklarasi individual dan bukti tersebut tetap memerlukan tindak lanjut sesuai ketentuan tugas~\cite{rubrik}.
 
+Versi ini mempertahankan pembahasan lengkap dan melampaui batas laporan 3--5 halaman dalam instruksi mata kuliah. Karena itu, naskah ini merupakan versi komprehensif, bukan klaim kepatuhan terhadap batas pengumpulan. Persetujuan sumber reanalisis, perbedaan keterangan jumlah anggota dalam instruksi, dan jadwal kalender aktual dicatat pada memo pendamping; tidak ada persetujuan, tanda tangan, atau tanggal yang direka.
+\end{singlespace}
 \end{document}
