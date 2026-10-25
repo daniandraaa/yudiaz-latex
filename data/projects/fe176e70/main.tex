@@ -1,0 +1,102 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Font Times-compatible untuk compiler pdfLaTeX.
+\usepackage{tgtermes}
+\usepackage[indonesian]{babel}
+\usepackage[left=3cm,right=2.54cm,top=2.54cm,bottom=2.54cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.15}
+\usepackage{microtype}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[authoryear,round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\input{glyphtounicode}
+\pdfgentounicode=1
+\hypersetup{pdftitle={Tandem: Paper Semifinal NUSC 2026},pdfauthor={Dimas Deo Rezkidyo dan Muhammad Fathoni Nuruddin}}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\titleformat{\chapter}[display]{\centering\bfseries\fontsize{14}{17}\selectfont}{BAB \thechapter}{6pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+\titleformat{\section}{\bfseries\normalsize}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\bfseries\normalsize}{\thesubsection}{0.7em}{}
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{0pt}
+\setlist[enumerate]{leftmargin=*,itemsep=2pt,parsep=0pt}
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+\clubpenalty=10000
+\widowpenalty=10000
+\raggedbottom
+\begin{document}
+% Cover dan lembar orisinalitas sengaja tidak disertakan.
+\pagenumbering{roman}
+\chapter*{DAFTAR ISI}
+% Sengaja kosong atas permintaan penulis. Aktifkan TOC setelah semua bab disetujui.
+\clearpage
+\pagenumbering{arabic}
+\chapter{PENDAHULUAN}
+\section{Latar Belakang}
+Tugas kelompok merupakan salah satu bentuk pembelajaran yang memberikan kesempatan kepada mahasiswa untuk berlatih membagi tanggung jawab, menyelesaikan permasalahan, dan mengembangkan kemampuan kolaborasi. Dalam pelaksanaannya, penilaian tidak hanya berkaitan dengan kualitas hasil akhir, tetapi juga dengan proses kerja dan kontribusi setiap anggota. Oleh karena itu, ketersediaan informasi mengenai proses pengerjaan menjadi penting agar dosen dapat mempertimbangkan kontribusi individu secara lebih menyeluruh.
+
+Salah satu tantangan dalam tugas kelompok adalah perbedaan tingkat kontribusi antaranggota. Sebagian anggota dapat mengambil tanggung jawab yang lebih besar, sementara anggota lainnya belum memenuhi bagian pekerjaan yang telah disepakati. Penelitian \citet{rasooli2025} menunjukkan bahwa persepsi keadilan mahasiswa dalam penilaian kelompok berkaitan dengan kesesuaian nilai yang diterima, prosedur kontribusi kelompok, dan perlakuan antaranggota. Temuan tersebut menunjukkan bahwa keadilan penilaian tidak cukup dipahami hanya dari pembagian nilai akhir, tetapi juga perlu mempertimbangkan proses dan hubungan kerja dalam kelompok.
+
+Dalam konteks yang menjadi sasaran pengembangan Tandem, tim mengidentifikasi dugaan permasalahan berupa keterpisahan ruang diskusi, pembagian tugas, dan penyimpanan berkas pada beberapa aplikasi. Ketika informasi tersebut tidak saling terhubung, riwayat pengerjaan berpotensi sulit ditelusuri kembali. Berkas akhir dapat menunjukkan hasil pekerjaan kelompok, tetapi belum tentu menjelaskan siapa yang mengerjakan bagian tertentu, bagaimana proses revisinya, dan apakah hasil tersebut telah ditinjau anggota lain. Cakupan dan tingkat kepentingan permasalahan ini perlu ditelaah lebih lanjut melalui pengumpulan pengalaman mahasiswa dan dosen, sehingga pengembangan produk tidak hanya bertumpu pada asumsi tim.
+
+Pencatatan aktivitas digital juga memiliki keterbatasan. Banyaknya pesan, unggahan, atau tugas yang ditandai selesai tidak otomatis mencerminkan kualitas kontribusi. Pekerjaan dapat dilakukan di luar platform, tingkat kesulitan tugas dapat berbeda, dan penilaian rekan dapat dipengaruhi hubungan personal. Dengan demikian, perangkat pendukung penilaian perlu menyajikan informasi yang dapat ditelusuri dan ditinjau secara kontekstual, bukan langsung menetapkan nilai individu berdasarkan frekuensi aktivitas.
+
+Berdasarkan kebutuhan tersebut, tim mengajukan Tandem, sebuah platform kolaborasi akademik yang mendukung \textit{Project-Based Learning} dengan menghubungkan pembagian tugas, diskusi kelompok, bukti pekerjaan, dan penilaian rekan dalam satu ruang kerja. Komunikasi dalam platform diarahkan melalui diskusi kelompok tanpa fitur pesan pribadi. Setiap bukti pekerjaan dikaitkan dengan tugas tertentu dan dapat ditinjau oleh anggota lain agar hubungan antara tanggung jawab dan hasil pengerjaan lebih mudah ditelusuri. Dosen memperoleh ringkasan indikator kontribusi sebagai bahan pertimbangan, sedangkan keputusan penilaian tetap berada pada dosen.
+
+Tandem sebelumnya telah dikembangkan sebagai prototipe dalam kegiatan perkuliahan dan telah memperoleh validasi dosen yang mencakup aspek fungsionalitas, kemudahan penggunaan, dan kesesuaian ide. Pada tahap pengembangan berikutnya, tim merencanakan pembangunan ulang prototipe dengan implementasi baru. Pengalaman dari pengembangan dan validasi prototipe terdahulu menjadi dasar penyempurnaan rancangan produk. Evaluasi awal tersebut dibedakan dari validasi pasar, khususnya terkait kebutuhan pengguna yang lebih luas, kesiapan adopsi institusi, dan kesediaan membayar, yang masih perlu ditelaah lebih lanjut. Pendekatan pengembangan bertahap ini sejalan dengan tema NUSC 2026 yang menekankan pengembangan solusi tervalidasi dan berkelanjutan untuk menjawab kebutuhan masyarakat.
+
+\section{Ringkasan Bisnis}
+\subsection{Gambaran Umum Bisnis}
+Tandem merupakan rancangan bisnis perangkat lunak berbasis web yang berfokus pada pengelolaan proses kolaborasi akademik. Pengguna utama yang dituju adalah mahasiswa yang mengerjakan tugas kelompok dan dosen yang memantau serta mengevaluasi proses pengerjaan. Program studi atau perguruan tinggi diposisikan sebagai calon pelanggan institusional untuk pengembangan layanan berbayar. Dalam NUSC 2026, pengembangan Tandem diajukan oleh tim \textit{joewhojoestar}, yang beranggotakan Dimas Deo Rezkidyo dan Muhammad Fathoni Nuruddin.
+
+Nilai utama Tandem terletak pada keterhubungan antara pembagian tanggung jawab, bukti pekerjaan, dan proses peninjauan. Mahasiswa dapat mengelola tugas melalui papan kerja, mendiskusikan pengerjaan dalam ruang bersama, dan melampirkan hasil pada tugas terkait. Dosen dapat menelusuri perkembangan kelompok dan meninjau indikator kontribusi tanpa harus mengumpulkan seluruh informasi secara terpisah. Tidak tersedianya pesan pribadi dalam platform mendukung keterbukaan diskusi di ruang kelompok, tetapi tidak berarti seluruh komunikasi di luar platform dapat dipantau.
+
+Pengembangan ulang prototipe direncanakan mencakup pengelolaan kelas dan kelompok, papan tugas, diskusi bersama, bukti pekerjaan yang terikat pada tugas, peninjauan hasil, penilaian rekan, serta rekap kontribusi. Sejalan dengan rancangan pada \textit{Business Lean Canvas}, indikator kontribusi mencakup penyelesaian tugas, ketepatan waktu, dan penilaian rekan. Penggabungan indikator menjadi skor memerlukan penjelasan bobot dan evaluasi lebih lanjut agar hasilnya tidak diperlakukan sebagai ukuran kontribusi yang mutlak.
+
+Prototipe baru direncanakan menggunakan data simulasi dan penyimpanan lokal untuk memperlihatkan serta menguji alur penggunaan. Data simulasi tidak digunakan sebagai bukti keberhasilan produk atau hasil validasi pengguna. Tahap ini belum mencakup penyimpanan terpusat, autentikasi institusional, atau penggunaan bersama secara langsung melalui beberapa perangkat. Fitur rekap dan ekspor diarahkan untuk membantu peninjauan kontribusi; pemanfaatannya dalam asesmen berbasis \textit{Outcome-Based Education} memerlukan penyesuaian terhadap rubrik dan kebutuhan institusi.
+
+Model bisnis awal yang diusulkan adalah \textit{business-to-business software as a service} dengan pendekatan adopsi melalui dosen. Sesuai rancangan BLC, layanan dasar direncanakan tersedia gratis untuk maksimal dua kelas aktif per semester dan maksimal sepuluh kelompok per kelas. Layanan institusional diusulkan menggunakan lisensi dengan kisaran harga Rp15.000 hingga Rp25.000 per mahasiswa per semester, disertai peluang layanan tambahan berupa penyesuaian laporan dan integrasi. Harga, batas layanan, serta cakupan fitur tersebut merupakan asumsi bisnis awal yang masih memerlukan validasi kebutuhan, biaya operasional, dan kesediaan membayar.
+
+Pengembangan bisnis dilaksanakan secara kolaboratif oleh seluruh anggota tim. Pada tahap awal, kegiatan tim mencakup penggalian kebutuhan pengguna, pengembangan prototipe, penyusunan materi bisnis, dan evaluasi umpan balik. Penanggung jawab kegiatan dapat disepakati sesuai kebutuhan pelaksanaan tanpa mengasumsikan bahwa seluruh fungsi bisnis telah memiliki personel khusus.
+
+\subsection{Visi}
+Menjadi platform kolaborasi akademik yang mendukung proses kerja kelompok yang transparan, bertanggung jawab, dan dapat ditinjau melalui bukti pengerjaan.
+
+\subsection{Misi}
+\begin{enumerate}
+\item Menyediakan ruang kerja yang menghubungkan pembagian tugas, diskusi, dan bukti pekerjaan kelompok.
+\item Membantu mahasiswa mendokumentasikan tanggung jawab dan hasil pengerjaan secara terstruktur.
+\item Menyediakan informasi kontribusi yang dapat ditelusuri sebagai bahan pertimbangan dosen.
+\item Mengembangkan produk melalui validasi kebutuhan dan pengujian bersama pengguna.
+\item Menyusun model layanan yang mempertimbangkan kemampuan institusi, biaya operasional, dan perlindungan data pengguna.
+\end{enumerate}
+
+\subsection{Tujuan Bisnis}
+\begin{enumerate}
+\item Mengidentifikasi kebutuhan mahasiswa dan dosen dalam pengelolaan serta evaluasi tugas kelompok.
+\item Mengembangkan ulang prototipe yang memperlihatkan alur pembagian tugas, pengumpulan bukti, peninjauan hasil, dan rekap kontribusi dengan memanfaatkan pengalaman evaluasi prototipe terdahulu.
+\item Mengevaluasi kemudahan penggunaan dan kesesuaian fungsi prototipe baru melalui pengujian dengan calon pengguna.
+\item Menguji asumsi adopsi dan pembelian layanan melalui diskusi dengan dosen serta pihak institusi yang relevan.
+\item Merumuskan tahapan pengembangan dan model pendapatan berdasarkan hasil validasi, kebutuhan sumber daya, dan biaya penyelenggaraan layanan.
+\end{enumerate}
+
+% Rujukan Bab I disertakan agar sitasi dapat ditelusuri.
+\clearpage
+\chapter*{DAFTAR PUSTAKA}
+\begingroup
+\renewcommand{\bibsection}{}
+\renewcommand{\bibnumfmt}[1]{}
+\setlength{\bibhang}{1.27cm}
+\begin{thebibliography}{1}
+\raggedright
+\bibitem[Rasooli et~al.(2025)]{rasooli2025}
+Rasooli, A., Turner, J., Varga-Atkins, T., Pitt, E., Asgari, S., \& Moindrot, W. (2025). Students' perceptions of fairness in groupwork assessment: Validity evidence for peer assessment fairness instrument. \textit{Assessment \& Evaluation in Higher Education, 50}(1), 111--126. \url{https://doi.org/10.1080/02602938.2024.2354510}
+\end{thebibliography}
+\endgroup
+\end{document}
