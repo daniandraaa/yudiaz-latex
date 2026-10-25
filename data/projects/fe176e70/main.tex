@@ -173,37 +173,8 @@ Gambar~\ref{fig:dashboard} memperlihatkan pemantauan kelas dan kelompok, sedangk
 \end{figure}
 \FloatBarrier
 
-\subsection{Bukti Pekerjaan dan Peninjauan Hasil}
-Gambar~\ref{fig:bukti} menunjukkan bukti yang terhubung ke tugas, sementara Gambar~\ref{fig:persetujuan} menampilkan tugas yang telah disetujui beserta catatan peninjau. Keterhubungan tersebut menjadi pembeda utama rancangan Tandem: bukti tidak hanya disimpan, tetapi disertai konteks tanggung jawab dan proses pemeriksaan. Catatan pengujian atau kegiatan lapangan yang muncul dalam isi contoh merupakan bagian dari data simulasi, bukan kegiatan riset pengguna Tandem yang benar-benar telah dilakukan.
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.96\textwidth,height=6.1cm,keepaspectratio]{images/bukti.jpg}
-\caption{Bukti pekerjaan yang terhubung ke detail tugas (data simulasi).}
-\label{fig:bukti}
-\end{figure}
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.96\textwidth,height=6.1cm,keepaspectratio]{images/persetujuan.jpg}
-\caption{Status selesai beserta identitas dan catatan peninjau (data simulasi).}
-\label{fig:persetujuan}
-\end{figure}
-\FloatBarrier
-
-\subsection{Penilaian Rekan dan Informasi Kontribusi}
-Gambar~\ref{fig:penilaian} memperlihatkan ringkasan penilaian rekan per aspek. Gambar~\ref{fig:kontribusi} menampilkan indikator setiap anggota beserta batas penafsirannya. Penilaian rekan tidak digabung menjadi vonis otomatis terhadap individu. Jumlah respons ditampilkan agar pembaca mengetahui cakupan masukan, sementara informasi yang belum tersedia tidak ditafsirkan sebagai kontribusi yang buruk.
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\textwidth,height=6.3cm,keepaspectratio]{images/penilaian.jpg}
-\caption{Ringkasan penilaian rekan pada periode yang ditutup (data simulasi).}
-\label{fig:penilaian}
-\end{figure}
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\textwidth,height=6.3cm,keepaspectratio]{images/kontribusi.jpg}
-\caption{Indikator kontribusi terpisah untuk pertimbangan dosen (data simulasi).}
-\label{fig:kontribusi}
-\end{figure}
-\FloatBarrier
+\subsection{Peninjauan dan Informasi Kontribusi}
+Bukti terhubung ke tugas dan ditinjau sebelum hasil dinyatakan selesai. Dokumentasi pada Lampiran~\ref{lamp:prototipe} memperlihatkan bukti, persetujuan, penilaian rekan, dan indikator kontribusi. Jumlah respons serta batas penafsiran ditampilkan agar ringkasan tidak diperlakukan sebagai nilai otomatis. Seluruh identitas, angka, dan catatan kegiatan dalam gambar merupakan simulasi, bukan hasil riset atau pengujian pengguna.
 
 \subsection{Implementasi dan Batas Kesiapan Produk}
 Berdasarkan dokumentasi pengembang, prototipe menggunakan React~19 dan TypeScript, Vite, Tailwind CSS, serta Lucide React. State dikelola melalui Context API dan \texttt{useReducer}, sedangkan \texttt{localStorage} mempertahankan perubahan setelah pemuatan ulang pada peramban yang sama. Tidak digunakan \textit{back-end}, basis data terpusat, maupun layanan berbayar untuk menjalankan demonstrasi.
@@ -443,6 +414,7 @@ Sebelum menawarkan layanan berbayar, tim perlu membahas kebutuhan dan proses pen
 \renewcommand{\bibnumfmt}[1]{}
 \setlength{\bibhang}{1.27cm}
 \begin{thebibliography}{9}
+\raggedright
 \bibitem[Biznet GIO(n.d.)]{biznetgio}
 Biznet GIO. (n.d.). \textit{Daftar harga cloud server, VPS dan hosting}. \url{https://www.biznetgio.com/pricelist}
 
@@ -451,4 +423,58 @@ Biznet GIO. (n.d.). \textit{Daftar harga cloud server, VPS dan hosting}. \url{ht
 Rasooli, A., Turner, J., Varga-Atkins, T., Pitt, E., Asgari, S., \& Moindrot, W. (2025). Students' perceptions of fairness in groupwork assessment: Validity evidence for peer assessment fairness instrument. \textit{Assessment \& Evaluation in Higher Education, 50}(1), 111--126. \url{https://doi.org/10.1080/02602938.2024.2354510}
 \end{thebibliography}
 \endgroup
+\clearpage
+\appendix
+\renewcommand{\thefigure}{\Alph{chapter}.\arabic{figure}}
+\titleformat{\chapter}[display]{\centering\bfseries\fontsize{14}{17}\selectfont}{LAMPIRAN \thechapter}{6pt}{}
+\chapter{PROTOTIPE PRODUK}
+\label{lamp:prototipe}
+Lampiran ini mendokumentasikan antarmuka prototipe baru Tandem. Seluruh nama, kelas, proyek DesaGo, penilaian, progres, dan catatan kegiatan merupakan data simulasi. Gambar menjelaskan rancangan produk, bukan bukti pengujian pengguna atau transaksi. Prototipe menggunakan penyimpanan lokal; pemilih akun menyimulasikan peran dan tidak menggantikan autentikasi produksi.
+
+\section*{A.1 Pemantauan Kelas dan Pengelolaan Tugas}
+Dashboard menyediakan pemilihan kelas dan ringkasan kelompok. Dari kelompok yang dipilih, pengguna masuk ke papan tugas untuk melihat penanggung jawab, bobot, tenggat, dan status Belum Dikerjakan, Dikerjakan, Ditinjau, atau Selesai.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=6cm,keepaspectratio]{images/dashboard.jpg}
+\caption{Pemantauan kelas dan kelompok oleh dosen (data simulasi).}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=6cm,keepaspectratio]{images/kanban.jpg}
+\caption{Papan tugas beserta penanggung jawab dan status (data simulasi).}
+\end{figure}
+\FloatBarrier
+\clearpage
+\section*{A.2 Bukti Pekerjaan dan Peninjauan}
+Bukti berupa tautan atau metadata berkas terhubung ke tugas. Pengajuan peninjauan memerlukan bukti; penanggung jawab tidak menyetujui pekerjaannya sendiri. Peninjau dapat meminta revisi atau menyetujui hasil, disertai catatan keputusan. Catatan pengujian dan pekerjaan lapangan pada contoh merupakan isi simulasi, bukan kegiatan validasi Tandem.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=7cm,keepaspectratio]{images/bukti.jpg}
+\caption{Bukti pada detail tugas (data simulasi).}
+\label{fig:bukti}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=7cm,keepaspectratio]{images/persetujuan.jpg}
+\caption{Hasil yang disetujui beserta catatan peninjau (data simulasi).}
+\label{fig:persetujuan}
+\end{figure}
+\FloatBarrier
+\clearpage
+\section*{A.3 Penilaian Rekan dan Rekap Kontribusi}
+Dosen mengendalikan periode penilaian rekan. Ringkasan mencakup tanggung jawab, kualitas, dan kolaborasi, sedangkan kontribusi ditampilkan melalui indikator terpisah. Informasi ini merupakan bahan pertimbangan dosen, bukan nilai akhir atau ukuran seluruh pekerjaan di luar platform. Rekap prototipe dapat diekspor sebagai CSV atau dicetak melalui peramban, bukan laporan akreditasi resmi.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=7cm,keepaspectratio]{images/penilaian.jpg}
+\caption{Ringkasan penilaian rekan setelah periode ditutup (data simulasi).}
+\label{fig:penilaian}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=7cm,keepaspectratio]{images/kontribusi.jpg}
+\caption{Indikator kontribusi untuk peninjauan dosen (data simulasi).}
+\label{fig:kontribusi}
+\end{figure}
+\FloatBarrier
+
 \end{document}
