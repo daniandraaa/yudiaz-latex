@@ -9,6 +9,12 @@
 \setstretch{1.15}
 \usepackage{microtype}
 \usepackage{titlesec}
+\usepackage{titletoc}
+\newcommand{\tocprefix}{BAB}
+\setcounter{tocdepth}{1}
+\addto\captionsindonesian{\renewcommand{\contentsname}{DAFTAR ISI}}
+\titlecontents{chapter}[0pt]{\addvspace{6pt}\bfseries}{\tocprefix\ \thecontentslabel\quad}{}{\titlerule*[0.5pc]{.}\contentspage}
+\titlecontents{section}[1.8em]{\addvspace{1pt}}{\thecontentslabel\quad}{}{\titlerule*[0.5pc]{.}\contentspage}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{caption}
@@ -42,8 +48,11 @@
 \begin{document}
 % Cover dan lembar orisinalitas sengaja tidak disertakan.
 \pagenumbering{roman}
-\chapter*{DAFTAR ISI}
-% Sengaja kosong atas permintaan penulis. Aktifkan TOC setelah semua bab disetujui.
+\begingroup
+\setstretch{1.15}
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
 \clearpage
 \pagenumbering{arabic}
 \chapter{PENDAHULUAN}
@@ -52,13 +61,13 @@ Tugas kelompok merupakan salah satu bentuk pembelajaran yang memberikan kesempat
 
 Salah satu tantangan dalam tugas kelompok adalah perbedaan tingkat kontribusi antaranggota. Sebagian anggota dapat mengambil tanggung jawab yang lebih besar, sementara anggota lainnya belum memenuhi bagian pekerjaan yang telah disepakati. Penelitian \citet{rasooli2025} menunjukkan bahwa persepsi keadilan mahasiswa dalam penilaian kelompok berkaitan dengan kesesuaian nilai yang diterima, prosedur kontribusi kelompok, dan perlakuan antaranggota. Temuan tersebut menunjukkan bahwa keadilan penilaian tidak cukup dipahami hanya dari pembagian nilai akhir, tetapi juga perlu mempertimbangkan proses dan hubungan kerja dalam kelompok.
 
-Dalam konteks yang menjadi sasaran pengembangan Tandem, tim mengidentifikasi dugaan permasalahan berupa keterpisahan ruang diskusi, pembagian tugas, dan penyimpanan berkas pada beberapa aplikasi. Ketika informasi tersebut tidak saling terhubung, riwayat pengerjaan berpotensi sulit ditelusuri kembali. Berkas akhir dapat menunjukkan hasil pekerjaan kelompok, tetapi belum tentu menjelaskan siapa yang mengerjakan bagian tertentu, bagaimana proses revisinya, dan apakah hasil tersebut telah ditinjau anggota lain. Cakupan dan tingkat kepentingan permasalahan ini perlu ditelaah lebih lanjut melalui pengumpulan pengalaman mahasiswa dan dosen, sehingga pengembangan produk tidak hanya bertumpu pada asumsi tim.
+Dalam konteks yang menjadi sasaran pengembangan Tandem, tim mengidentifikasi dugaan permasalahan berupa keterpisahan ruang diskusi, pembagian tugas, dan penyimpanan berkas pada beberapa aplikasi. Ketika informasi tersebut tidak saling terhubung, riwayat pengerjaan berpotensi sulit ditelusuri kembali. Berkas akhir dapat menunjukkan hasil pekerjaan kelompok, tetapi belum tentu menjelaskan siapa yang mengerjakan bagian tertentu, bagaimana proses revisinya, dan apakah hasil tersebut telah ditinjau anggota lain. Survei pengalaman mahasiswa dan dosen memberikan masukan eksploratif bagi rancangan produk. Temuan dan keterbatasan pemilihan respons dijelaskan pada Bab II; hasilnya tidak digunakan untuk memperkirakan prevalensi masalah.
 
 Pencatatan aktivitas digital juga memiliki keterbatasan. Banyaknya pesan, unggahan, atau tugas yang ditandai selesai tidak otomatis mencerminkan kualitas kontribusi. Pekerjaan dapat dilakukan di luar platform, tingkat kesulitan tugas dapat berbeda, dan penilaian rekan dapat dipengaruhi hubungan personal. Dengan demikian, perangkat pendukung penilaian perlu menyajikan informasi yang dapat ditelusuri dan ditinjau secara kontekstual, bukan langsung menetapkan nilai individu berdasarkan frekuensi aktivitas.
 
 Berdasarkan kebutuhan tersebut, tim mengajukan Tandem, sebuah platform kolaborasi akademik yang mendukung \textit{Project-Based Learning} dengan menghubungkan pembagian tugas, diskusi kelompok, bukti pekerjaan, dan penilaian rekan dalam satu ruang kerja. Komunikasi dalam platform diarahkan melalui diskusi kelompok tanpa fitur pesan pribadi. Setiap bukti pekerjaan dikaitkan dengan tugas tertentu dan dapat ditinjau oleh anggota lain agar hubungan antara tanggung jawab dan hasil pengerjaan lebih mudah ditelusuri. Dosen memperoleh ringkasan indikator kontribusi sebagai bahan pertimbangan, sedangkan keputusan penilaian tetap berada pada dosen.
 
-Tandem sebelumnya telah dikembangkan sebagai prototipe dalam kegiatan perkuliahan dan telah memperoleh validasi dosen yang mencakup aspek fungsionalitas, kemudahan penggunaan, dan kesesuaian ide. Pada tahap pengembangan berikutnya, tim merencanakan pembangunan ulang prototipe dengan implementasi baru. Pengalaman dari pengembangan dan validasi prototipe terdahulu menjadi dasar penyempurnaan rancangan produk. Evaluasi awal tersebut dibedakan dari validasi pasar, khususnya terkait kebutuhan pengguna yang lebih luas, kesiapan adopsi institusi, dan kesediaan membayar, yang masih perlu ditelaah lebih lanjut. Pendekatan pengembangan bertahap ini sejalan dengan tema NUSC 2026 yang menekankan pengembangan solusi tervalidasi dan berkelanjutan untuk menjawab kebutuhan masyarakat.
+Tandem sebelumnya telah dikembangkan sebagai prototipe dalam kegiatan perkuliahan dan telah memperoleh validasi dosen yang mencakup aspek fungsionalitas, kemudahan penggunaan, dan kesesuaian ide. Tim kemudian membangun ulang prototipe dengan implementasi baru yang tersedia untuk demonstrasi. Pengalaman dari pengembangan dan validasi prototipe terdahulu menjadi dasar penyempurnaan rancangan produk. Evaluasi awal tersebut dibedakan dari validasi pasar, khususnya terkait kebutuhan pengguna yang lebih luas, kesiapan adopsi institusi, dan kesediaan membayar, yang masih perlu ditelaah lebih lanjut. Pendekatan pengembangan bertahap ini sejalan dengan tema NUSC 2026 yang menekankan pengembangan solusi tervalidasi dan berkelanjutan untuk menjawab kebutuhan masyarakat.
 
 \section{Ringkasan Bisnis}
 \subsection{Gambaran Umum Bisnis}
@@ -66,9 +75,9 @@ Tandem merupakan rancangan bisnis perangkat lunak berbasis web yang berfokus pad
 
 Nilai utama Tandem terletak pada keterhubungan antara pembagian tanggung jawab, bukti pekerjaan, dan proses peninjauan. Mahasiswa dapat mengelola tugas melalui papan kerja, mendiskusikan pengerjaan dalam ruang bersama, dan melampirkan hasil pada tugas terkait. Dosen dapat menelusuri perkembangan kelompok dan meninjau indikator kontribusi tanpa harus mengumpulkan seluruh informasi secara terpisah. Tidak tersedianya pesan pribadi dalam platform mendukung keterbukaan diskusi di ruang kelompok, tetapi tidak berarti seluruh komunikasi di luar platform dapat dipantau.
 
-Pengembangan ulang prototipe direncanakan mencakup pengelolaan kelas dan kelompok, papan tugas, diskusi bersama, bukti pekerjaan yang terikat pada tugas, peninjauan hasil, penilaian rekan, serta rekap kontribusi. Sejalan dengan rancangan pada \textit{Business Lean Canvas}, indikator kontribusi mencakup penyelesaian tugas, ketepatan waktu, dan penilaian rekan. Penggabungan indikator menjadi skor memerlukan penjelasan bobot dan evaluasi lebih lanjut agar hasilnya tidak diperlakukan sebagai ukuran kontribusi yang mutlak.
+Prototipe baru mencakup pengelolaan kelas dan kelompok, papan tugas, diskusi bersama, bukti pekerjaan yang terikat pada tugas, peninjauan hasil, penilaian rekan, serta rekap kontribusi. Sejalan dengan rancangan pada \textit{Business Lean Canvas}, indikator kontribusi mencakup penyelesaian tugas, ketepatan waktu, dan penilaian rekan. Penggabungan indikator menjadi skor memerlukan penjelasan bobot dan evaluasi lebih lanjut agar hasilnya tidak diperlakukan sebagai ukuran kontribusi yang mutlak.
 
-Prototipe baru direncanakan menggunakan data simulasi dan penyimpanan lokal untuk memperlihatkan serta menguji alur penggunaan. Data simulasi tidak digunakan sebagai bukti keberhasilan produk atau hasil validasi pengguna. Tahap ini belum mencakup penyimpanan terpusat, autentikasi institusional, atau penggunaan bersama secara langsung melalui beberapa perangkat. Fitur rekap dan ekspor diarahkan untuk membantu peninjauan kontribusi; pemanfaatannya dalam asesmen berbasis \textit{Outcome-Based Education} memerlukan penyesuaian terhadap rubrik dan kebutuhan institusi.
+Prototipe baru menggunakan data simulasi dan penyimpanan lokal untuk mendemonstrasikan alur penggunaan. Survei pada tahap ini berfokus pada pengalaman dan kebutuhan, bukan pengujian penggunaan prototipe baru. Data simulasi tidak digunakan sebagai bukti keberhasilan produk atau hasil validasi pengguna. Tahap ini belum mencakup penyimpanan terpusat, autentikasi institusional, atau penggunaan bersama secara langsung melalui beberapa perangkat. Fitur rekap dan ekspor diarahkan untuk membantu peninjauan kontribusi; pemanfaatannya dalam asesmen berbasis \textit{Outcome-Based Education} memerlukan penyesuaian terhadap rubrik dan kebutuhan institusi.
 
 Model bisnis awal yang diusulkan adalah \textit{business-to-business software as a service} dengan pendekatan adopsi melalui dosen. Sesuai rancangan BLC, layanan dasar direncanakan tersedia gratis untuk maksimal dua kelas aktif per semester dan maksimal sepuluh kelompok per kelas. Layanan institusional diusulkan menggunakan lisensi dengan kisaran harga Rp15.000 hingga Rp25.000 per mahasiswa per semester, disertai peluang layanan tambahan berupa penyesuaian laporan dan integrasi. Harga, batas layanan, serta cakupan fitur tersebut merupakan asumsi bisnis awal yang masih memerlukan validasi kebutuhan, biaya operasional, dan kesediaan membayar.
 
@@ -82,16 +91,16 @@ Menjadi platform kolaborasi akademik yang mendukung proses kerja kelompok yang t
 \item Menyediakan ruang kerja yang menghubungkan pembagian tugas, diskusi, dan bukti pekerjaan kelompok.
 \item Membantu mahasiswa mendokumentasikan tanggung jawab dan hasil pengerjaan secara terstruktur.
 \item Menyediakan informasi kontribusi yang dapat ditelusuri sebagai bahan pertimbangan dosen.
-\item Mengembangkan produk melalui validasi kebutuhan dan pengujian bersama pengguna.
+\item Mengembangkan produk berdasarkan penggalian kebutuhan dan merencanakan evaluasi penggunaan pada tahap pilot.
 \item Menyusun model layanan yang mempertimbangkan kemampuan institusi, biaya operasional, dan perlindungan data pengguna.
 \end{enumerate}
 
 \subsection{Tujuan Bisnis}
 \begin{enumerate}
 \item Mengidentifikasi kebutuhan mahasiswa dan dosen dalam pengelolaan serta evaluasi tugas kelompok.
-\item Mengembangkan ulang prototipe yang memperlihatkan alur pembagian tugas, pengumpulan bukti, peninjauan hasil, dan rekap kontribusi dengan memanfaatkan pengalaman evaluasi prototipe terdahulu.
-\item Mengevaluasi kemudahan penggunaan dan kesesuaian fungsi prototipe baru melalui pengujian dengan calon pengguna.
-\item Menguji asumsi adopsi dan pembelian layanan melalui diskusi dengan dosen serta pihak institusi yang relevan.
+\item Menyediakan prototipe yang memperlihatkan alur pembagian tugas, pengumpulan bukti, peninjauan hasil, dan rekap kontribusi berdasarkan pengalaman pengembangan terdahulu.
+\item Menyiapkan rencana evaluasi penggunaan prototipe baru pada pilot; pengujian bersama calon pengguna belum menjadi hasil pada proposal ini.
+\item Merencanakan pembahasan asumsi adopsi dan pembelian dengan dosen serta pihak institusi yang relevan.
 \item Merumuskan tahapan pengembangan dan model pendapatan berdasarkan hasil validasi, kebutuhan sumber daya, dan biaya penyelenggaraan layanan.
 \end{enumerate}
 
@@ -213,7 +222,7 @@ Prototipe saat ini mendukung demonstrasi alur utama, mulai dari pembuatan tugas,
 \item \textbf{Persyaratan institusional.} Pengelolaan privasi, keamanan, integrasi, dan proses pengadaan berpotensi memperpanjang adopsi serta menambah biaya.
 \end{enumerate}
 
-Implikasi SWOT adalah memusatkan pengembangan pada keterhubungan bukti dan kemudahan alur, bukan penambahan fitur tanpa prioritas. Sebelum perluasan layanan, tim perlu memperkuat pencatatan evaluasi, memeriksa aturan akses, dan memvalidasi kebutuhan pembeli. Strategi pemasaran, sumber daya, keuangan, serta operasional dijabarkan pada bab berikutnya setelah pembahasan informasi bisnis ini disetujui.
+Implikasi SWOT adalah memusatkan pengembangan pada keterhubungan bukti dan kemudahan alur, bukan penambahan fitur tanpa prioritas. Sebelum perluasan layanan, tim perlu memperkuat pencatatan evaluasi, memeriksa aturan akses, dan memvalidasi kebutuhan pembeli. Strategi pemasaran, sumber daya, keuangan, serta operasional dijabarkan pada Bab III.
 
 \chapter{STRATEGI KEBERLANJUTAN}
 \section{Strategi Pemasaran}
@@ -409,6 +418,7 @@ Sebelum menawarkan layanan berbayar, tim perlu membahas kebutuhan dan proses pen
 % Rujukan Bab I disertakan agar sitasi dapat ditelusuri.
 \clearpage
 \chapter*{DAFTAR PUSTAKA}
+\phantomsection\addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
 \begingroup
 \renewcommand{\bibsection}{}
 \renewcommand{\bibnumfmt}[1]{}
@@ -425,6 +435,7 @@ Rasooli, A., Turner, J., Varga-Atkins, T., Pitt, E., Asgari, S., \& Moindrot, W.
 \endgroup
 \clearpage
 \appendix
+\addtocontents{toc}{\protect\renewcommand{\protect\tocprefix}{LAMPIRAN}}
 \renewcommand{\thefigure}{\Alph{chapter}.\arabic{figure}}
 \titleformat{\chapter}[display]{\centering\bfseries\fontsize{14}{17}\selectfont}{LAMPIRAN \thechapter}{6pt}{}
 \chapter{PROTOTIPE PRODUK}
@@ -479,7 +490,7 @@ Dosen mengendalikan periode penilaian rekan. Ringkasan mencakup tanggung jawab, 
 
 % BEGIN APPENDIX B - removable review draft
 \clearpage
-\chapter{INSTRUMEN DAN RINGKASAN PENGGALIAN KEBUTUHAN}
+\chapter[INSTRUMEN DAN RINGKASAN KEBUTUHAN]{INSTRUMEN DAN RINGKASAN PENGGALIAN KEBUTUHAN}
 \label{lamp:kebutuhan}
 \section*{B.1 Pelaksanaan dan Batas Analisis}
 Penggalian kebutuhan dilakukan melalui formulir mahasiswa dan dosen pada 9--14 September 2026. Mahasiswa dijangkau melalui teman kelas, teman angkatan, dan teman beda kampus, sedangkan dosen dihubungi langsung. Rekrutmen berdasarkan kemudahan akses, bukan sampel acak. Responden belum mencoba prototipe baru.
