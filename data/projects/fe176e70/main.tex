@@ -10,6 +10,14 @@
 \usepackage{microtype}
 \usepackage{titlesec}
 \usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{placeins}
+\captionsetup{font=small,labelfont=bf}
+\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
 \usepackage[authoryear,round]{natbib}
 \usepackage[hidelinks]{hyperref}
 \input{glyphtounicode}
@@ -85,6 +93,155 @@ Menjadi platform kolaborasi akademik yang mendukung proses kerja kelompok yang t
 \item Menguji asumsi adopsi dan pembelian layanan melalui diskusi dengan dosen serta pihak institusi yang relevan.
 \item Merumuskan tahapan pengembangan dan model pendapatan berdasarkan hasil validasi, kebutuhan sumber daya, dan biaya penyelenggaraan layanan.
 \end{enumerate}
+
+\chapter{INFORMASI BISNIS}
+\section{Deskripsi Ide Start-up}
+Tandem adalah platform ruang kerja digital untuk mendukung proses kolaborasi mahasiswa dalam \textit{Project-Based Learning}. Produk ini menghubungkan pengelolaan tugas, diskusi kelompok, bukti pekerjaan, peninjauan hasil, dan penilaian rekan. Fokusnya bukan menggantikan seluruh fungsi \textit{Learning Management System} (LMS), melainkan menyediakan dokumentasi proses kerja kelompok yang dapat ditinjau mahasiswa dan dosen.
+
+Mahasiswa merupakan pengguna yang membagi serta menyelesaikan pekerjaan, sedangkan dosen memantau proses dan menggunakan informasi yang tersedia sebagai bahan pertimbangan penilaian. Program studi dan perguruan tinggi menjadi calon pembeli layanan institusional. Pembedaan ini penting karena manfaat bagi pengguna harian belum otomatis menjadi alasan pembelian bagi institusi. Kebutuhan pengadaan, persyaratan pengelolaan data, dan kesediaan membayar masih merupakan asumsi yang perlu ditelaah pada pengembangan bisnis berikutnya.
+
+\subsection{Perkembangan Produk dan Posisi Nilai}
+Prototipe terdahulu dikembangkan dalam kegiatan perkuliahan dengan ruang percakapan dan papan tugas berbasis \textit{room}. Dokumentasinya memperlihatkan daftar ruang, percakapan kelompok, serta tugas pada kolom TODO, DOING, dan DONE dengan penanda prioritas. Menurut keterangan tim, prototipe tersebut memperoleh evaluasi dosen pada aspek fungsi, kemudahan penggunaan, dan kesesuaian ide. Masukan dosen menjadi dasar perluasan fitur, bukan bukti bahwa seluruh fitur pada rancangan terbaru sudah diuji pada versi lama.
+
+Tim kemudian membangun ulang prototipe untuk memasukkan pengelolaan kelas, tugas berbobot, keterhubungan bukti pekerjaan, peninjauan, penilaian rekan, serta rekap kontribusi. Status versi baru merupakan prototipe fungsional untuk demonstrasi. Berdasarkan konfirmasi tim pengembang, alur utama dan operasi \textit{create, read, update, dan delete} (CRUD) dapat dijalankan. Dokumentasi antarmuka dan README digunakan untuk menjelaskan implementasi; keduanya tidak diperlakukan sebagai laporan pengujian independen.
+
+Pernyataan nilai Tandem adalah membantu mengubah proses koordinasi kelompok menjadi informasi kontribusi yang dapat ditelusuri. Dua pendekatan pada BLC dipertahankan, yaitu diskusi bersama tanpa fitur pesan pribadi dan bukti pekerjaan yang terhubung ke tugas. Keduanya mendukung dokumentasi, tetapi tidak menjamin seluruh aktivitas tercatat atau manipulasi dapat dihilangkan. Tandem juga tidak diklaim sebagai satu-satunya produk yang memiliki fungsi tersebut.
+
+\section{Permasalahan Pelanggan (\textit{Problem})}
+\subsection{Penggalian Kebutuhan dan Batas Analisis}
+Penggalian kebutuhan dilakukan melalui survei pada 24--26 Oktober 2026 sebagaimana dilaporkan tim. Responden mahasiswa dijangkau melalui jaringan teman kelas, teman angkatan, dan mahasiswa dari kampus lain, sedangkan dosen dihubungi secara langsung. Rekrutmen dilakukan berdasarkan kemudahan akses, bukan pengambilan sampel acak. Responden belum mencoba prototipe baru; pertanyaan berfokus pada pengalaman tugas kelompok dan kebutuhan pendukungnya.
+
+Bahan yang diterima untuk penyusunan proposal terdiri atas berkas respons mahasiswa dan dosen. Tim menyampaikan bahwa sebagian respons dengan jawaban mirip telah dikeluarkan sebelum analisis. Pengeluaran berdasarkan kemiripan tidak memastikan bahwa respons tersebut berasal dari orang yang sama dan berpotensi mengubah gambaran jawaban. Jumlah respons awal dan catatan pengeluaran tidak tersedia dalam bahan yang dianalisis. Karena itu, pembahasan dibatasi pada tema dalam respons yang dipertahankan, tanpa persentase atau klaim frekuensi yang mewakili seluruh peserta survei maupun populasi.
+
+Analisis dilakukan dengan membaca jawaban pengalaman, kendala, cara penanganan, kebutuhan, dan kekhawatiran adopsi, kemudian mengelompokkannya berdasarkan topik yang sejenis. Hasilnya dipakai sebagai masukan desain, bukan pembuktian hubungan sebab-akibat. Survei ini tidak mengukur keberhasilan Tandem, kemudahan penggunaan prototipe baru, maupun kelayakan pembelian institusional.
+
+\subsection{Tema Kebutuhan Mahasiswa}
+\textbf{Kejelasan tanggung jawab dan perkembangan pekerjaan.} Respons menggambarkan pembagian tugas yang tidak selalu dicatat, penagihan pekerjaan melalui percakapan, serta pekerjaan yang diambil alih menjelang tenggat. Kebutuhan yang muncul adalah informasi penanggung jawab dan perkembangan tugas yang mudah ditelusuri. Temuan ini tidak digunakan untuk memberi label perilaku pada seluruh mahasiswa, karena kendala dapat berkaitan dengan pembagian peran, kemampuan, atau komunikasi.
+
+\textbf{Keterhubungan dokumen dan proses pengerjaan.} Jawaban menyebut berkas yang tersebar, revisi yang dikirim berulang melalui percakapan, dan kesulitan menemukan hasil terbaru. Kebutuhan yang relevan adalah pengaitan hasil kerja dengan tugas serta catatan perubahan statusnya. Riwayat perubahan tugas tetap perlu dibedakan dari riwayat penyuntingan isi dokumen, yang belum menjadi kemampuan prototipe saat ini.
+
+\textbf{Penjelasan kontribusi kepada dosen.} Respons memuat pengalaman kesulitan menyediakan bukti ketika kontribusi dipersoalkan dan persepsi ketidaksesuaian antara pekerjaan dengan nilai. Hal ini menjadi alasan untuk menyediakan bukti serta konteks peninjauan. Persepsi tersebut tidak membuktikan kesalahan penilaian dosen dan tidak menjadi dasar bagi penetapan nilai otomatis.
+
+\textbf{Beban penggunaan aplikasi tambahan.} Kekhawatiran berkaitan dengan kebiasaan teman kelompok, pembuatan akun, kerumitan penggunaan, dan keterbatasan perangkat. Implikasinya adalah menjaga alur sederhana berbasis web dan menghindari pencatatan berulang. Pernyataan bahwa penggunaan akan meningkat jika diwajibkan dosen diperlakukan sebagai dugaan responden, bukan jaminan adopsi atau strategi pemaksaan penggunaan.
+
+\subsection{Tema Kebutuhan Dosen}
+Respons dosen menyoroti kesulitan membedakan kontribusi individu, bukti dari beberapa media, perbedaan klaim antaranggota, serta waktu peninjauan dan rekap. Kebutuhan yang muncul meliputi bukti terpusat, riwayat pekerjaan, kemudahan penggunaan, dan keluaran yang dapat ditinjau kembali. Penilaian rekan juga dipandang berisiko bias karena hubungan personal. Oleh sebab itu, penilaian rekan pada Tandem ditempatkan sebagai informasi tambahan yang disertai komentar, bukan penentu tunggal nilai.
+
+Terdapat permintaan dukungan laporan terkait \textit{Outcome-Based Education} (OBE). Permintaan tersebut dicatat sebagai kebutuhan yang dinyatakan responden, bukan bukti kewajiban regulasi atau pengesahan format laporan. Jejak aktivitas belum membuktikan ketercapaian pembelajaran; pemanfaatannya memerlukan rubrik, pemetaan capaian, dan peninjauan dosen. Kesediaan mengikuti uji coba juga tidak disamakan dengan persetujuan pengadaan atau kesediaan membayar.
+
+\subsection{Alternatif yang Digunakan dan Ruang Solusi}
+Dalam respons yang dianalisis, percakapan, dokumen bersama, LMS, dan aplikasi pengelolaan tugas digunakan untuk kebutuhan yang berbeda. Media tersebut tidak dianggap selalu tidak memadai. Ruang solusi Tandem terletak pada penghubungan tanggung jawab, bukti, peninjauan, dan rekap dalam konteks tugas kelompok. Kesesuaian pendekatan ini masih bergantung pada kesediaan pengguna mendokumentasikan pekerjaan dan kesesuaiannya dengan alur kelas.
+
+\section{Solusi yang Ditawarkan (\textit{Solution})}
+\subsection{Papan Tugas dan Bukti Pekerjaan Terhubung}
+Papan tugas menyediakan penanggung jawab, deskripsi, tenggat, bobot, dan status. Bobot berfungsi sebagai perkiraan relatif beban tugas, bukan ukuran kualitas atau kemampuan mahasiswa. Bukti berupa tautan atau metadata berkas harus terhubung ke identitas tugas. Dengan demikian, dosen dapat menelusuri konteks hasil kerja tanpa mengandalkan unggahan yang tidak memiliki hubungan dengan tanggung jawab tertentu.
+
+Status tugas terdiri atas Belum Dikerjakan, Dikerjakan, Ditinjau, dan Selesai. Pengajuan peninjauan memerlukan bukti pekerjaan. Penanggung jawab tidak boleh menyetujui tugasnya sendiri; peninjauan dilakukan oleh anggota kelompok lain atau dosen. Permintaan revisi disertai catatan dan mengembalikan tugas ke tahap Dikerjakan. Persetujuan mencatat peninjau serta waktu keputusan. Aturan ini merupakan pengendalian alur dalam prototipe, bukan jaminan bahwa peninjauan selalu independen atau bukti selalu benar.
+
+\subsection{Diskusi dan Penilaian Rekan}
+Diskusi berlangsung dalam ruang bersama dan dapat dilengkapi komentar yang terhubung ke tugas. Tidak tersedia pesan pribadi dalam platform. Pengaturan tersebut mendukung keterbukaan komunikasi yang dicatat, tetapi tidak membatasi komunikasi pengguna di luar Tandem. Jumlah pesan tidak digunakan sebagai pengganti kualitas kontribusi.
+
+Penilaian rekan mencakup tanggung jawab, kualitas hasil, dan kolaborasi dengan skala 1--5. Dosen mengendalikan pembukaan serta penutupan periode. Penilaian diri sendiri tidak diperbolehkan dan penilaian ekstrem memerlukan penjelasan. Ringkasan dibaca bersama jumlah respons dan konteks pekerjaan. Pendekatan ini sejalan dengan perhatian terhadap prosedur dan hubungan antaranggota dalam persepsi keadilan penilaian kelompok \citep{rasooli2025}, tetapi kesesuaian instrumen internal Tandem belum diuji melalui survei kebutuhan ini.
+
+\subsection{Indikator Kontribusi dan Rekap}
+Indikator ditampilkan secara terpisah: tugas yang ditugaskan, tugas yang disetujui, proporsi bobot selesai, ketepatan pengajuan, dan penilaian rekan. Proporsi bobot selesai dihitung dari bobot tugas yang selesai dan disetujui dibandingkan seluruh bobot tugas yang ditugaskan kepada anggota. Angka tersebut menggambarkan penyelesaian tanggung jawab yang tercatat, bukan persentase kontribusi terhadap seluruh hasil kelompok.
+
+Ketepatan waktu menggunakan waktu pengajuan yang akhirnya diterima dibandingkan tenggat tugas, bukan waktu peninjau memberikan persetujuan. Ketika belum ada data yang memenuhi syarat atau pembagi bernilai nol, antarmuka menampilkan keterangan belum ada data. Sistem tidak menggabungkan seluruh indikator menjadi peringkat otomatis. Dosen tetap perlu mempertimbangkan kualitas pekerjaan, perbedaan peran, serta kontribusi di luar platform.
+
+Rekap tersedia untuk ditinjau dan diekspor sebagai CSV atau dicetak melalui peramban. Keluaran tersebut merupakan dokumentasi proses internal, bukan nilai akhir dan bukan format akreditasi resmi. Dibandingkan gagasan skor otomatis dalam BLC, implementasi awal memilih indikator terpisah agar dasar informasi lebih mudah dijelaskan sebelum formula gabungan dievaluasi.
+
+\section{Desain Bisnis Start-up}
+\subsection{Alur Penggunaan dan Manfaat yang Dituju}
+Pada sisi dosen, alur dimulai dari memilih kelas dan kelompok, meninjau ringkasan tugas, serta membuka ruang kerja yang membutuhkan perhatian. Pada sisi mahasiswa, alur mencakup pembagian tugas, pengerjaan, penambahan bukti, pengajuan peninjauan, dan tindak lanjut revisi. Setelah hasil disetujui, indikator diperbarui dan dapat ditinjau dosen. Penilaian rekan dilakukan pada periode tersendiri untuk melengkapi informasi proses.
+
+Manfaat yang dituju adalah mengurangi kebutuhan menelusuri bukti yang terpisah dan membantu mahasiswa memperjelas tanggung jawab. Manfaat tersebut belum diukur sebagai penghematan waktu atau peningkatan keadilan. Pada tahap semifinal, validasi dibatasi pada survei pengalaman dan kebutuhan; pengujian penggunaan prototipe baru bersama responden belum dilakukan.
+
+\subsection{Dashboard Dosen dan Papan Tugas}
+Gambar~\ref{fig:dashboard} memperlihatkan pemantauan kelas dan kelompok, sedangkan Gambar~\ref{fig:kanban} menunjukkan hubungan tugas, penanggung jawab, bobot, dan status. Kelompok yang membutuhkan perhatian ditentukan berdasarkan kondisi pekerjaan, bukan pemberian label negatif kepada mahasiswa. Proyek DesaGo, identitas akun, angka progres, dan aktivitas pada seluruh gambar merupakan data simulasi untuk demonstrasi Tandem.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{images/dashboard.jpg}
+\caption{Dashboard dosen pada prototipe baru Tandem (data simulasi).}
+\label{fig:dashboard}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{images/kanban.jpg}
+\caption{Papan tugas kelompok dengan empat tahap pengerjaan (data simulasi).}
+\label{fig:kanban}
+\end{figure}
+\FloatBarrier
+
+\subsection{Bukti Pekerjaan dan Peninjauan Hasil}
+Gambar~\ref{fig:bukti} menunjukkan bukti yang terhubung ke tugas, sementara Gambar~\ref{fig:persetujuan} menampilkan tugas yang telah disetujui beserta catatan peninjau. Keterhubungan tersebut menjadi pembeda utama rancangan Tandem: bukti tidak hanya disimpan, tetapi disertai konteks tanggung jawab dan proses pemeriksaan. Catatan pengujian atau kegiatan lapangan yang muncul dalam isi contoh merupakan bagian dari data simulasi, bukan kegiatan riset pengguna Tandem yang benar-benar telah dilakukan.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.96\textwidth,height=6.1cm,keepaspectratio]{images/bukti.jpg}
+\caption{Bukti pekerjaan yang terhubung ke detail tugas (data simulasi).}
+\label{fig:bukti}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.96\textwidth,height=6.1cm,keepaspectratio]{images/persetujuan.jpg}
+\caption{Status selesai beserta identitas dan catatan peninjau (data simulasi).}
+\label{fig:persetujuan}
+\end{figure}
+\FloatBarrier
+
+\subsection{Penilaian Rekan dan Informasi Kontribusi}
+Gambar~\ref{fig:penilaian} memperlihatkan ringkasan penilaian rekan per aspek. Gambar~\ref{fig:kontribusi} menampilkan indikator setiap anggota beserta batas penafsirannya. Penilaian rekan tidak digabung menjadi vonis otomatis terhadap individu. Jumlah respons ditampilkan agar pembaca mengetahui cakupan masukan, sementara informasi yang belum tersedia tidak ditafsirkan sebagai kontribusi yang buruk.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=6.3cm,keepaspectratio]{images/penilaian.jpg}
+\caption{Ringkasan penilaian rekan pada periode yang ditutup (data simulasi).}
+\label{fig:penilaian}
+\end{figure}
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth,height=6.3cm,keepaspectratio]{images/kontribusi.jpg}
+\caption{Indikator kontribusi terpisah untuk pertimbangan dosen (data simulasi).}
+\label{fig:kontribusi}
+\end{figure}
+\FloatBarrier
+
+\subsection{Implementasi dan Batas Kesiapan Produk}
+Berdasarkan dokumentasi pengembang, prototipe menggunakan React~19 dan TypeScript, Vite, Tailwind CSS, serta Lucide React. State dikelola melalui Context API dan \texttt{useReducer}, sedangkan \texttt{localStorage} mempertahankan perubahan setelah pemuatan ulang pada peramban yang sama. Tidak digunakan \textit{back-end}, basis data terpusat, maupun layanan berbayar untuk menjalankan demonstrasi.
+
+Penyimpanan lokal dipilih untuk menyederhanakan konfigurasi, bukan sebagai rancangan akhir layanan institusional. Data belum disinkronkan antarperangkat, dan pemilih akun hanya menyimulasikan peran, bukan autentikasi produksi. Unggahan berkas menyimpan metadata, bukan isi berkas pada penyimpanan terpusat. Data juga dapat hilang ketika penyimpanan situs dibersihkan atau fungsi reset digunakan. Oleh sebab itu, prototipe tidak digunakan untuk menyimpan data akademik sensitif.
+
+README memuat skenario demonstrasi dari pembuatan tugas hingga ekspor, pemuatan ulang, dan reset. Keterangan fitur berfungsi didasarkan pada konfirmasi tim; belum tersedia laporan uji independen untuk seluruh skenario, keamanan ekspor, atau ketahanan penyimpanan. Infrastruktur multi-pengguna, otorisasi, pengelolaan berkas, dan perlindungan data menjadi kebutuhan sebelum layanan digunakan secara operasional.
+
+\section{Analisis SWOT}
+\subsection{Kekuatan (\textit{Strengths})}
+\begin{enumerate}
+\item \textbf{Keterhubungan proses kerja.} Tugas, bukti, peninjauan, dan rekap dirancang dalam satu alur sehingga konteks hasil pekerjaan dapat ditelusuri.
+\item \textbf{Fondasi prototipe tersedia.} Tim memiliki pengalaman prototipe terdahulu dan prototipe baru yang dapat didemonstrasikan, sehingga pembahasan produk tidak berhenti pada konsep.
+\item \textbf{Indikator yang dapat dijelaskan.} Informasi kontribusi dipisahkan dan dilengkapi batas penafsiran, dengan tetap mempertahankan keputusan penilaian pada dosen.
+\end{enumerate}
+
+\subsection{Kelemahan (\textit{Weaknesses})}
+\begin{enumerate}
+\item \textbf{Kesiapan teknis terbatas.} Penyimpanan lokal dan simulasi peran belum memenuhi kebutuhan kolaborasi multi-pengguna serta pengelolaan data produksi.
+\item \textbf{Bukti evaluasi terbatas.} Respons kebutuhan telah diseleksi berdasarkan kemiripan dan prototipe baru belum diuji bersama responden, sehingga efektivitas serta kemudahan penggunaan belum dapat disimpulkan.
+\item \textbf{Kapasitas tim dan bukti bisnis.} Pekerjaan dijalankan bersama oleh dua anggota; sumber daya operasional, biaya layanan, dan kesediaan membayar belum dibuktikan melalui pelaksanaan layanan institusional.
+\end{enumerate}
+
+\subsection{Peluang (\textit{Opportunities})}
+\begin{enumerate}
+\item \textbf{Kebutuhan peninjauan proses.} Tema respons mahasiswa dan dosen membuka ruang eksplorasi perangkat pendukung dokumentasi kerja kelompok, tanpa menyatakan besaran pasar yang belum dihitung.
+\item \textbf{Uji coba melalui dosen.} Kontak akademik dapat menjadi jalur untuk mengusulkan uji coba terbatas, dengan tetap memerlukan persetujuan dan kesepakatan pelaksanaan.
+\item \textbf{Pelengkap sistem yang tersedia.} Rekap dan keterhubungan bukti berpotensi melengkapi alur LMS, jika kebutuhan integrasi dan format informasi disepakati dengan institusi.
+\end{enumerate}
+
+\subsection{Ancaman (\textit{Threats})}
+\begin{enumerate}
+\item \textbf{Hambatan perpindahan kebiasaan.} Pengguna dapat memilih tetap menggunakan media yang familiar, khususnya jika Tandem menambah pencatatan atau koordinasi berulang.
+\item \textbf{Alternatif dan peniruan fitur.} LMS maupun aplikasi kolaborasi dapat menyediakan fungsi serupa; keberadaan fitur saja belum menjadi keunggulan yang sulit ditiru.
+\item \textbf{Bias dan manipulasi.} Persetujuan antaranggota, penilaian karena pertemanan, serta pekerjaan di luar platform dapat membatasi ketepatan interpretasi indikator.
+\item \textbf{Persyaratan institusional.} Pengelolaan privasi, keamanan, integrasi, dan proses pengadaan berpotensi memperpanjang adopsi serta menambah biaya.
+\end{enumerate}
+
+Implikasi SWOT adalah memusatkan pengembangan pada keterhubungan bukti dan kemudahan alur, bukan penambahan fitur tanpa prioritas. Sebelum perluasan layanan, tim perlu memperkuat pencatatan evaluasi, memeriksa aturan akses, dan memvalidasi kebutuhan pembeli. Strategi pemasaran, sumber daya, keuangan, serta operasional dijabarkan pada bab berikutnya setelah pembahasan informasi bisnis ini disetujui.
 
 % Rujukan Bab I disertakan agar sitasi dapat ditelusuri.
 \clearpage
