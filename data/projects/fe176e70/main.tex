@@ -103,7 +103,7 @@ Mahasiswa merupakan pengguna yang membagi serta menyelesaikan pekerjaan, sedangk
 \subsection{Perkembangan Produk dan Posisi Nilai}
 Prototipe terdahulu dikembangkan dalam kegiatan perkuliahan dengan ruang percakapan dan papan tugas berbasis \textit{room}. Dokumentasinya memperlihatkan daftar ruang, percakapan kelompok, serta tugas pada kolom TODO, DOING, dan DONE dengan penanda prioritas. Menurut keterangan tim, prototipe tersebut memperoleh evaluasi dosen pada aspek fungsi, kemudahan penggunaan, dan kesesuaian ide. Masukan dosen menjadi dasar perluasan fitur, bukan bukti bahwa seluruh fitur pada rancangan terbaru sudah diuji pada versi lama.
 
-Tim kemudian membangun ulang prototipe untuk memasukkan pengelolaan kelas, tugas berbobot, keterhubungan bukti pekerjaan, peninjauan, penilaian rekan, serta rekap kontribusi. Status versi baru merupakan prototipe fungsional untuk demonstrasi. Berdasarkan konfirmasi tim pengembang, alur utama dan operasi \textit{create, read, update, dan delete} (CRUD) dapat dijalankan. Dokumentasi antarmuka dan README digunakan untuk menjelaskan implementasi; keduanya tidak diperlakukan sebagai laporan pengujian independen.
+Tim kemudian membangun ulang prototipe untuk memasukkan pengelolaan kelas, tugas berbobot, keterhubungan bukti pekerjaan, peninjauan, penilaian rekan, serta rekap kontribusi. Status versi baru merupakan prototipe fungsional untuk demonstrasi. Berdasarkan konfirmasi tim pengembang, alur utama dan operasi \textit{create, read, update, dan delete} (CRUD) dapat dijalankan.
 
 Pernyataan nilai Tandem adalah membantu mengubah proses koordinasi kelompok menjadi informasi kontribusi yang dapat ditelusuri. Dua pendekatan pada BLC dipertahankan, yaitu diskusi bersama tanpa fitur pesan pribadi dan bukti pekerjaan yang terhubung ke tugas. Keduanya mendukung dokumentasi, tetapi tidak menjamin seluruh aktivitas tercatat atau manipulasi dapat dihilangkan. Tandem juga tidak diklaim sebagai satu-satunya produk yang memiliki fungsi tersebut.
 
@@ -209,7 +209,7 @@ Berdasarkan dokumentasi pengembang, prototipe menggunakan React~19 dan TypeScrip
 
 Penyimpanan lokal dipilih untuk menyederhanakan konfigurasi, bukan sebagai rancangan akhir layanan institusional. Data belum disinkronkan antarperangkat, dan pemilih akun hanya menyimulasikan peran, bukan autentikasi produksi. Unggahan berkas menyimpan metadata, bukan isi berkas pada penyimpanan terpusat. Data juga dapat hilang ketika penyimpanan situs dibersihkan atau fungsi reset digunakan. Oleh sebab itu, prototipe tidak digunakan untuk menyimpan data akademik sensitif.
 
-README memuat skenario demonstrasi dari pembuatan tugas hingga ekspor, pemuatan ulang, dan reset. Keterangan fitur berfungsi didasarkan pada konfirmasi tim; belum tersedia laporan uji independen untuk seluruh skenario, keamanan ekspor, atau ketahanan penyimpanan. Infrastruktur multi-pengguna, otorisasi, pengelolaan berkas, dan perlindungan data menjadi kebutuhan sebelum layanan digunakan secara operasional.
+Prototipe saat ini mendukung demonstrasi alur utama, mulai dari pembuatan tugas, penambahan bukti pekerjaan, dan peninjauan hasil hingga penyajian serta ekspor rekap kontribusi. Sebelum digunakan secara operasional, pengembangan perlu mencakup infrastruktur multi-pengguna, autentikasi dan otorisasi, penyimpanan berkas terpusat, serta perlindungan data.
 
 \section{Analisis SWOT}
 \subsection{Kekuatan (\textit{Strengths})}
