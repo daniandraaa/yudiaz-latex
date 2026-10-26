@@ -37,7 +37,7 @@ Connected ECG recorders increasingly send digital 12-lead records to remote serv
 
 This paper addresses localization and deployment together. Its contributions are:
 \begin{itemize}
-\item A compact CNN pipeline for record-level LVOT/RVOT localization that, under matched patient partitions, exceeds a morphology-based RF and three established ECG criteria in macro-F1 and LVOT sensitivity. We show that this advantage holds for every evaluated CNN training configuration and does not depend on generative augmentation.
+\item A compact CNN pipeline for record-level LVOT/RVOT localization that, under matched patient partitions, exceeds a morphology-based RF and three established ECG criteria in macro-F1 and LVOT sensitivity. We show that this advantage holds for every evaluated CNN training configuration.
 \item An IoT gateway protocol (session declaration, sequenced chunks, completeness checks, server-side canonical preprocessing) with a verification procedure showing that gateway outputs reproduce offline model probabilities record by record.
 \item A repeated latency benchmark that separates model inference from pipeline and gateway time. It identifies a batch-size-dependent CPU convolution slowdown as the cause of CNN tail latency, and shows that fixed 8-window inference batches remove it without changing any prediction.
 \end{itemize}
@@ -132,7 +132,7 @@ Each CNN has four convolutional blocks with 32, 64, 128, and 256 channels and ke
 \end{equation}
 RVOT is assigned when $\hat p_i(\mathrm{RVOT})>0.5$.
 
-Training samples bags of up to four windows per patient and applies a class-weighted negative log-likelihood after mean pooling. The bag size is a memory and diversity budget: random four-window draws expose the model to different parts of each recording across epochs. Because pooling is a mean of window probabilities, the training bag and the inference record estimate the same patient-level quantity. Inference averages all complete windows, which uses all available signal and reduces the variance of that estimate. A conditional GAN~\cite{mirza2014}, fitted only to the training patients of each fold, can replace one window of a four-window bag with a class-matched synthetic window. Validation, hold-out, and gateway inference use only real ECG.
+Training samples bags of up to four windows per patient and applies a class-weighted negative log-likelihood after mean pooling. The bag size is a memory and diversity budget: random four-window draws expose the model to different parts of each recording across epochs. Because pooling is a mean of window probabilities, the training bag and the inference record estimate the same patient-level quantity. Inference averages all complete windows, which uses all available signal and reduces the variance of that estimate. As a training-only option, one window of a four-window bag can be replaced by a class-matched synthetic window from a conditional GAN~\cite{mirza2014} fitted to the training patients; validation, hold-out, and gateway inference use only real ECG.
 
 AdamW (weight decay $10^{-4}$), cosine decay to $10^{-6}$, gradient clipping at 1.0, and early stopping with patience 15 on validation macro-F1 were used throughout. Ten training configurations were evaluated: nine GAN-augmented configurations crossing learning rates $\{10^{-4},5\times10^{-4},10^{-3}\}$ with window budgets $\{16,32,64\}$ (G01--G09), and a configuration without augmentation (learning rate $10^{-3}$, budget 32) that had been specified in advance as the reference. G04 ($5\times10^{-4}$, 16, GAN) had the highest mean CV macro-F1 and was deployed. Five final CNNs (seeds 42--46) were fitted on all 230 development patients for 16 epochs.
 
@@ -179,6 +179,8 @@ V2 transition ratio & 0.500 & 0.824 & 0.612 & 0.825\\\bottomrule
 
 \emph{Robustness to configuration selection.} Fig.~\ref{fig:configs} shows all ten CNN configurations. Mean macro-F1 ranges from 0.872 (G03) to 0.903 (G04), and every configuration exceeds RF in at least 12 of 15 paired fits. The best-minus-worst spread of 0.031 bounds how much selecting G04 on the same folds can inflate its estimate. That spread is about a quarter of the 0.128 CNN--RF difference. The reference configuration without augmentation, which was not selected, still exceeds RF by 0.116.
 
+\emph{Effect of GAN augmentation.} G08 and the reference configuration differ only in GAN augmentation. Both reach macro-F1 0.891 (patient-level difference $-0.008$, 95\% CI $-0.038$ to 0.020), and LVOT sensitivity is 0.824 with GAN and 0.859 without. The augmentation therefore gave no measurable benefit, and the CNN advantage over RF does not depend on it.
+
 \begin{figure}[t]\centering
 \includegraphics[width=\columnwidth]{cv_configurations.pdf}
 \caption{Mean $\pm$ SD over 15 fold/seed fits for all ten CNN training configurations and RF (dotted line: RF mean). Blue: deployed G04 (*) and the pre-specified configuration without augmentation.}
@@ -187,12 +189,10 @@ V2 transition ratio & 0.500 & 0.824 & 0.612 & 0.825\\\bottomrule
 
 \emph{Patient-level uncertainty.} Using one out-of-fold probability per patient, the CNN reaches macro-F1 0.899 and AUC 0.946, against 0.779 and 0.842 for RF. The patient bootstrap gives a macro-F1 difference of 0.120 (95\% CI 0.056--0.186) and an AUC difference of 0.104 (0.031--0.183). For the no-augmentation CNN, the macro-F1 difference is 0.116 (0.049--0.184). Both intervals exclude zero.
 
-\emph{Stability.} The CNN is also more stable across data partitions. Its fold-mean macro-F1 stays within 0.860--0.926, whereas RF ranges from 0.674 to 0.896. Across the 15 fits, the lowest macro-F1 is 0.822 for the CNN and 0.642 for RF. The lowest LVOT sensitivity is 0.667 for the CNN and 0.417 for RF (SD 0.078 versus 0.174). Within a fold, changing only the seed shifts macro-F1 by 0.026 on average for the CNN and 0.045 for RF. On the hold-out, the reverse holds across seeds: individual CNNs vary more (macro-F1 SD 0.038) than individual forests (0.019), which stay at an LVOT sensitivity of 0.500 for every seed. This seed sensitivity motivates the five-model CNN ensemble (Section~IV-C).
-
-\subsection{Contribution of GAN Augmentation}
-G08 and the no-augmentation configuration share learning rate, window budget, architecture, folds, seeds, and epoch limit; they differ only in GAN augmentation. Their mean macro-F1 values are identical to three decimals (0.891 and 0.891); AUC is 0.931 for both. LVOT sensitivity is 0.824 with GAN and 0.859 without. At patient level the difference in macro-F1 is $-0.008$ (95\% CI $-0.038$ to 0.020). Conditional GAN augmentation therefore gave no measurable benefit here, and the CNN's advantage over RF does not come from augmentation. G04 remains the deployed model because it had the highest CV score. A deployment without the GAN would be simpler and is expected to perform similarly.
+\emph{Stability.} The CNN is also more stable across data partitions. Its fold-mean macro-F1 stays within 0.860--0.926, whereas RF ranges from 0.674 to 0.896. Across the 15 fits, the lowest macro-F1 is 0.822 for the CNN and 0.642 for RF. The lowest LVOT sensitivity is 0.667 for the CNN and 0.417 for RF (SD 0.078 versus 0.174). Within a fold, changing only the seed shifts macro-F1 by 0.026 on average for the CNN and 0.045 for RF. On the hold-out, the reverse holds across seeds: individual CNNs vary more (macro-F1 SD 0.038) than individual forests (0.019), which stay at an LVOT sensitivity of 0.500 for every seed. This seed sensitivity motivates the five-model CNN ensemble (Section~\ref{sec:ensemble}).
 
 \subsection{Single Model Versus Ensemble}
+\label{sec:ensemble}
 Table~\ref{tab:ensemble} compares individual CNNs with seed ensembles under matched partitions. In CV, averaging three seeds per patient leaves macro-F1 essentially unchanged (0.899 versus a fit mean of 0.903) and raises AUC from 0.935 to 0.946. On the hold-out, the five-model ensemble improves macro-F1 from a single-model mean of 0.793 to 0.828 and AUC from 0.916 to 0.941. The ensemble also removes the seed-to-seed spread (SD 0.038) from the deployed decision. The cost is five times the parameters (854,570) and five forward passes. In the deployed service, those five passes take a median of 33.5~ms per record in total (Section~\ref{sec:latency}).
 
 \begin{table}[t]
@@ -293,7 +293,7 @@ RF pipeline & 112.8 & 148.6 & 107.9 & \textbf{149.7}\\\bottomrule
 \end{table}
 \begin{figure}[t]\centering
 \includegraphics[width=\columnwidth]{latency_ecdf.pdf}
-\caption{Empirical distributions of per-record pipeline time over 590 trials with four CNN threads. The dotted horizontal line marks the 95th percentile.}
+\caption{Cumulative distribution of per-record pipeline time (590 trials, four CNN threads). Dotted: CNN with 16-window batches before the fix; solid: CNN with the deployed 8-window batches and RF. The dashed line marks the 95th percentile.}
 \label{fig:latency}
 \end{figure}
 
@@ -307,7 +307,7 @@ Several limitations remain. First, the RF used default hyperparameters and no gr
 
 \balance
 \section{Conclusion}
-A compact 1D CNN ensemble was developed for record-level LVOT/RVOT localization and deployed behind a verified web-based IoT gateway. In patient-level CV the CNN reached macro-F1 0.903 against 0.775 for a morphology-based Random Forest and at most 0.732 for established ECG criteria, with LVOT sensitivity 0.859 against 0.620. All ten CNN training configurations exceeded RF, and the advantage held without GAN augmentation. On the historical hold-out the ensembles reached macro-F1 0.828 and 0.721 and AUC 0.941 and 0.741. The gateway reproduced all 59 offline decisions. With fixed 8-window inference batches, the CNN pipeline was faster than RF at both the median (57.8 versus 104.2~ms) and the 95th percentile (109.6 versus 132.8~ms). Future work will connect a physical 12-lead recorder, compare against tuned gradient-boosting baselines under nested selection, and validate on an independent multi-center cohort.
+A compact 1D CNN ensemble was developed for record-level LVOT/RVOT localization and deployed behind a verified web-based IoT gateway. In patient-level CV the CNN reached macro-F1 0.903 against 0.775 for a morphology-based Random Forest and at most 0.732 for established ECG criteria, with LVOT sensitivity 0.859 against 0.620. All ten CNN training configurations exceeded RF. On the historical hold-out the ensembles reached macro-F1 0.828 and 0.721 and AUC 0.941 and 0.741. The gateway reproduced all 59 offline decisions. With fixed 8-window inference batches, the CNN pipeline was faster than RF at both the median (57.8 versus 104.2~ms) and the 95th percentile (109.6 versus 132.8~ms). Future work will connect a physical 12-lead recorder, compare against tuned gradient-boosting baselines under nested selection, and validate on an independent multi-center cohort.
 
 \begin{thebibliography}{00}
 \bibitem{zheng2020} J. Zheng, G. Fu, K. Anderson, H. Chu, and C. Rakovski, ``A 12-lead ECG database to identify origins of idiopathic ventricular arrhythmia containing 334 patients,'' \emph{Sci. Data}, vol. 7, Art. no. 98, 2020, doi: 10.1038/s41597-020-0440-8.
