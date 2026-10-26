@@ -6,7 +6,7 @@
 \usepackage{booktabs}
 \usepackage{balance}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
 \usepackage[hidelinks]{hyperref}
 
 \begin{document}
@@ -55,30 +55,51 @@ Fig.~\ref{fig:system} shows the acquisition-to-user path. A complete 12-lead rec
 \begin{figure*}[t]
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[font=\small,
- box/.style={draw,rounded corners=2pt,align=center,minimum height=15mm,inner sep=3pt},
- arr/.style={-{Stealth[length=2.2mm]},thick},
- target/.style={arr,dashed,gray}]
-\node[box,text width=12mm,dashed,draw=gray] (patient) at (0,0) {Patient};
-\node[box,text width=22mm,dashed,draw=gray] (device) at (2.4,0) {12-lead ECG\\recorder};
-\node[box,text width=23mm,fill=blue!5] (gateway) at (5.3,0) {IoT gateway\\HTTP/JSON chunks\\completeness check};
-\node[box,text width=27mm,fill=blue!5] (pre) at (8.6,0) {Server preprocessing\\HP filter + DWT\\scaling + windows};
-\node[box,text width=25mm,fill=blue!5] (cnn) at (11.9,0) {Compact 1D CNN\\5-model ensemble\\8-window batches};
-\node[box,text width=21mm,fill=green!5] (output) at (14.9,0) {LVOT/RVOT\\probability\\and timing};
-\node[box,text width=16mm,fill=green!5] (user) at (17.6,0) {Browser\\dashboard\\and export};
-\node[box,text width=30mm,fill=orange!8] (dataset) at (2.4,-2.1) {Public 12-lead dataset\\(replayed records)};
-\node[box,text width=40mm,fill=orange!8] (rf) at (11.9,-2.1) {RF comparator (132 features)\\morphology + RR extraction\\five forests};
-\draw[target] (patient)--(device);
-\draw[target] (device)--(gateway);
-\draw[arr] (gateway)--(pre);
-\draw[arr] (pre)--(cnn);
-\draw[arr] (cnn)--(output);
-\draw[arr] (output)--(user);
-\draw[arr] (dataset.east)--(4.3,-2.1)--node[left,font=\footnotesize]{replay}(4.3,-.9)--(gateway.south west);
-\draw[arr] (gateway.south)--(5.3,-2.1)--node[above,font=\footnotesize]{raw ECG}(rf.west);
-\draw[arr] (rf.east)-|(output.south);
+\begin{tikzpicture}[font=\sffamily\footnotesize,
+ node distance=6mm,
+ blk/.style={draw=black!55,fill=white,line width=.5pt,rounded corners=1.5pt,align=center,
+   minimum width=27mm,minimum height=13mm,inner sep=2pt},
+ main/.style={blk,draw=blue!55!black,line width=.8pt},
+ aux/.style={blk,draw=black!45,fill=black!3},
+ plan/.style={blk,dashed,draw=black!40,text=black!55},
+ zone/.style={draw=black!20,fill=black!2,rounded corners=3pt},
+ zlabel/.style={font=\sffamily\scriptsize\bfseries,text=black!55,anchor=north west},
+ flow/.style={-{Latex[length=1.8mm]},line width=.7pt,draw=blue!55!black},
+ sflow/.style={-{Latex[length=1.6mm]},line width=.5pt,draw=black!55},
+ pflow/.style={-{Latex[length=1.6mm]},line width=.5pt,dashed,draw=black!40},
+ lab/.style={font=\sffamily\scriptsize,text=black!60,fill=white,inner sep=1pt}]
+% blocks
+\node[plan] (rec) at (0,0) {\textbf{12-lead ECG}\\\textbf{recorder}\\[-1pt]{\scriptsize(future work)}};
+\node[aux] (data) at (0,-2.3) {\textbf{Public dataset}\\{\scriptsize Ningbo, 2000 Hz}\\[-1pt]{\scriptsize replayed records}};
+\node[main] (gw) at (3.9,0) {\textbf{IoT gateway}\\{\scriptsize session + ordered}\\[-1pt]{\scriptsize chunks, completeness}};
+\node[main] (pre) at (7.3,0) {\textbf{Preprocessing}\\{\scriptsize HP 0.5 Hz, DWT}\\[-1pt]{\scriptsize scaling, 2.5 s windows}};
+\node[main] (cnn) at (10.7,0) {\textbf{1D CNN ensemble}\\{\scriptsize 5 models, mean}\\[-1pt]{\scriptsize window pooling}};
+\node[aux] (rf) at (9.0,-2.3) {\textbf{RF comparator}\\{\scriptsize 132 morphology/RR}\\[-1pt]{\scriptsize features, 5 forests}};
+\node[main,fill=blue!4] (ui) at (14.6,0) {\textbf{Web dashboard}\\{\scriptsize LVOT/RVOT output}\\[-1pt]{\scriptsize probability, timing}};
+% zones
+\begin{scope}[on background layer]
+\node[zone,fit=(rec)(data),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z1) {};
+\node[zone,fit=(gw)(cnn)(rf),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z2) {};
+\node[zone,fit=(ui)(ui.south|-data.south),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z3) {};
+\end{scope}
+\node[zlabel] at (z1.north west) {ACQUISITION};
+\node[zlabel] at (z2.north west) {GATEWAY \& INFERENCE SERVER};
+\node[zlabel] at (z3.north west) {CLIENT};
+% flows
+\draw[pflow] (rec) -- (gw);
+\draw[sflow] (data.east) -- ++(.9,0) |- ([yshift=-3mm]gw.west);
+\node[lab,rotate=90] at (2.0,-1.15) {HTTP/JSON};
+\draw[flow] (gw) -- (pre);
+\draw[flow] (pre) -- (cnn);
+\draw[flow] (cnn) -- (ui);
+\draw[sflow] (gw.south) |- node[lab,pos=.75]{raw record} (rf.west);
+\draw[sflow] (rf.east) -| (ui.south);
+% legend
+\draw[flow] (-1.2,-3.55) -- ++(.8,0) node[right,lab,fill=none]{deployed CNN path};
+\draw[sflow] (2.6,-3.55) -- ++(.8,0) node[right,lab,fill=none]{evaluated support path};
+\draw[pflow] (6.6,-3.55) -- ++(.8,0) node[right,lab,fill=none]{not evaluated};
 \end{tikzpicture}}
-\caption{Acquisition-to-user architecture. Solid paths are implemented and evaluated; dashed paths (physical recorder) are the intended source but were not evaluated. The RF branch receives the raw record and performs its own feature processing.}
+\caption{System architecture. Records enter the gateway over HTTP/JSON, are preprocessed on the server, and are classified by the five-model CNN ensemble; the dashboard shows the result. The RF comparator receives the same raw record. In this study the input is public-dataset replay; a physical recorder (dashed) is future work.}
 \label{fig:system}
 \end{figure*}
 
@@ -88,13 +109,14 @@ The Ningbo resource contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. 
 The 289 included patients comprise 71 LVOT and 218 RVOT cases (286 PVC and 3 VT records). Table~\ref{tab:cohort} gives the 230-patient development and 59-patient historical hold-out partitions; all splits are by patient. The 1:3 imbalance is handled in four ways: stratified folds, a class-weighted patient loss for the CNN, balanced class weights for RF, and reporting macro-F1, balanced accuracy, and LVOT sensitivity rather than accuracy alone. The three VT records are too few for separate analysis, so results describe a predominantly PVC population.
 
 \begin{table}[t]
-\caption{Frozen cohort and partition counts.}
-\label{tab:cohort}\centering
-\begin{tabular}{lrrr}\toprule
-Partition & LVOT & RVOT & Total\\\midrule
-Development & 57 & 173 & 230\\
-Historical hold-out & 14 & 45 & 59\\\midrule
-Included cohort & 71 & 218 & 289\\\bottomrule
+\caption{Frozen Cohort and Patient-Level Partitions}
+\label{tab:cohort}\centering\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Partition & LVOT & RVOT & Total & LVOT (\%)\\\midrule
+Development & 57 & 173 & 230 & 24.8\\
+Historical hold-out & 14 & 45 & 59 & 23.7\\\midrule
+Included cohort & 71 & 218 & 289 & 24.6\\\bottomrule
 \end{tabular}
 \end{table}
 
@@ -134,19 +156,25 @@ The service uses a Python HTTP server, PyTorch CNN inference, a scikit-learn RF 
 Table~\ref{tab:cv} compares the deployed CNN configuration, the reference CNN without augmentation, RF, and the three ECG criteria on the 230 development patients. The selected CNN reaches macro-F1 0.903 compared with 0.775 for RF, a paired difference of 0.128 (corrected 95\% CI 0.025--0.231, $p=0.019$). The CNN has higher macro-F1 in 13 of 15 fits and ties in two. The largest gain is in the minority class: LVOT sensitivity is 0.859 for CNN and 0.620 for RF. RVOT sensitivity is 0.950 and 0.915. The CNN is also more stable across fits (SD 0.028 versus 0.081). The best ECG criterion (transition zone) reaches macro-F1 0.732; V2S/V3R gives 0.711 and the V2 transition ratio 0.500.
 
 \begin{table}[t]
-\caption{Development CV on 230 patients (mean $\pm$ SD over 15 fold/seed fits; ECG criteria are deterministic). BA: balanced accuracy; Sens.~L: LVOT sensitivity.}
-\label{tab:cv}\centering\small
-\setlength{\tabcolsep}{3pt}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{lcccc}\toprule
-Method & Macro-F1 & AUC & BA & Sens.~L\\\midrule
-CNN, deployed (G04) & \textbf{.903}$\pm$.028 & \textbf{.935}$\pm$.026 & \textbf{.905}$\pm$.034 & \textbf{.859}$\pm$.078\\
-CNN, no augmentation & .891$\pm$.031 & .931$\pm$.023 & .897$\pm$.021 & .859$\pm$.056\\
-Random Forest & .775$\pm$.081 & .851$\pm$.077 & .767$\pm$.086 & .620$\pm$.174\\\midrule
-Transition zone & .732 & .749 & .711 & .491\\
-V2S/V3R index & .711 & .835 & .771 & .825\\
-V2 transition ratio & .500 & .824 & .612 & .825\\\bottomrule
-\end{tabular}}
+\caption{Development Cross-Validation on 230 Patients}
+\label{tab:cv}\centering\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lcccc@{}}\toprule
+Method & Macro-F1 & AUC & BA & Sens.\ LVOT\\\midrule
+\multicolumn{5}{@{}l}{\emph{Learned models, mean (SD) of 15 fold/seed fits}}\\
+1D CNN (deployed) & \textbf{0.903} & \textbf{0.935} & \textbf{0.905} & \textbf{0.859}\\
+ & {\scriptsize(0.028)} & {\scriptsize(0.026)} & {\scriptsize(0.034)} & {\scriptsize(0.078)}\\
+1D CNN without GAN & 0.891 & 0.931 & 0.897 & \textbf{0.859}\\
+ & {\scriptsize(0.031)} & {\scriptsize(0.023)} & {\scriptsize(0.021)} & {\scriptsize(0.056)}\\
+Random Forest & 0.775 & 0.851 & 0.767 & 0.620\\
+ & {\scriptsize(0.081)} & {\scriptsize(0.077)} & {\scriptsize(0.086)} & {\scriptsize(0.174)}\\\midrule
+\multicolumn{5}{@{}l}{\emph{Established ECG criteria, no training}}\\
+Transition zone & 0.732 & 0.749 & 0.711 & 0.491\\
+V2S/V3R index & 0.711 & 0.835 & 0.771 & 0.825\\
+V2 transition ratio & 0.500 & 0.824 & 0.612 & 0.825\\\bottomrule
+\end{tabular}\\[3pt]
+\parbox{\columnwidth}{\scriptsize BA: balanced accuracy. Sens.\ LVOT: LVOT sensitivity. Unmeasurable criteria are assigned RVOT.}
 \end{table}
 
 \emph{Robustness to configuration selection.} Fig.~\ref{fig:configs} shows all ten CNN configurations. Mean macro-F1 ranges from 0.872 (G03) to 0.903 (G04), and every configuration exceeds RF in at least 12 of 15 paired fits. The best-minus-worst spread of 0.031 bounds how much selecting G04 on the same folds can inflate its estimate. That spread is about a quarter of the 0.128 CNN--RF difference. The reference configuration without augmentation, which was not selected, still exceeds RF by 0.116.
@@ -166,32 +194,38 @@ G08 and the no-augmentation configuration share learning rate, window budget, ar
 Table~\ref{tab:ensemble} compares individual CNNs with seed ensembles under matched partitions. In CV, averaging three seeds per patient leaves macro-F1 essentially unchanged (0.899 versus a fit mean of 0.903) and raises AUC from 0.935 to 0.946. On the hold-out, the five-model ensemble improves macro-F1 from a single-model mean of 0.793 to 0.828 and AUC from 0.916 to 0.941. The ensemble also removes the seed-to-seed spread (SD 0.038) from the deployed decision. The cost is five times the parameters (854,570) and five forward passes. In the deployed service, those five passes take a median of 33.5~ms per record in total (Section~\ref{sec:latency}).
 
 \begin{table}[t]
-\caption{Individual CNN versus seed ensemble. Single-model values are means ($\pm$SD) over fits or seeds.}
-\label{tab:ensemble}\centering\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccc}\toprule
- & Macro-F1 & AUC & BA & Params\\\midrule
-CV, single CNN & .903$\pm$.028 & .935 & .905 & 170,914\\
-CV, 3-seed ensemble & .899 & .946 & .892 & 512,742\\
-Hold-out, single CNN & .793$\pm$.038 & .916 & -- & 170,914\\
-Hold-out, 5-seed ensemble & .828 & .941 & .862 & 854,570\\\bottomrule
-\end{tabular}
+\caption{Single CNN Versus Seed Ensemble}
+\label{tab:ensemble}\centering\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lcccr@{}}\toprule
+Model & Macro-F1 & AUC & BA & Parameters\\\midrule
+\multicolumn{5}{@{}l}{\emph{Development CV, 230 patients}}\\
+Single CNN$^{a}$ & 0.903 & 0.935 & 0.905 & 170,914\\
+3-seed ensemble & 0.899 & 0.946 & 0.892 & 512,742\\\midrule
+\multicolumn{5}{@{}l}{\emph{Historical hold-out, 59 patients}}\\
+Single CNN$^{a}$ & 0.793 & 0.916 & 0.827 & 170,914\\
+5-seed ensemble & \textbf{0.828} & \textbf{0.941} & \textbf{0.862} & 854,570\\\bottomrule
+\end{tabular}\\[3pt]
+\parbox{\columnwidth}{\scriptsize $^{a}$Mean over 15 fits (CV) or 5 seeds (hold-out); hold-out macro-F1 SD 0.038.}
 \end{table}
 
 \subsection{Historical Hold-Out}
 Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the deployed ensembles on 59 patients. The CNN correctly classifies 12 of 14 LVOT and 39 of 45 RVOT cases; RF classifies 7 LVOT and 41 RVOT cases correctly. The CNN gains in LVOT sensitivity (0.857 versus 0.500) at the cost of two RVOT cases. The AUC difference is 0.200 (95\% CI 0.067--0.349). The macro-F1 difference is 0.108 (95\% CI $-0.026$ to 0.257; McNemar $p=0.55$). With 14 LVOT patients and a previously inspected hold-out, this is supporting rather than confirmatory evidence. Hold-out macro-F1 (0.828) is lower than CV (0.903), consistent with the selection optimism discussed above.
 
 \begin{table}[t]
-\caption{Historical hold-out (59 patients, 14 LVOT): five-model ensembles.}
-\label{tab:holdout}\centering\small
-\begin{tabular}{lcc}\toprule
-Metric & 1D CNN & Random Forest\\\midrule
-Macro-F1 & \textbf{0.828} & 0.721\\
-ROC AUC & \textbf{0.941} & 0.741\\
-Accuracy & \textbf{0.864} & 0.814\\
-Balanced accuracy & \textbf{0.862} & 0.706\\
-LVOT sensitivity & \textbf{0.857} & 0.500\\
-RVOT sensitivity & 0.867 & \textbf{0.911}\\\bottomrule
+\caption{Historical Hold-Out: Five-Model Ensembles (59 Patients, 14 LVOT)}
+\label{tab:holdout}\centering\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}lccc@{}}\toprule
+Metric & 1D CNN & Random Forest & Difference\\\midrule
+Macro-F1 & \textbf{0.828} & 0.721 & +0.108\\
+ROC AUC & \textbf{0.941} & 0.741 & +0.200\\
+Accuracy & \textbf{0.864} & 0.814 & +0.051\\
+Balanced accuracy & \textbf{0.862} & 0.706 & +0.156\\
+LVOT sensitivity & \textbf{0.857} & 0.500 & +0.357\\
+RVOT sensitivity & 0.867 & \textbf{0.911} & $-$0.044\\\bottomrule
 \end{tabular}
 \end{table}
 \begin{figure}[t]\centering
@@ -237,18 +271,22 @@ Fig.~\ref{fig:browser} shows the application as opened in a web browser. The ove
 The first single-pass gateway measurement showed a lower CNN median but a long tail (P95 2370.6~ms against 254.4~ms for RF). Repeated measurements located the cause. The service ran CNN inference in batches of 16 windows, and on this PyTorch CPU build one-dimensional convolution becomes about 20 times slower once a batch holds 16 or more windows (one model: 15~ms for 15 windows, 371~ms for 16). Only records of at least 16 windows (about 21~s; 4 of 59 records) filled a full batch, which produced the tail. Processing windows in fixed batches of 8 removes the slowdown. Because the CNN evaluates each window independently, this does not change the output: class predictions agree in 1180/1180 trials, and the maximum probability difference is $2.5\times10^{-7}$.
 
 \begin{table}[t]
-\caption{Repeated latency benchmark: 59 records $\times$ 10 repeats (ms per record). Model computation only; I/O and network excluded.}
-\label{tab:latency}\centering\small
-\setlength{\tabcolsep}{4pt}
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrr}\toprule
- & \multicolumn{2}{c}{16-window batches} & \multicolumn{2}{c}{8-window batches}\\
+\caption{Repeated Latency Benchmark (ms per Record)}
+\label{tab:latency}\centering\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lrrrr@{}}\toprule
+ & \multicolumn{2}{c}{Before fix$^{a}$} & \multicolumn{2}{c}{After fix$^{b}$}\\\cmidrule(lr){2-3}\cmidrule(l){4-5}
 Stage & Median & P95 & Median & P95\\\midrule
-CNN inference, 5 models (4 thr.) & 39.4 & 2704.2 & 33.5 & 64.2\\
-\textbf{CNN pipeline (4 threads)} & 64.4 & 2745.1 & \textbf{57.8} & \textbf{109.6}\\
-CNN pipeline (1 thread) & 84.4 & 2822.9 & 83.2 & 162.6\\
-RF features + 5 forests & 112.7 & 164.0 & 104.2 & 132.8\\\bottomrule
-\end{tabular}}
+\multicolumn{5}{@{}l}{\emph{Four CNN threads}}\\
+CNN inference (5 models) & 39.4 & 2704.2 & 33.5 & 64.2\\
+CNN pipeline & 64.4 & 2745.1 & \textbf{57.8} & \textbf{109.6}\\
+RF pipeline & 112.7 & 164.0 & 104.2 & 132.8\\\midrule
+\multicolumn{5}{@{}l}{\emph{One CNN thread}}\\
+CNN pipeline & 84.4 & 2822.9 & \textbf{83.2} & 162.6\\
+RF pipeline & 112.8 & 148.6 & 107.9 & \textbf{149.7}\\\bottomrule
+\end{tabular}\\[3pt]
+\parbox{\columnwidth}{\scriptsize $^{a}$16-window CNN batches. $^{b}$8-window CNN batches. 59 records $\times$ 10 repeats; model computation only (I/O, network, and model loading excluded). Pipeline: preprocessing or feature extraction plus inference.}
 \end{table}
 \begin{figure}[t]\centering
 \includegraphics[width=\columnwidth]{latency_ecdf.pdf}
