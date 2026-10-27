@@ -50,56 +50,33 @@ Deep networks learn ECG representations directly for rhythm classification~\cite
 
 \section{Methodology}
 \subsection{System Overview}
-Fig.~\ref{fig:system} shows the acquisition-to-user path. A complete 12-lead record enters through the HTTP gateway, receives canonical preprocessing on the server, and is classified by the CNN ensemble; the browser presents the LVOT/RVOT output and stage timing. The RF branch is a separately timed comparator. A physical ECG recorder is the intended upstream source (dashed); the experiments inject real public-dataset recordings at the gateway and evaluate the solid paths.
+Fig.~\ref{fig:system} shows the acquisition-to-user path. A complete 12-lead record enters through the HTTP gateway, receives canonical preprocessing on the server, and is classified by the CNN ensemble; the browser presents the LVOT/RVOT output and stage timing. The RF branch is a separately timed comparator. The system has three parts: acquisition, a gateway and inference server, and a browser client. A 12-lead ECG recorder is the intended source; in the experiments, real public-dataset recordings are replayed into the gateway in its place.
 
 \begin{figure*}[t]
 \centering
+\definecolor{figedge}{RGB}{69,70,111}
 \resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[font=\sffamily\footnotesize,
- node distance=6mm,
- blk/.style={draw=black!55,fill=white,line width=.5pt,rounded corners=1.5pt,align=center,
-   minimum width=27mm,minimum height=13mm,inner sep=2pt},
- main/.style={blk,draw=blue!55!black,line width=.8pt},
- aux/.style={blk,draw=black!45,fill=black!3},
- plan/.style={blk,dashed,draw=black!40,text=black!55},
- zone/.style={draw=black!20,fill=black!2,rounded corners=3pt},
- zlabel/.style={font=\sffamily\scriptsize\bfseries,text=black!55,anchor=north west},
- flow/.style={-{Latex[length=1.8mm]},line width=.7pt,draw=blue!55!black},
- sflow/.style={-{Latex[length=1.6mm]},line width=.5pt,draw=black!55},
- pflow/.style={-{Latex[length=1.6mm]},line width=.5pt,dashed,draw=black!40},
- lab/.style={font=\sffamily\scriptsize,text=black!60,fill=white,inner sep=1pt}]
-% blocks
-\node[plan] (rec) at (0,0) {\textbf{12-lead ECG}\\\textbf{recorder}\\[-1pt]{\scriptsize(future work)}};
-\node[aux] (data) at (0,-2.3) {\textbf{Public dataset}\\{\scriptsize Ningbo, 2000 Hz}\\[-1pt]{\scriptsize replayed records}};
-\node[main] (gw) at (3.9,0) {\textbf{IoT gateway}\\{\scriptsize session + ordered}\\[-1pt]{\scriptsize chunks, completeness}};
-\node[main] (pre) at (7.3,0) {\textbf{Preprocessing}\\{\scriptsize HP 0.5 Hz, DWT}\\[-1pt]{\scriptsize scaling, 2.5 s windows}};
-\node[main] (cnn) at (10.7,0) {\textbf{1D CNN ensemble}\\{\scriptsize 5 models, mean}\\[-1pt]{\scriptsize window pooling}};
-\node[aux] (rf) at (9.0,-2.3) {\textbf{RF comparator}\\{\scriptsize 132 morphology/RR}\\[-1pt]{\scriptsize features, 5 forests}};
-\node[main,fill=blue!4] (ui) at (14.6,0) {\textbf{Web dashboard}\\{\scriptsize LVOT/RVOT output}\\[-1pt]{\scriptsize probability, timing}};
-% zones
-\begin{scope}[on background layer]
-\node[zone,fit=(rec)(data),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z1) {};
-\node[zone,fit=(gw)(cnn)(rf),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z2) {};
-\node[zone,fit=(ui)(ui.south|-data.south),inner xsep=3mm,inner ysep=3mm,yshift=2mm] (z3) {};
-\end{scope}
-\node[zlabel] at (z1.north west) {ACQUISITION};
-\node[zlabel] at (z2.north west) {GATEWAY \& INFERENCE SERVER};
-\node[zlabel] at (z3.north west) {CLIENT};
-% flows
-\draw[pflow] (rec) -- (gw);
-\draw[sflow] (data.east) -- ++(.9,0) |- ([yshift=-3mm]gw.west);
-\node[lab,rotate=90] at (2.0,-1.15) {HTTP/JSON};
-\draw[flow] (gw) -- (pre);
-\draw[flow] (pre) -- (cnn);
-\draw[flow] (cnn) -- (ui);
-\draw[sflow] (gw.south) |- node[lab,pos=.75]{raw record} (rf.west);
-\draw[sflow] (rf.east) -| (ui.south);
-% legend
-\draw[flow] (-1.2,-3.55) -- ++(.8,0) node[right,lab,fill=none]{deployed CNN path};
-\draw[sflow] (2.6,-3.55) -- ++(.8,0) node[right,lab,fill=none]{evaluated support path};
-\draw[pflow] (6.6,-3.55) -- ++(.8,0) node[right,lab,fill=none]{not evaluated};
+\begin{tikzpicture}[font=\sffamily\bfseries\footnotesize,
+ zone/.style={draw=figedge,line width=.9pt,fill=black!4.5,rounded corners=5pt},
+ blk/.style={draw=figedge,line width=.9pt,fill=white,rounded corners=4pt,align=center,inner sep=2pt},
+ arr/.style={-{Stealth[length=2.4mm]},line width=.8pt}]
+\draw[zone] (0.200,-0.300) rectangle (3.533,-4.200);
+\draw[zone] (3.933,-0.300) rectangle (13.100,-4.200);
+\draw[zone] (13.767,-0.300) rectangle (17.067,-4.200);
+\node[blk,minimum width=2.367cm,minimum height=1.067cm] (rec) at (1.883,-2.233) {12-lead ECG\\Recorder};
+\node[blk,minimum width=2.367cm,minimum height=1.050cm] (gw) at (5.567,-1.525) {IoT gateway};
+\node[blk,minimum width=2.367cm,minimum height=1.050cm] (pre) at (8.567,-1.525) {Preprocessing};
+\node[blk,minimum width=2.367cm,minimum height=1.050cm] (cnn) at (11.567,-1.525) {1D CNN\\ensemble};
+\node[blk,minimum width=2.367cm,minimum height=1.067cm] (rf) at (8.533,-2.967) {Random Forest};
+\node[blk,minimum width=2.367cm,minimum height=1.083cm] (ui) at (15.517,-2.242) {Web\\Dashboard};
+\draw[arr] (rec.east) -- (4.050,-2.233) -- (4.050,-1.517) -- (gw.west);
+\draw[arr] (gw) -- (pre);
+\draw[arr] (pre) -- (cnn);
+\draw[arr] (cnn.east) -- (13.967,-1.517) -- (13.967,-2.167) -- ([yshift=1.2mm]ui.west);
+\draw[arr] (gw.south) -- (5.567,-2.967) -- (rf.west);
+\draw[arr] (rf.east) -- (15.517,-2.967) -- (ui.south);
 \end{tikzpicture}}
-\caption{System architecture. Records enter the gateway over HTTP/JSON, are preprocessed on the server, and are classified by the five-model CNN ensemble; the dashboard shows the result. The RF comparator receives the same raw record. In this study the input is public-dataset replay; a physical recorder (dashed) is future work.}
+\caption{System architecture. Left: acquisition; center: gateway and inference server; right: client. A 12-lead ECG record reaches the IoT gateway, is preprocessed on the server, and is classified by the five-model 1D CNN ensemble; the Random Forest comparator receives the same raw record. Both outputs are shown on the web dashboard. In this study the recorder input is emulated by replaying public-dataset recordings into the gateway.}
 \label{fig:system}
 \end{figure*}
 
