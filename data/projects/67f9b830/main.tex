@@ -5,6 +5,8 @@
 \graphicspath{{assets/}{./}}
 \usepackage{booktabs}
 \usepackage{balance}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\floatpagefraction}{0.9}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
 \usepackage[hidelinks]{hyperref}
@@ -122,7 +124,7 @@ AdamW (weight decay $10^{-4}$), cosine decay to $10^{-6}$, gradient clipping at 
 Five fixed stratified folds on the 230 development patients were evaluated with seeds 42--44, giving 15 paired fits per model. These fits share patients and folds and are not independent. We therefore report uncertainty at two levels. Fit-level paired differences use the corrected resampled $t$ statistic of Nadeau and Bengio~\cite{nadeau2003}. For patient-level uncertainty, the three seed predictions of each out-of-fold patient are averaged to give one probability per patient (230 in total). A class-stratified bootstrap over patients (5000 resamples) then gives intervals for the CNN--RF difference. Because G04 was chosen on the same folds, the CV estimate for G04 is optimistic. We quantify this by reporting all ten configurations, including G00. Hold-out ensemble differences use the same patient bootstrap and an exact McNemar test~\cite{mcnemar1947}. The hold-out had been inspected in earlier exploratory work and is secondary evidence, not an untouched test set.
 
 \subsection{Web and IoT Deployment}
-The service uses a Python HTTP server, PyTorch CNN inference, a scikit-learn RF comparator, and a browser dashboard served by the same host (Fig.~\ref{fig:browser}). Outside the loopback interface the server refuses to start without a bearer token, which every request must then carry. A client opens a session that declares sampling rate, lead order, amplitude unit, and expected length. It then sends sequenced JSON chunks (at most 8000 time points each) with sample offsets. Identical retransmissions are accepted once; gaps, conflicts, and inconsistent offsets are rejected. Finalization checks completeness before preprocessing and inference. CNN checkpoints and the scaler are verified against SHA-256 hashes; the deployed identity is \texttt{154da12ade375dff}. The CNN processes windows in fixed batches of 8 (Section~\ref{sec:latency}).
+The service uses a Python HTTP server, PyTorch CNN inference, a scikit-learn RF comparator, and a browser dashboard served by the same host (Fig.~\ref{fig:browser}). Outside the loopback interface the server refuses to start without a bearer token, which every request must then carry. A client opens a session that declares sampling rate, lead order, amplitude unit, and expected length. It then sends sequenced JSON chunks (at most 8000 time points each) with sample offsets. Identical retransmissions are accepted once; gaps, conflicts, and inconsistent offsets are rejected. Finalization checks completeness before preprocessing and inference. CNN checkpoints and the scaler are verified against SHA-256 hashes. The CNN processes windows in fixed batches of 8 (Section~\ref{sec:latency}).
 
 \emph{Consistency test.} All 59 hold-out records were sent through the gateway in 1000-point chunks (0.5~s of signal each) without delay. Five records were also replayed at acquisition pace (2000 points/s). Gateway probabilities were compared with offline probabilities.
 
@@ -196,7 +198,7 @@ RVOT sensitivity & 0.867 & \textbf{0.911} & $-$0.044\\\bottomrule
 \subsection{Gateway Consistency and Application}
 All 59 no-delay replays completed (record durations 5.1--25.0~s, median 12.9~s). Gateway and offline class predictions agree for 59/59 records for both models. The maximum absolute probability difference is $2.5\times10^{-7}$ for the CNN and zero for RF. All five acquisition-paced replays also preserve both predictions. This 100\% agreement measures implementation consistency: the gateway reproduces the validated model. Diagnostic accuracy remains that of Table~\ref{tab:holdout}. During paced replay, the median chunk round trip was 10.2~ms and the largest within-record chunk P95 was 51.6~ms, well below the 500~ms of signal each chunk represents. The transfer path therefore keeps pace with acquisition on the local link. Eleven automated tests exercise the real server and frozen models. They cover valid transfer, duplicate chunks, gap and conflict rejection, incomplete records, incompatible rate/lead/unit declarations, prediction parity, and result export; all pass.
 
-Fig.~\ref{fig:browser} shows the application as opened in a web browser. The overview page provides record selection or CSV upload, transfer speed, the received-signal monitor, and the localization panel. The comparison page presents the CNN and RF development-CV metrics, out-of-fold confusion matrices, and an on-demand latency benchmark for the selected record. Fig.~\ref{fig:browser}(c)--(d) shows the dashboard for hold-out record ECG-231: the received 12 leads, completed transfer status, and an RVOT output (CNN probability 98.0\%, RF 82.2\%). The heart graphic is a schematic orientation cue, not a patient-specific map.
+Fig.~\ref{fig:browser} shows the application as opened in a web browser. The overview page provides record selection or CSV upload, transfer speed, and the localization result. The comparison page presents the CNN and RF development-CV metrics and out-of-fold confusion matrices. Fig.~\ref{fig:browser}(c)--(d) shows the dashboard for hold-out record ECG-231: the received 12 leads, completed transfer status, and an RVOT output (CNN probability 98.0\%, RF 82.2\%). The heart graphic is a schematic orientation cue, not a patient-specific map.
 
 \begin{figure*}[!t]
 \centering
@@ -210,12 +212,12 @@ Fig.~\ref{fig:browser} shows the application as opened in a web browser. The ove
 {\small\textbf{(b) CNN and Random Forest page}}\\[2pt]
 \includegraphics[width=\linewidth]{web_comparison_browser.png}
 \end{minipage}\\[6pt]
-\begin{minipage}[t]{0.71\textwidth}
+\begin{minipage}[t]{0.66\textwidth}
 \centering
 {\small\textbf{(c) Received 12-lead ECG after transfer (ECG-231)}}\\[2pt]
 \includegraphics[width=\linewidth]{web_signal.png}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.255\textwidth}
+\begin{minipage}[t]{0.237\textwidth}
 \centering
 {\small\textbf{(d) Localization output}}\\[2pt]
 \includegraphics[width=\linewidth]{web_result.png}
@@ -224,6 +226,12 @@ Fig.~\ref{fig:browser} shows the application as opened in a web browser. The ove
 \label{fig:browser}
 \end{figure*}
 
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{latency_ecdf.pdf}
+\caption{Cumulative distribution of per-record pipeline time (590 trials, four CNN threads). Dotted: CNN with 16-window batches before the fix; solid: CNN with the deployed 8-window batches and RF. The dashed line marks the 95th percentile.}
+\label{fig:latency}
+\end{figure}
 
 \subsection{Processing Latency}
 \label{sec:latency}
@@ -247,26 +255,20 @@ RF pipeline & 112.8 & 148.6 & 107.9 & \textbf{149.7}\\\bottomrule
 \end{tabular}\\[3pt]
 \parbox{\columnwidth}{\scriptsize $^{a}$16-window CNN batches. $^{b}$8-window CNN batches. 59 records $\times$ 10 repeats; model computation only (I/O, network, and model loading excluded). Pipeline: preprocessing or feature extraction plus inference.}
 \end{table}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{latency_ecdf.pdf}
-\caption{Cumulative distribution of per-record pipeline time (590 trials, four CNN threads). Dotted: CNN with 16-window batches before the fix; solid: CNN with the deployed 8-window batches and RF. The dashed line marks the 95th percentile.}
-\label{fig:latency}
-\end{figure}
-
 Table~\ref{tab:latency} and Fig.~\ref{fig:latency} report the repeated benchmark. With 8-window batches and four threads, the CNN pipeline has a median of 57.8~ms and a P95 of 109.6~ms. RF has 104.2 and 132.8~ms, so the CNN is faster at both the median and the tail. With one thread, the CNN median remains lower (83.2 versus 107.9~ms for RF), but its P95 is slightly higher (162.6 versus 149.7~ms). Both pipelines scale with record length (Spearman $\rho\approx0.9$ between duration and median time). Five-model CNN inference alone takes a median of 33.5~ms. Model computation is therefore a small part of the post-acquisition response compared with recording duration and network transfer.
 
 \emph{Model footprint.} The five CNN checkpoints occupy 3.33~MiB in total (0.67~MiB each), against 9.64~MiB for the five stored forests. The predictor is therefore small enough for a gateway-class device, although execution on such hardware was not measured.
 
 \section{Discussion and Limitations}
 \label{sec:limits}
-The CNN's advantage over RF has the same direction across metrics, configurations, and evaluation levels, although on the hold-out only the AUC difference excludes zero. It is largest for LVOT, the minority class, where RF misses about four in ten patients in CV and half on the hold-out. It does not depend on selecting the best configuration, since the pre-specified reference G00 also exceeds RF. A plausible explanation is that convolutional filters capture QRS morphology across all 12 leads that the fixed feature set summarizes only partially, although this study does not test that mechanism. The established ECG criteria trade LVOT sensitivity against specificity and do not reach the learned models' macro-F1.
+The CNN's advantage over RF has the same direction across metrics, configurations, and evaluation levels, although on the hold-out only the AUC difference excludes zero. It is largest for LVOT, the minority class, where RF misses about four in ten LVOT patients in CV and half on the hold-out. It does not depend on selecting the best configuration, since the pre-specified reference G00 also exceeds RF. A plausible explanation is that convolutional filters capture QRS morphology across all 12 leads that the fixed feature set summarizes only partially, although this study does not test that mechanism. The established ECG criteria trade LVOT sensitivity against specificity and do not reach the learned models' macro-F1.
 
 Several limitations remain. First, the RF used default hyperparameters and no gradient-boosting baseline was evaluated. Tuned feature-based models could narrow the gap, although the CNN advantage is several times the variation among CNN configurations. Second, configuration selection was not nested. Fig.~\ref{fig:configs} bounds its effect, but nested cross-validation would give a less biased estimate. Third, the data come from one center, the hold-out had been inspected before, and only 14 hold-out patients are LVOT. Excluding 40 labelled records and having only three VT cases further limit how well the results generalize. An independent cohort is needed for confirmation. Fourth, the IoT evaluation verifies the gateway, its decision preservation, and its timing on a local link with replayed public recordings. It does not cover physical-recorder acquisition, amplitude calibration across devices, wireless loss, concurrent clients, or energy use. Finally, noncausal preprocessing restricts the service to post-acquisition localization, and probabilities are not calibrated risk estimates.
 
-\balance
 \section{Conclusion}
 A compact 1D CNN ensemble was developed for record-level LVOT/RVOT localization and deployed behind a verified web-based IoT gateway. In patient-level CV the CNN reached macro-F1 0.903 against 0.775 for a morphology-based Random Forest and at most 0.732 for established ECG criteria, with LVOT sensitivity 0.859 against 0.620. All ten CNN training configurations exceeded RF. On the historical hold-out the ensembles reached macro-F1 0.828 and 0.721 and AUC 0.941 and 0.741. The gateway reproduced all 59 offline decisions. With fixed 8-window inference batches and four threads, the CNN pipeline was faster than RF at both the median (57.8 versus 104.2~ms) and the 95th percentile (109.6 versus 132.8~ms). Future work will connect a physical 12-lead recorder, compare against tuned gradient-boosting baselines under nested selection, and validate on an independent multi-center cohort.
 
+\balance
 \begin{thebibliography}{00}
 \bibitem{zheng2020} J. Zheng, G. Fu, K. Anderson, H. Chu, and C. Rakovski, ``A 12-lead ECG database to identify origins of idiopathic ventricular arrhythmia containing 334 patients,'' \emph{Sci. Data}, vol. 7, Art. no. 98, 2020, doi: 10.1038/s41597-020-0440-8.
 \bibitem{betensky2011} B. P. Betensky \emph{et al.}, ``The V2 transition ratio: A new electrocardiographic criterion for distinguishing left from right ventricular outflow tract tachycardia origin,'' \emph{J. Am. Coll. Cardiol.}, vol. 57, no. 22, pp. 2255--2262, 2011, doi: 10.1016/j.jacc.2011.01.035.
