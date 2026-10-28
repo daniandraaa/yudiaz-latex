@@ -11,6 +11,9 @@
 \usepackage{setspace}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usepackage{placeins}
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -194,6 +197,15 @@ The system development is carried out using the Research and Development (R\&D) 
   \singlespacing
   \setlength{\parskip}{0pt}
   \tableofcontents
+}
+\newpage
+
+% --- DAFTAR GAMBAR ---
+\addcontentsline{toc}{chapter}{\listfigurename}
+{
+  \singlespacing
+  \setlength{\parskip}{0pt}
+  \listoffigures
 }
 \newpage
 
@@ -451,6 +463,132 @@ Schellander (2024) \cite{schellander2024decisions} \& Thomas dkk. (2017) \cite{p
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\chapter{DESAIN SISTEM}
+\label{chap:desain_sistem}
+
+\section{Deskripsi Solusi}
+\label{sec:deskripsi_solusi}
+Penelitian ini merancang uGUIDED.js sebagai \textit{framework wrapper} di atas Express.js untuk membantu pengembang membangun REST API dengan pemisahan tanggung jawab sesuai \textit{Clean Architecture}. Solusi diarahkan pada masalah pencampuran penanganan HTTP, proses bisnis, dan akses penyimpanan yang dibahas pada Bab 1. Express.js tetap menangani komunikasi HTTP serta rangkaian \textit{middleware}, sedangkan uGUIDED.js menyediakan konvensi struktur proyek, pembentukan modul awal, dan penyambungan dependensi. Dengan demikian, rancangan tidak mengganti mesin internal Express.js, tetapi menambahkan aturan pengorganisasian aplikasi di atasnya.
+
+Pendekatan \textit{Convention over Configuration} diwujudkan melalui aturan yang dapat diturunkan secara konsisten dari lokasi dan nama berkas. Pengembang tetap menyatakan kebutuhan modul secara eksplisit, tetapi tidak harus menulis ulang registrasi setiap \textit{endpoint} dan penyusunan objek yang mengikuti konvensi. Pemisahan aturan bisnis dari detail HTTP dan penyimpanan mengacu pada prinsip ketergantungan ke arah lapisan dalam \cite{martin2017clean}. Uraian pada bab ini merupakan rancangan yang akan diimplementasikan dan diuji, bukan laporan kemampuan yang telah dibuktikan melalui eksperimen.
+
+\subsection{Komponen Solusi yang Ditawarkan}
+Rancangan uGUIDED.js memiliki tiga komponen utama yang saling melengkapi:
+\begin{enumerate}
+\item \textbf{CLI scaffolding.} Modul CLI membentuk direktori dan berkas awal sesuai tanggung jawab lapisan. Tujuannya adalah menyediakan titik awal yang konsisten, bukan menghasilkan seluruh aturan bisnis secara otomatis. Pengembang mengisi validasi domain, proses bisnis, serta integrasi penyimpanan sesuai kebutuhan aplikasi.
+\item \textbf{File-system routing.} Lokasi direktori pada \textit{controllers} menentukan path, sedangkan nama berkas menentukan HTTP method. Sebagai contoh, \texttt{users/\allowbreak post.js} dipetakan menjadi \texttt{POST /\allowbreak users}, dan \texttt{users/\allowbreak [id]/\allowbreak get.js} menjadi \texttt{GET /\allowbreak users/\allowbreak :id}. Rancangan awal mendukung segmen statis dan parameter dinamis bernama, tanpa parameter opsional atau \textit{wildcard}.
+\item \textbf{Convention-based dependency injection.} Modul menyatakan token dependensi melalui ekspor \texttt{dependencies} dan menyediakan fungsi \textit{factory}. Sistem membaca deklarasi tersebut, menemukan penyedia berdasarkan konvensi, lalu menyusun objek. Nama parameter fungsi tidak digunakan untuk menebak dependensi. Contohnya, modul \texttt{create-user.js} dikenali sebagai \texttt{createUser}, sedangkan implementasi \texttt{user-repository.js} dikenali sebagai \texttt{userRepository}.
+\end{enumerate}
+
+\subsection{Pembagian Tanggung Jawab dan Batas Otomatisasi}
+Struktur aplikasi dibagi berdasarkan tanggung jawab lapisan berikut:
+\begin{itemize}
+\item \texttt{domain/entities}: aturan domain yang tidak bergantung pada HTTP atau database.
+\item \texttt{application/use-cases}: proses bisnis aplikasi.
+\item \texttt{application/ports}: kontrak yang dibutuhkan proses bisnis.
+\item \texttt{controllers}: penerjemahan masukan dan keluaran HTTP.
+\item \texttt{infrastructure/repositories}: implementasi akses penyimpanan.
+\end{itemize}
+Berkas \texttt{src/app.js} menjadi titik awal penyusunan aplikasi. Pemisahan ini membatasi tanggung jawab setiap lokasi berkas tanpa mengubah aturan bisnis menjadi bagian dari framework.
+
+Kontrak \textit{repository} ditempatkan pada \texttt{application/\allowbreak ports} karena kebutuhan operasi penyimpanan didefinisikan oleh proses bisnis. Implementasi infrastruktur harus memenuhi kontrak tersebut. Dalam JavaScript, kontrak direncanakan didokumentasikan menggunakan JSDoc dan diperiksa keberadaan metodenya saat inisialisasi. Pemeriksaan ini bukan pemeriksaan tipe saat kompilasi dan tidak menjamin kebenaran semantik implementasi.
+
+Satu token memiliki satu penyedia bawaan. Penggantian implementasi disediakan secara eksplisit pada titik penyusunan aplikasi, misalnya untuk memakai \textit{fake repository} dalam pengujian. Modul bisnis tidak melakukan \textit{import} terhadap implementasi database, dan objek \texttt{req} serta \texttt{res} tidak diteruskan ke \textit{use case}. Modul yang dikelola sistem dibuat sekali saat inisialisasi dan digunakan bersama; state khusus pengguna atau \textit{request} tidak boleh disimpan pada objek bersama tersebut.
+
+Pemeriksaan arsitektur dibatasi pada hubungan dependensi yang dikelola \textit{container}. Struktur direktori dan penyuntikan dependensi tidak mencegah pengembang menulis \textit{import} langsung yang melanggar batas lapisan. Pemeriksaan batas \textit{import} melalui \textit{linting} belum ditetapkan sebagai fitur inti. Oleh karena itu, rancangan membantu penerapan dan pemeriksaan hubungan tertentu, bukan menjamin seluruh aplikasi otomatis mematuhi \textit{Clean Architecture}.
+
+\section{Perancangan Sistem Tingkat Tinggi}
+\label{sec:arsitektur_tingkat_tinggi}
+Arsitektur dibedakan menjadi mekanisme inisialisasi framework dan struktur aplikasi yang dibangun pengembang. Gambar~\ref{fig:arsitektur_uguided} memperlihatkan hubungan penyusunan modul serta arah dependensi konseptual. Panah penuh pada bagian atas menunjukkan proses pembentukan dan registrasi aplikasi. Panah putus-putus pada bagian bawah menunjukkan arah dependensi terhadap lapisan atau kontrak, bukan urutan pemanggilan saat \textit{request} dijalankan.
+
+\begin{figure}[!htbp]
+\centering
+\begin{singlespace}
+\begin{tikzpicture}[
+ box/.style={draw=black!75,fill=black!3,rounded corners=2pt,align=center,text width=10.4cm,minimum height=0.85cm,inner sep=6pt,font=\small},
+ half/.style={box,text width=4.6cm,minimum height=1.1cm},
+ flow/.style={-{Latex[length=2mm]},thick},
+ dep/.style={-{Latex[length=2mm]},dashed},
+ lab/.style={fill=white,inner sep=2pt,font=\scriptsize}]
+\node[box] (cli) at (0,0) {\textbf{CLI scaffolding}\\Struktur direktori dan berkas awal aplikasi};
+\node[box] (core) at (0,-1.65) {\textbf{uGUIDED.js: inisialisasi aplikasi}\\Pemindaian modul, validasi, dan penyusunan dependensi};
+\node[box] (http) at (0,-3.3) {\textbf{Express.js dan controllers}\\Registrasi HTTP handler dan penerjemahan masukan/keluaran};
+\node[half] (use) at (-2.85,-5.25) {\textbf{Application}\\Use cases dan ports};
+\node[half] (infra) at (2.85,-5.25) {\textbf{Infrastructure}\\Implementasi repository};
+\node[half] (domain) at (-2.85,-7.15) {\textbf{Domain}\\Entities dan aturan bisnis};
+\draw[flow] (cli)--node[lab,right=4pt]{menyediakan struktur}(core);
+\draw[flow] (core)--node[lab,right=4pt]{registrasi handler}(http);
+\draw[dep] (http.south) -- ++(0,-0.35) -| (use.north);
+\draw[dep] (infra.west)--node[lab,above=5pt]{mengikuti kontrak}(use.east);
+\draw[dep] (use)--node[lab,right=4pt]{aturan domain}(domain);
+\node[align=left,font=\scriptsize,text width=4.7cm] at (2.85,-7.15) {Garis penuh: proses penyiapan.\\Garis putus-putus: arah dependensi.\\Detail database berada di infrastruktur.};
+\end{tikzpicture}
+\end{singlespace}
+\caption{Desain sistem tingkat tinggi uGUIDED.js.}
+\label{fig:arsitektur_uguided}
+\end{figure}
+\FloatBarrier
+
+\subsection{Fase Inisialisasi Aplikasi}
+Inisialisasi dimulai melalui \texttt{src/\allowbreak app.js}, yang bertindak sebagai \textit{composition root}. Sistem memindai direktori yang mengikuti konvensi, membaca ekspor modul dan deklarasi dependensinya, kemudian membentuk registri penyedia. Deklarasi kontrak pada direktori \texttt{ports} dibedakan dari implementasi penyedia agar tidak didaftarkan sebagai dua objek dengan token yang sama.
+
+Sebelum membentuk objek, sistem memeriksa nama penyedia ganda, dependensi yang tidak ditemukan, siklus dependensi, dan hubungan lapisan yang tidak diizinkan pada deklarasi yang dikelolanya. Penggantian penyedia yang dinyatakan secara eksplisit diterapkan sebagai pilihan pada \textit{composition root}, bukan diterima sebagai duplikasi bawaan. Jika pemeriksaan gagal, inisialisasi dihentikan dengan informasi modul dan penyebab kesalahan. Aplikasi tidak mulai menerima \textit{request} dalam keadaan registrasi sebagian.
+
+Setelah validasi, penyedia dibentuk sesuai urutan dependensinya. \textit{Use case} menerima objek \textit{repository} yang memenuhi kontrak, kemudian \textit{controller} menerima \textit{use case} yang dibutuhkan. Fungsi \textit{factory controller} menghasilkan HTTP handler yang didaftarkan pada Express.js. Express.js tetap menjadi pelaksana \textit{middleware pipeline} dan penerima koneksi HTTP.
+
+Pada registrasi \textit{routing}, segmen statis didahulukan atas segmen dinamis pada tingkat path yang sama. Konflik diperiksa berdasarkan pasangan HTTP method dan bentuk path yang dinormalisasi. Sebagai contoh, \texttt{/\allowbreak users/\allowbreak :id} dan \texttt{/\allowbreak users/\allowbreak :userId} dianggap konflik untuk method yang sama. Konflik menghentikan inisialisasi, bukan memilih handler berdasarkan urutan pembacaan berkas. Urutan umum fase ini dirangkum pada Gambar~\ref{fig:inisialisasi_uguided}.
+
+\begin{figure}[!htbp]
+\centering
+\begin{singlespace}
+\begin{tikzpicture}[
+ b/.style={draw=black!75,fill=black!3,rounded corners=2pt,text width=10.5cm,minimum height=0.8cm,align=center,font=\small,inner sep=5pt},
+ a/.style={-{Latex[length=2mm]},thick}]
+\node[b] (a) at (0,0) {Memindai modul dan membaca deklarasi dependensi};
+\node[b] (b) at (0,-1.35) {Memvalidasi penyedia, siklus, kontrak, dan aturan lapisan};
+\node[b] (c) at (0,-2.7) {Menyusun objek sesuai graf dependensi yang valid};
+\node[b] (d) at (0,-4.05) {Memeriksa konflik path dan mendaftarkan HTTP handler};
+\node[b] (e) at (0,-5.4) {Mulai menerima request setelah seluruh tahap berhasil};
+\draw[a](a)--(b);\draw[a](b)--(c);\draw[a](c)--(d);\draw[a](d)--(e);
+\node[font=\scriptsize,align=center,text width=10.5cm] at (0,-6.4) {Kesalahan pada tahap validasi atau registrasi menghentikan inisialisasi.};
+\end{tikzpicture}
+\end{singlespace}
+\caption{Urutan inisialisasi aplikasi yang dirancang.}
+\label{fig:inisialisasi_uguided}
+\end{figure}
+\FloatBarrier
+
+\subsection{Fase Pemrosesan Request}
+Setelah inisialisasi berhasil, Express.js menerima \textit{request} dan menjalankan \textit{middleware} yang telah didaftarkan. HTTP handler memilih masukan yang diperlukan dari parameter, \textit{request body}, atau konteks autentikasi yang disediakan aplikasi. Masukan tersebut diteruskan sebagai objek biasa kepada \textit{use case}; objek protokol HTTP tidak menjadi bagian dari kontrak proses bisnis.
+
+Sebagai ilustrasi, \texttt{POST /\allowbreak users} ditangani oleh \texttt{controllers/\allowbreak users/\allowbreak post.js}. Handler memanggil \texttt{createUser}, yang menjalankan aturan proses dan menggunakan \texttt{userRepository} untuk operasi penyimpanan. Implementasi \textit{repository} berinteraksi dengan penyimpanan, lalu mengembalikan hasil kepada \textit{use case}. Hasil proses dikembalikan kepada \textit{controller} untuk disusun menjadi status HTTP dan \textit{payload JSON response}. Contoh ini merupakan pemetaan rancangan, bukan spesifikasi API pustaka yang telah diuji.
+
+Arah pemanggilan saat eksekusi dapat bergerak dari \textit{use case} menuju objek \textit{repository}, tetapi ketergantungan rancangan tetap mengarah pada kontrak milik lapisan aplikasi. Objek implementasi disediakan dari luar ketika inisialisasi dilakukan. Pemisahan ini memungkinkan penggantian penyimpanan tanpa mengubah proses bisnis selama kontrak dipenuhi. \textit{Use case} juga dapat dipanggil dengan \textit{fake repository} tanpa server HTTP untuk pemeriksaan terisolasi.
+
+\begin{figure}[!htbp]
+\centering
+\begin{singlespace}
+\begin{tikzpicture}[
+ b/.style={draw=black!75,fill=black!3,rounded corners=2pt,text width=10.5cm,minimum height=0.8cm,align=center,font=\small,inner sep=5pt},
+ a/.style={-{Latex[length=2mm]},thick}]
+\node[b] (http) at (0,0) {Express.js menerima request dan menjalankan middleware};
+\node[b] (ctrl) at (0,-1.35) {Controller menerjemahkan masukan HTTP};
+\node[b] (use) at (0,-2.7) {Use case menjalankan proses dan aturan domain};
+\node[b] (repo) at (0,-4.05) {Repository menjalankan operasi penyimpanan};
+\node[b] (back) at (0,-5.4) {Hasil kembali melalui use case dan controller menjadi respons HTTP};
+\draw[a](http)--(ctrl);\draw[a](ctrl)--(use);\draw[a](use)--(repo);\draw[a](repo)--(back);
+\end{tikzpicture}
+\end{singlespace}
+\caption{Alur pemrosesan request pada aplikasi yang dirancang.}
+\label{fig:request_uguided}
+\end{figure}
+\FloatBarrier
+
+\subsection{Penanganan Kesalahan dan Titik Integrasi}
+Kesalahan inisialisasi dibedakan dari kesalahan pemrosesan \textit{request}. Kesalahan registrasi, kontrak, atau dependensi menghentikan penyiapan aplikasi. Setelah server berjalan, kesalahan dari proses asinkron diteruskan oleh \textit{controller} kepada \textit{error-handling middleware} Express.js. Penentuan status HTTP dan bentuk respons kesalahan dilakukan pada lapisan adaptasi HTTP, bukan dengan membuat \textit{entities} atau \textit{use cases} bergantung pada Express.js.
+
+Rancangan tidak menetapkan teknologi database tertentu sebagai bagian dari aturan bisnis. Pengembang menyediakan implementasi \textit{repository} dan konfigurasi koneksi pada lapisan infrastruktur serta titik penyusunan aplikasi. \textit{Middleware} untuk autentikasi, pencatatan, atau kebutuhan lain dapat diintegrasikan melalui Express.js; fitur tersebut tidak otomatis dihasilkan seluruhnya oleh uGUIDED.js. Pemisahan ini menjaga ruang lingkup framework pada pembentukan struktur, registrasi \textit{routing}, dan penyusunan dependensi sesuai konvensi yang disepakati.
 
 % ==============================================================================
 % DAFTAR PUSTAKA (Format IEEE Sesuai Panduan Buku PA Rev05 PENS)
