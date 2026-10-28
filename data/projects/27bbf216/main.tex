@@ -484,13 +484,13 @@ Rancangan uGUIDED.js memiliki tiga komponen utama yang saling melengkapi:
 \subsection{Pembagian Tanggung Jawab dan Batas Otomatisasi}
 Struktur aplikasi dibagi berdasarkan tanggung jawab lapisan berikut:
 \begin{itemize}
-\item \texttt{domain/entities}: aturan domain yang tidak bergantung pada HTTP atau database.
-\item \texttt{application/use-cases}: proses bisnis aplikasi.
-\item \texttt{application/ports}: kontrak yang dibutuhkan proses bisnis.
+\item \texttt{domain/\allowbreak entities}: aturan domain yang tidak bergantung pada HTTP atau database.
+\item \texttt{application/\allowbreak use-cases}: proses bisnis aplikasi.
+\item \texttt{application/\allowbreak ports}: kontrak yang dibutuhkan proses bisnis.
 \item \texttt{controllers}: penerjemahan masukan dan keluaran HTTP.
-\item \texttt{infrastructure/repositories}: implementasi akses penyimpanan.
+\item \texttt{infrastructure/\allowbreak repositories}: implementasi akses penyimpanan.
 \end{itemize}
-Berkas \texttt{src/app.js} menjadi titik awal penyusunan aplikasi. Pemisahan ini membatasi tanggung jawab setiap lokasi berkas tanpa mengubah aturan bisnis menjadi bagian dari framework.
+Berkas \texttt{src/\allowbreak app.js} menjadi titik awal penyusunan aplikasi. Pemisahan ini membatasi tanggung jawab setiap lokasi berkas tanpa mengubah aturan bisnis menjadi bagian dari framework.
 
 Kontrak \textit{repository} ditempatkan pada \texttt{application/\allowbreak ports} karena kebutuhan operasi penyimpanan didefinisikan oleh proses bisnis. Implementasi infrastruktur harus memenuhi kontrak tersebut. Dalam JavaScript, kontrak direncanakan didokumentasikan menggunakan JSDoc dan diperiksa keberadaan metodenya saat inisialisasi. Pemeriksaan ini bukan pemeriksaan tipe saat kompilasi dan tidak menjamin kebenaran semantik implementasi.
 
@@ -532,6 +532,8 @@ Arsitektur dibedakan menjadi mekanisme inisialisasi framework dan struktur aplik
 
 \subsection{Fase Inisialisasi Aplikasi}
 Inisialisasi dimulai melalui \texttt{src/\allowbreak app.js}, yang bertindak sebagai \textit{composition root}. Sistem memindai direktori yang mengikuti konvensi, membaca ekspor modul dan deklarasi dependensinya, kemudian membentuk registri penyedia. Deklarasi kontrak pada direktori \texttt{ports} dibedakan dari implementasi penyedia agar tidak didaftarkan sebagai dua objek dengan token yang sama.
+
+Untuk aplikasi yang menggunakan database, \texttt{app.js} juga mengatur pemuatan konfigurasi dan persiapan koneksi melalui modul infrastruktur. Objek koneksi diberikan kepada implementasi repository, kemudian repository tersebut disediakan sebagai pengganti eksplisit untuk token yang sesuai sebelum resolver menyusun modul yang menggunakannya. Modul koneksi tidak dipindai sebagai penyedia otomatis dan tidak membuka koneksi hanya karena diimpor. Pengujian yang mengganti repository dengan implementasi dalam memori tidak perlu membuka koneksi database.
 
 Sebelum membentuk objek, sistem memeriksa nama penyedia ganda, dependensi yang tidak ditemukan, siklus dependensi, dan hubungan lapisan yang tidak diizinkan pada deklarasi yang dikelolanya. Penggantian penyedia yang dinyatakan secara eksplisit diterapkan sebagai pilihan pada \textit{composition root}, bukan diterima sebagai duplikasi bawaan. Jika pemeriksaan gagal, inisialisasi dihentikan dengan informasi modul dan penyebab kesalahan. Aplikasi tidak mulai menerima \textit{request} dalam keadaan registrasi sebagian.
 
@@ -596,10 +598,19 @@ Rancangan tidak menetapkan teknologi database tertentu sebagai bagian dari atura
 Bagian ini merinci konvensi dan perilaku modul yang membentuk uGUIDED.js. Contoh perintah, bentuk ekspor, dan konfigurasi merupakan spesifikasi rancangan, bukan dokumentasi pustaka yang telah dirilis. Seluruh contoh menggunakan JavaScript dengan modul ES dan fitur pengguna sebagai ilustrasi agar hubungan antara struktur berkas, HTTP handler, dan proses bisnis dapat ditelusuri secara konsisten.
 
 \subsection{Struktur Direktori dan Konvensi Penamaan}
-Proyek dibentuk dengan direktori utama \texttt{src}. Struktur contoh berikut membedakan kontrak penyimpanan dari implementasinya, meskipun keduanya memiliki nama berkas yang sama.
+Struktur proyek disusun berdasarkan tanggung jawab lapisan yang dijelaskan pada Bagian 3.1. Lapisan domain memuat entitas dan aturan bisnis, lapisan aplikasi menjalankan proses bisnis serta menetapkan kontrak yang dibutuhkannya, dan controllers menerjemahkan masukan serta keluaran HTTP. Lapisan infrastruktur menyediakan implementasi teknis, termasuk akses penyimpanan. Titik penyusunan seluruh komponen berada pada \texttt{src/\allowbreak app.js}.
+
+Kontrak dan implementasi repository dipisahkan karena keduanya memiliki peran berbeda. Berkas \texttt{user-repository.js} pada \texttt{application/\allowbreak ports} mendefinisikan operasi yang dibutuhkan aplikasi, misalnya \texttt{save} dan \texttt{findById}, tanpa memuat query atau driver database. Berkas dengan nama yang sama pada direktori repositories di lapisan infrastruktur menyediakan implementasi operasi tersebut. Kontrak berada di proyek aplikasi karena kebutuhan penyimpanan mengikuti proses bisnis masing-masing proyek, bukan ditentukan secara seragam oleh framework.
+
+Apabila implementasi repository menggunakan database, diperlukan koneksi untuk menjalankan operasinya. Pengelolaan koneksi dipisahkan dari operasi repository agar pembentukan dan penutupan sumber daya tidak tersebar pada setiap modul. Dalam rancangan ini, tanggung jawab tersebut ditempatkan pada \texttt{connection.js} di direktori database pada lapisan infrastruktur. Berkas ini hanya relevan bagi implementasi yang menggunakan database; penyimpanan dalam memori untuk pengujian tidak memerlukan koneksi tersebut.
+
+Struktur contoh berikut memperlihatkan lokasi kontrak, implementasi repository, dan pengelolaan koneksi dalam satu proyek. Nama teknologi database tidak ditetapkan oleh struktur ini.
 \begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
+.env
+.env.example
+.gitignore
 src/
   app.js
   domain/
@@ -619,6 +630,8 @@ src/
         patch.js
         delete.js
   infrastructure/
+    database/
+      connection.js
     repositories/
       user-repository.js
 \end{verbatim}
@@ -721,6 +734,10 @@ export default function createController({ createUser }) {
 Pada rancangan aplikasi, proses bisnis memvalidasi masukan melalui aturan domain dan menggunakan kontrak penyimpanan. Implementasi \textit{repository} mengembalikan hasil sebagai data aplikasi, bukan objek respons HTTP. Handler menerjemahkan keberhasilan menjadi status \texttt{201} pada contoh pembuatan pengguna; status tersebut tidak menjadi aturan tunggal bagi seluruh operasi. Kesalahan yang diteruskan melalui \texttt{next(error)} ditangani oleh \textit{middleware} terpusat.
 
 Kesalahan domain atau aplikasi membawa informasi jenis kesalahan tanpa bergantung pada Express.js. Lapisan HTTP memetakan informasi tersebut ke respons, misalnya masukan tidak valid, data tidak ditemukan, atau konflik, sesuai kebijakan aplikasi. Kesalahan internal yang tidak dikenali menghasilkan respons umum tanpa mengungkap kredensial, rincian koneksi, atau \textit{stack trace} kepada klien. Pencatatan rinci dilakukan pada sisi server sesuai konfigurasi aplikasi.
+
+Konfigurasi database pada pengembangan lokal dapat dimuat dari \texttt{.env} di akar proyek, sedangkan lingkungan operasional dapat menyediakan variabel lingkungan secara langsung. Berkas \texttt{.env.example} mendokumentasikan nama konfigurasi tanpa rahasia, dan \texttt{.gitignore} mengecualikan \texttt{.env} dari repositori. Kredensial tidak ditulis pada source code atau templat. Pemilihan driver serta format konfigurasi tetap mengikuti implementasi penyimpanan yang digunakan.
+
+Koneksi atau \textit{connection pool} disiapkan sekali saat aplikasi dimulai, bukan dibuat ulang pada setiap request. Peminjaman koneksi dari pool untuk operasi tertentu mengikuti mekanisme driver. Kegagalan penyiapan sumber daya yang diwajibkan aplikasi mencegah server mulai menerima koneksi HTTP. Jika inisialisasi gagal setelah koneksi terbentuk, sumber daya yang sudah dibuka dibersihkan. Saat aplikasi dihentikan, server berhenti menerima request baru, pekerjaan berjalan ditangani sesuai kebijakan penghentian aplikasi, lalu sumber daya database ditutup. Siklus hidup ini dikelola pada composition root, bukan di dalam use case.
 
 Berbeda dari kesalahan saat menjalankan proses bisnis, kegagalan konfigurasi menghentikan inisialisasi sebelum server menerima koneksi. Pesan diagnostik menyertakan tahap, token atau path berkas terkait, serta alasan kegagalan. Pemisahan ini menjadi dasar skenario pengujian CLI, pemetaan endpoint, resolver, dan penanganan respons pada bagian evaluasi berikutnya. Seluruh contoh tetap diposisikan sebagai spesifikasi rancangan yang perlu dibuktikan melalui implementasi dan pengujian.
 
