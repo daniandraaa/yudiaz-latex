@@ -242,9 +242,9 @@ Percampuran tanggung jawab kode tersebut memicu fenomena yang dalam domain rekay
 
 Untuk mengatasi degradasi kualitas perangkat lunak tersebut, paradigma \textit{Clean Architecture} yang digagas oleh Robert C. Martin \cite{martin2017clean} hadir sebagai solusi teoritis yang ideal. \textit{Clean Architecture} mengisolasi aturan bisnis inti dari mekanisme eksternal melalui prinsip \textit{Dependency Inversion Principle} (DIP) dan aturan dependensi konsentris (\textit{The Dependency Rule}), di mana lapisan dalam tidak boleh memiliki ketergantungan terhadap lapisan luar. Penerapan \textit{Clean Architecture} terbukti secara empiris meningkatkan indeks keterawatan (\textit{Maintainability Index}) sistem perangkat lunak \textit{back-end} antara 21\% hingga 61\% \cite{nugroho2022clean}. Kendati demikian, penelitian tersebut juga menggarisbawahi bahwa penerapan \textit{Clean Architecture} secara manual pada sistem \textit{back-end} membutuhkan tenaga ekstra dan kurva belajar yang sangat tinggi, sehingga penulisnya secara eksplisit menyarankan perlunya bantuan \textit{scaffolding tools} untuk mempermudah adopsi.
 
-Hingga saat ini, upaya pencegahan pelanggaran arsitektur di industri umumnya mengandalkan \textit{static analysis tools} atau aturan \textit{linter} pasca-penulisan kode. Namun, studi empiris oleh Gilson dkk.\ \cite{gilson2020junior} mengungkapkan bahwa pengembang pemula cenderung mengabaikan peringatan utang teknis dari sistem \textit{linter} jika instrumen tersebut tidak bersifat membatasi secara aktif dan tidak menyediakan panduan struktural yang konstruktif. Seiring dengan hal tersebut, Ali dkk.\ \cite{ali2017architecture} serta Strasser dkk.\ \cite{strasser2021understanding} menekankan pentingnya instrumen penegak kesesuaian arsitektur secara otomatis guna menjembatani jurang pemisah antara rancangan arsitektur tingkat tinggi dan realitas implementasi \textit{source code}.
+Hingga saat ini, upaya pencegahan pelanggaran arsitektur di industri umumnya mengandalkan \textit{static analysis tools} atau aturan \textit{linter} pasca-penulisan kode. Namun, studi empiris oleh Gilson dkk.\ \cite{gilson2020junior} mengungkapkan bahwa pengembang pemula cenderung mengabaikan peringatan utang teknis dari sistem \textit{linter} jika instrumen tersebut tidak bersifat membatasi secara aktif dan tidak menyediakan panduan struktural yang konstruktif. Seiring dengan hal tersebut, Ali dkk.\ \cite{ali2017architecture} serta Li dkk.\ \cite{strasser2021understanding} menekankan pentingnya instrumen penegak kesesuaian arsitektur secara otomatis guna menjembatani jurang pemisah antara rancangan arsitektur tingkat tinggi dan realitas implementasi \textit{source code}.
 
-Di sisi lain, alternatif \textit{framework} yang kaku dan terstruktur seperti \textit{NestJS} sering kali menuntut beban kognitif yang terlalu berlebihan bagi pengembang pemula karena mengharuskan pemahaman mendalam tentang \textit{TypeScript}, dekorator, dan pustaka \textit{dependency injection} yang rumit. Di sinilah letak relevansi paradigma \textit{Convention over Configuration} (CoC) sebagaimana dipelopori oleh \textit{Ruby on Rails} \cite{hansson2011agile}. Paradigma CoC berupaya meminimalkan keputusan konfigurasi yang tidak perlu dengan menetapkan konvensi direktori dan penamaan baku, sehingga mampu mereduksi beban kognitif pengembang dan melipatgandakan produktivitas pengembangan \cite{ijres2023coc}. Temuan eksperimental terkini oleh tim peneliti Esfinge \cite{esfinge2025coc} mengonfirmasi bahwa penerapan mekanisme CoC berhasil menurunkan tingkat kegagalan pengembang pemula secara signifikan dan mempercepat penyelesaian implementasi.
+Di sisi lain, alternatif \textit{framework} yang kaku dan terstruktur seperti \textit{NestJS} sering kali menuntut beban kognitif yang terlalu berlebihan bagi pengembang pemula karena mengharuskan pemahaman mendalam tentang \textit{TypeScript}, dekorator, dan pustaka \textit{dependency injection} yang rumit. Di sinilah letak relevansi paradigma \textit{Convention over Configuration} (CoC) sebagaimana dipelopori oleh \textit{Ruby on Rails} \cite{hansson2011agile}. Paradigma CoC berupaya meminimalkan keputusan konfigurasi yang tidak perlu dengan menetapkan konvensi direktori dan penamaan baku, sehingga mampu mereduksi beban kognitif pengembang dan melipatgandakan produktivitas pengembangan \cite{ijres2023coc}. Temuan eksperimental terkini oleh Gomes dkk. \cite{esfinge2025coc} mengonfirmasi bahwa penerapan mekanisme CoC berhasil menurunkan tingkat kegagalan pengembang pemula secara signifikan dan mempercepat penyelesaian implementasi.
 
 Berdasarkan kesenjangan tersebut, penelitian proyek akhir ini mengusulkan perancangan \textit{framework} \textbf{uGUIDED.js}, sebuah \textit{framework} berbasis \textit{Convention over Configuration} yang dirancang khusus sebagai \textit{wrapper} di atas \textit{Express.js}. Melalui uGUIDED.js, pengembang pemula dan mahasiswa magang akan dipandu secara otomatis oleh sistem melalui struktur konvensi direktori baku dan generator berbasis \textit{Command-Line Interface} (CLI) untuk membantu pemisahan tanggung jawab sesuai \textit{Clean Architecture} dan mengurangi kebutuhan registrasi manual. Pemeriksaan otomatis tetap terbatas pada dependensi yang dikelola \textit{container}.
 
@@ -397,9 +397,9 @@ Implementasi \textit{Clean Architecture} menuntut penerapan prinsip \textit{Depe
 
 \textit{Convention over Configuration} (CoC), yang juga dikenal sebagai \textit{coding by convention}, adalah filosofi desain rekayasa perangkat lunak yang bertujuan meminimalkan jumlah keputusan konfigurasi yang harus dibuat oleh pengembang tanpa mengorbankan fleksibilitas sistem \cite{hansson2011agile}. Filosofi ini pertama kali diadopsi secara luas oleh David Heinemeier Hansson dalam \textit{framework} \textit{Ruby on Rails}.
 
-Prinsip kerja CoC menetapkan serangkaian konvensi baku mengenai tata letak direktori, penamaan berkas, dan penamaan modul. Apabila pengembang mengikuti konvensi tersebut, \textit{framework} akan secara otomatis menghubungkan modul-modul terkait tanpa memerlukan berkas konfigurasi eksplisit (\textit{XML}, \textit{YAML}, atau konfigurasi kode manual). Analisis produktivitas pengembang oleh tim peneliti IJRES \cite{ijres2023coc} menunjukkan bahwa \textit{framework} berpendekatan CoC memangkas waktu penyiapan awal proyek secara drastis serta mereduksi beban kognitif pengembang pemula dalam menavigasi \textit{codebase}.
+Prinsip kerja CoC menetapkan serangkaian konvensi baku mengenai tata letak direktori, penamaan berkas, dan penamaan modul. Apabila pengembang mengikuti konvensi tersebut, \textit{framework} akan secara otomatis menghubungkan modul-modul terkait tanpa memerlukan berkas konfigurasi eksplisit (\textit{XML}, \textit{YAML}, atau konfigurasi kode manual). Analisis produktivitas pengembang oleh Hamza dkk. \cite{ijres2023coc} menunjukkan bahwa \textit{framework} berpendekatan CoC memangkas waktu penyiapan awal proyek secara drastis serta mereduksi beban kognitif pengembang pemula dalam menavigasi \textit{codebase}.
 
-Penelitian mutakhir oleh tim peneliti Esfinge \cite{esfinge2025coc} menunjukkan bahwa penerapan CoC yang dipadukan dengan pemisahan logika \textit{framework} terbukti menurunkan tingkat kegagalan implementasi (\textit{failure rate}) mahasiswa dan pengembang pemula dalam membangun arsitektur perangkat lunak yang kompleks. Dalam uGUIDED.js, paradigma CoC diwujudkan melalui dua pilar teknis:
+Penelitian mutakhir oleh Gomes dkk. \cite{esfinge2025coc} menunjukkan bahwa penerapan CoC yang dipadukan dengan pemisahan logika \textit{framework} terbukti menurunkan tingkat kegagalan implementasi (\textit{failure rate}) mahasiswa dan pengembang pemula dalam membangun arsitektur perangkat lunak yang kompleks. Dalam uGUIDED.js, paradigma CoC diwujudkan melalui dua pilar teknis:
 \begin{enumerate}
     \item \textbf{\textit{File-System Routing}}: Penempatan berkas \textit{controller} pada struktur folder tertentu secara otomatis menghasilkan titik akhir (\textit{endpoint}) HTTP pada \textit{Express.js} tanpa perlu pendaftaran rute manual.
     \item \textbf{\textit{Convention-Based Dependency Resolution}}: \textit{Controller} menerima fungsi \textit{use case}, sedangkan \textit{use case} menerima implementasi repository yang memenuhi \textit{repository interface} milik lapisan aplikasi. Framework menyambungkan objek berdasarkan token dependencies yang dinyatakan eksplisit dan konvensi nama modul; repository tidak menerima \textit{use case} sebagai dependensi.
@@ -435,11 +435,11 @@ Untuk menjamin kualitas dan keabsahan ilmiah dari \textit{framework} yang dibang
 
 Kajian terhadap penelitian terdahulu dilakukan guna memetakan lanskap keilmuan, mengidentifikasi celah penelitian (\textit{research gap}), serta menegaskan posisi orisinalitas dari \textit{framework} uGUIDED.js.
 
-Penelitian mengenai erosi arsitektur dan penegakan kepatuhan rancangan perangkat lunak telah menjadi fokus perhatian intensif dalam rekayasa perangkat lunak modern. Ali dkk.\ \cite{ali2017architecture} melakukan studi berskala luas mengenai konsistensi arsitektur dan mengidentifikasi bahwa inkonsistensi antara rancangan desain dan implementasi kode merupakan masalah kronis di industri yang membutuhkan perangkat pengecekan otomatis berkelanjutan. Pandangan ini diperkuat oleh Strasser dkk.\ \cite{strasser2021understanding} yang meneliti fenomena erosi arsitektur dari perspektif praktisi industri. Mereka menemukan bahwa erosi struktural terjadi terutama karena dokumentasi arsitektur statis cepat usang dan pengembang dihadapkan pada tenggat waktu mendesak. Di sisi teknis, Schellander \cite{schellander2024decisions} mengembangkan kerangka pengecekan kesesuaian otomatis berbasis model refleksi untuk memvalidasi keputusan arsitektur, sementara Thomas dkk.\ \cite{pruijt2017husacct} melalui sistem HUSACCT menganalisis komparasi pengecekan kepatuhan arsitektural secara statis dan dinamis. Namun, mayoritas pendekatan pada kelompok penelitian ini bersifat pasif dan reaktif (\textit{post-hoc}): pengecekan dilakukan setelah kode selesai ditulis. Sebagaimana dibuktikan oleh Gilson dkk.\ \cite{gilson2020junior}, pendekatan pasif ini sering kali diabaikan oleh pengembang pemula karena tidak memberikan panduan yang konstruktif saat kode sedang dibangun.
+Penelitian mengenai erosi arsitektur dan penegakan kepatuhan rancangan perangkat lunak telah menjadi fokus perhatian intensif dalam rekayasa perangkat lunak modern. Ali dkk.\ \cite{ali2017architecture} melakukan studi berskala luas mengenai konsistensi arsitektur dan mengidentifikasi bahwa inkonsistensi antara rancangan desain dan implementasi kode merupakan masalah kronis di industri yang membutuhkan perangkat pengecekan otomatis berkelanjutan. Pandangan ini diperkuat oleh Li dkk.\ \cite{strasser2021understanding} yang meneliti fenomena erosi arsitektur dari perspektif praktisi industri. Mereka menemukan bahwa erosi struktural terjadi terutama karena dokumentasi arsitektur statis cepat usang dan pengembang dihadapkan pada tenggat waktu mendesak. Di sisi teknis, Schellander \cite{schellander2024decisions} mengembangkan kerangka pengecekan kesesuaian otomatis berbasis model refleksi untuk memvalidasi keputusan arsitektur, sementara Thomas dkk.\ \cite{pruijt2017husacct} melalui sistem HUSACCT menganalisis komparasi pengecekan kepatuhan arsitektural secara statis dan dinamis. Namun, mayoritas pendekatan pada kelompok penelitian ini bersifat pasif dan reaktif (\textit{post-hoc}): pengecekan dilakukan setelah kode selesai ditulis. Sebagaimana dibuktikan oleh Gilson dkk.\ \cite{gilson2020junior}, pendekatan pasif ini sering kali diabaikan oleh pengembang pemula karena tidak memberikan panduan yang konstruktif saat kode sedang dibangun.
 
 Pada ranah implementasi arsitektur terstruktur, Nugroho, Kusumo, dan Alibasa \cite{nugroho2022clean} mengevaluasi dampak penerapan \textit{Clean Architecture} pada \textit{codebase} sistem \textit{back-end}. Hasil eksperimen mereka membuktikan bahwa pemisahan lapisan independen meningkatkan nilai keterawatan (\textit{Maintainability Index}) secara dramatis antara 21\% hingga 61\%. Meskipun demikian, penelitian tersebut juga mengungkapkan bahwa penerapan manual \textit{Clean Architecture} menimbulkan kompleksitas pengkabelan kode yang signifikan dan secara eksplisit menyarankan perlunya instrumen pembantu (\textit{scaffolding tooling}) untuk memfasilitasi adopsi pengembang.
 
-Dalam konteks efisiensi pengembangan dan beban kognitif, tim peneliti IJRES \cite{ijres2023coc} membandingkan produktivitas pengembang pada \textit{framework} berbasis konfigurasi manual versus berbasis konvensi, dan membuktikan keunggulan signifikan dari pendekatan konvensi. Lebih lanjut, terobosan terbaru oleh tim peneliti Esfinge \cite{esfinge2025coc} menunjukkan bahwa mekanisme \textit{Convention over Configuration} (CoC) yang dipisahkan dari logika inti sistem mampu mereduksi kegagalan implementasi secara signifikan pada pengembang pemula di lingkungan bahasa pemrograman Java. Kendati demikian, penelitian tersebut belum merambah ekosistem JavaScript/\textit{Node.js} yang justru memiliki fleksibilitas tertinggi dan risiko utang teknis terbesar.
+Dalam konteks efisiensi pengembangan dan beban kognitif, Hamza dkk. \cite{ijres2023coc} membandingkan produktivitas pengembang pada \textit{framework} berbasis konfigurasi manual versus berbasis konvensi, dan membuktikan keunggulan signifikan dari pendekatan konvensi. Lebih lanjut, terobosan terbaru oleh Gomes dkk. \cite{esfinge2025coc} menunjukkan bahwa mekanisme \textit{Convention over Configuration} (CoC) yang dipisahkan dari logika inti sistem mampu mereduksi kegagalan implementasi secara signifikan pada pengembang pemula di lingkungan bahasa pemrograman Java. Kendati demikian, penelitian tersebut belum merambah ekosistem JavaScript/\textit{Node.js} yang justru memiliki fleksibilitas tertinggi dan risiko utang teknis terbesar.
 
 Posisi kebaruan (\textit{novelty}) dari penelitian proyek akhir uGUIDED.js berada pada integrasi paradigma \textit{Convention over Configuration} dengan panduan penerapan \textit{Clean Architecture} di atas \textit{framework} \textit{Express.js}. uGUIDED.js tidak sekadar mendeteksi pelanggaran secara pasif, melainkan menyediakan lingkungan pengembangan proaktif melalui modul CLI generator dan mesin \textit{file-system routing} yang membantu pengembang pemula mengikuti pemisahan lapisan arsitektur. Pemeriksaan otomatis hanya mencakup dependensi yang dikelola \textit{container}, bukan seluruh \textit{import} langsung pada aplikasi. Matriks perbandingan antara penelitian-penelitian terdahulu dan posisi \textit{framework} uGUIDED.js disajikan pada Tabel \ref{tab:penelitian_terkait}.
 
@@ -452,13 +452,13 @@ Posisi kebaruan (\textit{novelty}) dari penelitian proyek akhir uGUIDED.js berad
 \toprule
 \textbf{Peneliti \& Tahun} & \textbf{Fokus Kajian} & \textbf{Pendekatan Solusi} & \textbf{Keterbatasan / \textit{Research Gap}} \tabularnewline
 \midrule
-Ali dkk. (2018) \cite{ali2017architecture} \& Strasser dkk. (2021) \cite{strasser2021understanding} & Inkonsistensi arsitektur dan erosi struktur perangkat lunak. & Identifikasi tantangan kepatuhan arsitektur industri. & Bersifat pasif pasca-pengembangan (\textit{post-hoc}); tidak mencegah pelanggaran saat kode ditulis. \tabularnewline
+Ali dkk. (2018) \cite{ali2017architecture} \& Li dkk. (2021) \cite{strasser2021understanding} & Inkonsistensi arsitektur dan erosi struktur perangkat lunak. & Identifikasi tantangan kepatuhan arsitektur industri. & Bersifat pasif pasca-pengembangan (\textit{post-hoc}); tidak mencegah pelanggaran saat kode ditulis. \tabularnewline
 \addlinespace
 Nugroho dkk. (2022) \cite{nugroho2022clean} & Implementasi \textit{Clean Architecture} pada sistem \textit{back-end}. & Pengukuran empiris \textit{Maintainability Index} (MI). & Penerapan manual rumit; belum menyediakan \textit{tooling scaffolding} otomatis. \tabularnewline
 \addlinespace
-Tim Esfinge (2025) \cite{esfinge2025coc} & Efektivitas \textit{Convention over Configuration} (CoC). & Pemisahan logika konvensi berbasis metadata pada Java. & Terfokus pada bahasa Java; belum menyentuh ekosistem JavaScript/\textit{Node.js}. \tabularnewline
+Gomes dkk. (2025) \cite{esfinge2025coc} & Efektivitas \textit{Convention over Configuration} (CoC). & Pemisahan logika konvensi berbasis metadata pada Java. & Terfokus pada bahasa Java; belum menyentuh ekosistem JavaScript/\textit{Node.js}. \tabularnewline
 \addlinespace
-Schellander (2024) \cite{schellander2024decisions} \& Thomas dkk. (2017) \cite{pruijt2017husacct} & Pengecekan kesesuaian arsitektural (\textit{conformance checking}). & Verifikasi aturan relasi modular secara statis/dinamis. & Menuntut konfigurasi aturan arsitektur formal yang rumit bagi pengembang pemula. \tabularnewline
+Schellander (2026) \cite{schellander2024decisions} \& Thomas dkk. (2017) \cite{pruijt2017husacct} & Pengecekan kesesuaian arsitektural (\textit{conformance checking}). & Verifikasi aturan relasi modular secara statis/dinamis. & Menuntut konfigurasi aturan arsitektur formal yang rumit bagi pengembang pemula. \tabularnewline
 \addlinespace
 \textbf{uGUIDED.js} (Penelitian Ini) & Panduan penerapan \textit{Clean Architecture} pada \textit{Express.js}. & CLI, \textit{file-system routing}, dan \textit{dependency injection} berbasis CoC. & Pemeriksaan otomatis terbatas pada dependensi yang dikelola \textit{container}; tidak mencegah seluruh pelanggaran \textit{import}. \tabularnewline
 \bottomrule
@@ -889,64 +889,64 @@ Kesimpulan evaluasi menggabungkan bukti teknis dan pengalaman peserta tanpa meny
 \setlength{\parskip}{0pt}
 
 \bibitem{tilkov2010node}
-Tilkov, S. and Vinoski, S., Node.js: Using JavaScript to Build High-Performance Network Programs, \textit{IEEE Internet Computing}, Vol. 14, No. 6, Hal. 80-83, IEEE, 2010.
+S. Tilkov and S. Vinoski, ``Node.js: Using JavaScript to Build High-Performance Network Programs,'' \textit{IEEE Internet Computing}, vol. 14, no. 6, pp. 80--83, 2010, doi: \nolinkurl{10.1109/MIC.2010.145}.
 
 \bibitem{sousa2023atd}
-Sousa, A., Rocha, L., and Britto, R., Architectural Technical Debt - A Systematic Mapping Study, \textit{Proceedings of the 38th ACM/SIGAPP Symposium on Applied Computing (SAC '23)}, Hal. 1450-1459, ACM, 2023.
+A. Sousa, L. Rocha, and R. Britto, ``Architectural Technical Debt - A Systematic Mapping Study,'' in \textit{Proc. XXXVII Brazilian Symposium on Software Engineering (SBES '23)}, 2023, pp. 196--205, doi: \nolinkurl{10.1145/3613372.3613399}.
 
 \bibitem{verdecchia2021theory}
-Verdecchia, R., Kruchten, P., Lago, P., and Ozkaya, I., Building and Evaluating a Theory of Architectural Technical Debt in Software-Intensive Systems, \textit{IEEE Transactions on Software Engineering}, Vol. 48, No. 11, Hal. 4296-4318, IEEE, 2021.
+R. Verdecchia, P. Kruchten, P. Lago, and I. Malavolta, ``Building and evaluating a theory of architectural technical debt in software-intensive systems,'' \textit{Journal of Systems and Software}, vol. 176, Art. no. 110925, 2021, doi: \nolinkurl{10.1016/j.jss.2021.110925}.
 
 \bibitem{toledo2021identifying}
-de Toledo, S. S., Martini, A., and Sjøberg, D. I. K., Identifying Architectural Technical Debt, Principal, and Interest in Microservices: A Multiple-Case Study, \textit{Journal of Systems and Software}, Vol. 177, Hal. 110931, Elsevier, 2021.
+S. S. de Toledo, A. Martini, and D. I. K. Sjøberg, ``Identifying architectural technical debt, principal, and interest in microservices: A multiple-case study,'' \textit{Journal of Systems and Software}, vol. 177, Art. no. 110968, 2021, doi: \nolinkurl{10.1016/j.jss.2021.110968}.
 
 \bibitem{toledo2022accumulation}
-de Toledo, S. S., Martini, A., Nguyen, P., and Sjøberg, D. I. K., Accumulation and Prioritization of Architectural Debt in Three Companies Migrating to Microservices, \textit{IEEE Access}, Vol. 10, Hal. 29699-29718, IEEE, 2022.
+S. S. de Toledo, A. Martini, P. H. Nguyen, and D. I. K. Sjøberg, ``Accumulation and Prioritization of Architectural Debt in Three Companies Migrating to Microservices,'' \textit{IEEE Access}, vol. 10, pp. 37422--37445, 2022, doi: \nolinkurl{10.1109/ACCESS.2022.3158648}.
 
 \bibitem{robillard2016sustainable}
-Robillard, M. P., Marcus, A., Treude, C., Bavota, G., Chaparro, O., Ernst, N., Gerosa, M. A., Godfrey, M., Lanza, M., Linares-V{\'a}squez, M., Murphy, G. C., Paixao, M., Petrosyan, R., Perez, D. R., and Zou, Y., Sustainable Software Design: On the Role of Design Evaporation, \textit{Proceedings of the 2016 24th ACM SIGSOFT International Symposium on Foundations of Software Engineering (FSE 2016)}, Hal. 1046-1049, ACM, 2016.
+M. P. Robillard, ``Sustainable software design,'' in \textit{Proc. 24th ACM SIGSOFT International Symposium on Foundations of Software Engineering (FSE 2016)}, 2016, pp. 920--923, doi: \nolinkurl{10.1145/2950290.2983983}.
 
 \bibitem{robillard2021turnover}
-Robillard, M. P., Turnover-Induced Knowledge Loss in Practice, \textit{Proceedings of the 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021)}, Hal. 1362-1372, ACM, 2021.
+M. P. Robillard, ``Turnover-induced knowledge loss in practice,'' in \textit{Proc. 29th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2021)}, 2021, pp. 1292--1302, doi: \nolinkurl{10.1145/3468264.3473923}.
 
 \bibitem{martin2017clean}
-Martin, R. C., \textit{Clean Architecture: A Craftsman's Guide to Software Structure and Design}, Prentice Hall, Edisi 1, 2017.
+R. C. Martin, \textit{Clean Architecture: A Craftsman's Guide to Software Structure and Design}, 1st ed. Prentice Hall, 2017.
 
 \bibitem{nugroho2022clean}
-Nugroho, Y. N., Kusumo, D. S., and Alibasa, M. J., Clean Architecture Implementation Impacts on Maintainability Aspect for Backend System Code Base, \textit{Proceedings of the 2022 10th International Conference on Information and Communication Technology (ICoICT)}, Hal. 81-86, IEEE, 2022.
+Y. N. Nugroho, D. S. Kusumo, and M. J. Alibasa, ``Clean Architecture Implementation Impacts on Maintainability Aspect for Backend System Code Base,'' in \textit{Proc. 10th International Conference on Information and Communication Technology (ICoICT)}, 2022, pp. 134--139, doi: \nolinkurl{10.1109/ICoICT55009.2022.9914890}.
 
 \bibitem{gilson2020junior}
-Gilson, F., Morales-Trujillo, M., and Mathews, M., How Junior Developers Deal with Their Technical Debt?, \textit{Proceedings of the 2020 International Conference on Technical Debt (TechDebt)}, Hal. 101-110, IEEE/ACM, 2020.
+F. Gilson, M. Morales-Trujillo, and M. Mathews, ``How junior developers deal with their technical debt?,'' in \textit{Proc. 3rd International Conference on Technical Debt (TechDebt '20)}, 2020, pp. 51--61, doi: \nolinkurl{10.1145/3387906.3388624}.
 
 \bibitem{ali2017architecture}
-Ali, N., Baker, S., O'Crowley, R., Herold, S., and Buckley, J., Architecture Consistency: State of the Practice, Challenges and Requirements, \textit{Empirical Software Engineering}, Vol. 23, No. 1, Hal. 224-258, Springer, 2018.
+N. Ali, S. Baker, R. O'Crowley, S. Herold, and J. Buckley, ``Architecture consistency: State of the practice, challenges and requirements,'' \textit{Empirical Software Engineering}, vol. 23, no. 1, pp. 224--258, 2018, doi: \nolinkurl{10.1007/s10664-017-9515-3}.
 
 \bibitem{strasser2021understanding}
-Strasser, K., Ramler, R., and Linsbauer, L., Understanding Architecture Erosion: The Practitioners' Perspective, \textit{arXiv preprint arXiv:2103.11392}, Hal. 1-12, 2021.
+R. Li, P. Liang, M. Soliman, and P. Avgeriou, ``Understanding Architecture Erosion: The Practitioners' Perceptive,'' in \textit{Proc. 29th IEEE/ACM International Conference on Program Comprehension (ICPC)}, 2021, pp. 24--35, doi: \nolinkurl{10.1109/ICPC52881.2021.00037}.
 
 \bibitem{hansson2011agile}
-Hansson, D. H., \textit{Agile Web Development with Rails: A Pragmatic Guide}, Pragmatic Bookshelf, Edisi 4, 2011.
+S. Ruby, D. Thomas, and D. H. Hansson, \textit{Agile Web Development with Rails}, 4th ed. Pragmatic Bookshelf, 2011.
 
 \bibitem{ijres2023coc}
-IJRES Research Team, A Comparative Analysis of Convention over Configuration Impact on Developer Productivity, \textit{International Journal of Research in Engineering and Science (IJRES)}, Vol. 14, No. 5, Hal. 6-8, 2023.
+A. Hamza, R. Azmeera, and K. Killari, ``Convention over Configuration: A Comparative Analysis of Its Impact on Java, Ruby on Rails, and Node.js Framework Adoption in API Development,'' \textit{International Journal of Research in Engineering and Science}, vol. 14, no. 5, pp. 6--8, 2026. [Online]. Available: \url{https://www.ijres.org/papers/Volume-14/Issue-5/14050608.pdf}
 
 \bibitem{esfinge2025coc}
-Esfinge Research Team, An Approach Based on Metadata to Implement Convention Over Configuration Decoupled From Framework Logic, \textit{Journal of Software: Evolution and Process}, Vol. 37, No. 2, Hal. e70028, Wiley, 2025.
+E. Gomes, E. Guerra, P. Lima, and P. Meirelles, ``An Approach Based on Metadata to Implement Convention Over Configuration Decoupled From Framework Logic,'' \textit{Journal of Software: Evolution and Process}, vol. 37, no. 5, Art. no. e70028, 2025, doi: \nolinkurl{10.1002/smr.70028}.
 
 \bibitem{fowler2018refactoring}
-Fowler, M., \textit{Refactoring: Improving the Design of Existing Code}, Addison-Wesley Professional, Edisi 2, 2018.
+M. Fowler, \textit{Refactoring: Improving the Design of Existing Code}, 2nd ed. Addison-Wesley Professional, 2018.
 
 \bibitem{branch2009addie}
-Branch, R. M., \textit{Approach, Instructional Design: The ADDIE}, Springer, Edisi 1, 2009.
+R. M. Branch, \textit{Instructional Design: The ADDIE Approach}. Springer, 2009, doi: \nolinkurl{10.1007/978-0-387-09506-6}.
 
 \bibitem{brooke1996sus}
-Brooke, J., SUS: A 'Quick and Dirty' Usability Scale, dalam P. W. Jordan, B. Thomas, B. A. Weerdmeester, and A. L. McClelland (Eds.), \textit{Usability Evaluation in Industry}, Hal. 189-194, Taylor \& Francis, 1996.
+J. Brooke, ``SUS: A `quick and dirty' usability scale,'' in \textit{Usability Evaluation in Industry}, P. W. Jordan, B. Thomas, B. A. Weerdmeester, and I. L. McClelland, Eds. Taylor \& Francis, 1996, pp. 189--194.
 
 \bibitem{schellander2024decisions}
-Schellander, R., \textit{From Architectural Decisions to Automated Conformance Checks}, Master's Thesis, Eastern Switzerland University of Applied Sciences (OST), 2024.
+R. Schellander, ``Architectural Decision Enforcement: From Architectural Decisions to Automated Conformance Checks,'' Master's thesis, Eastern Switzerland University of Applied Sciences (OST), 2026. [Online]. Available: \url{https://eprints.ost.ch/id/eprint/1381}
 
 \bibitem{pruijt2017husacct}
-Thomas, J., Nicolaescu, A., and Lichter, H., Static and Dynamic Architecture Conformance Checking: A Systematic, Case Study-Based Analysis on Tradeoffs and Synergies, \textit{CEUR Workshop Proceedings}, Vol. 2017, Hal. 6-13, CEUR-WS, 2017.
+J. Thomas, A. Nicolaescu, and H. Lichter, ``Static and Dynamic Architecture Conformance Checking: A Systematic, Case Study-Based Analysis on Tradeoffs and Synergies,'' in \textit{Proc. 5th International Workshop on Quantitative Approaches to Software Quality (QuASoQ 2017)}, \textit{CEUR Workshop Proceedings}, vol. 2017, 2017, pp. 6--13. [Online]. Available: \url{https://ceur-ws.org/Vol-2017/paper03.pdf}
 
 \end{thebibliography}
 
