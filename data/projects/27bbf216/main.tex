@@ -590,12 +590,14 @@ Kesalahan inisialisasi dibedakan dari kesalahan pemrosesan \textit{request}. Kes
 
 Rancangan tidak menetapkan teknologi database tertentu sebagai bagian dari aturan bisnis. Pengembang menyediakan implementasi \textit{repository} dan konfigurasi koneksi pada lapisan infrastruktur serta titik penyusunan aplikasi. \textit{Middleware} untuk autentikasi, pencatatan, atau kebutuhan lain dapat diintegrasikan melalui Express.js; fitur tersebut tidak otomatis dihasilkan seluruhnya oleh uGUIDED.js. Pemisahan ini menjaga ruang lingkup framework pada pembentukan struktur, registrasi \textit{routing}, dan penyusunan dependensi sesuai konvensi yang disepakati.
 
+\clearpage
 \section{Perancangan Modul dan Mekanisme Kerja Sistem}
 \label{sec:perancangan_modul}
 Bagian ini merinci konvensi dan perilaku modul yang membentuk uGUIDED.js. Contoh perintah, bentuk ekspor, dan konfigurasi merupakan spesifikasi rancangan, bukan dokumentasi pustaka yang telah dirilis. Seluruh contoh menggunakan JavaScript dengan modul ES dan fitur pengguna sebagai ilustrasi agar hubungan antara struktur berkas, HTTP handler, dan proses bisnis dapat ditelusuri secara konsisten.
 
 \subsection{Struktur Direktori dan Konvensi Penamaan}
 Proyek dibentuk dengan direktori utama \texttt{src}. Struktur contoh berikut membedakan kontrak penyimpanan dari implementasinya, meskipun keduanya memiliki nama berkas yang sama.
+\begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
 src/
@@ -621,22 +623,25 @@ src/
       user-repository.js
 \end{verbatim}
 \end{singlespace}
+\end{samepage}
 
 Nama berkas modul menggunakan huruf kecil dengan pemisah tanda hubung (\textit{kebab-case}). Pada direktori penyedia, nama tersebut dikonversi menjadi \textit{camelCase} untuk membentuk token. Berkas \texttt{create-user.js}, misalnya, menghasilkan token \texttt{createUser}. Identitas HTTP handler tidak mengikuti nama berkas method saja, karena beberapa direktori dapat memiliki \texttt{get.js}; identitas internalnya menggunakan path relatif berkas agar tidak saling menimpa.
 
-Pemindaian kontrak pada \texttt{application/ports} hanya menghasilkan metadata kebutuhan metode, bukan objek penyedia. Implementasi pada direktori \texttt{repositories} didaftarkan sebagai penyedia token yang bersesuaian. \textit{Entities} digunakan oleh proses bisnis melalui modul domain dan tidak diperlakukan sebagai layanan yang otomatis dibuat sekali untuk seluruh aplikasi. Objek entitas dapat dibentuk sesuai kebutuhan setiap operasi.
+Pemindaian kontrak pada \texttt{application/\allowbreak ports} hanya menghasilkan metadata kebutuhan metode, bukan objek penyedia. Implementasi pada direktori \texttt{repositories} didaftarkan sebagai penyedia token yang bersesuaian. \textit{Entities} digunakan oleh proses bisnis melalui modul domain dan tidak diperlakukan sebagai layanan yang otomatis dibuat sekali untuk seluruh aplikasi. Objek entitas dapat dibentuk sesuai kebutuhan setiap operasi.
 
 Hubungan yang dikelola \textit{container} dibatasi agar HTTP handler menerima \textit{use cases}, sedangkan \textit{use cases} menerima layanan penyimpanan melalui token kontraknya. Penyedia infrastruktur tidak boleh meminta HTTP handler atau \textit{use case} sebagai dependensi. Koneksi database dan konfigurasi eksternal disiapkan pada \textit{composition root} dan dapat diberikan kepada penyedia melalui penggantian eksplisit. Aturan ini memeriksa deklarasi yang dikelola framework, bukan seluruh pernyataan \textit{import} pada aplikasi.
 
 \subsection{Modul CLI Scaffolding}
 CLI dirancang memiliki dua operasi dasar: pembentukan proyek dan pembentukan modul. Usulan sintaksnya adalah sebagai berikut:
+\begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
 uguided init nama-proyek
 uguided generate module users
 \end{verbatim}
 \end{singlespace}
-Perintah pertama membentuk direktori proyek, struktur lapisan, \texttt{package.json}, dan \texttt{src/app.js}. Perintah kedua dijalankan dari akar proyek untuk membentuk kerangka modul sesuai nama yang diberikan. Untuk nama \texttt{users}, generator menggunakan konvensi contoh fitur pengguna yang meliputi entitas, kontrak dan implementasi \textit{repository}, \textit{use case}, serta HTTP handler. Pembentukan nama tunggal dan jamak tidak ditebak untuk semua kosakata: rancangan generator perlu menerima nama entitas secara eksplisit jika tidak mengikuti pola yang didukung, atau memakai token dari templat bawaan yang jelas.
+\end{samepage}
+Perintah pertama membentuk direktori proyek, struktur lapisan, \texttt{package.json}, dan \texttt{src/\allowbreak app.js}. Perintah kedua dijalankan dari akar proyek untuk membentuk kerangka modul sesuai nama yang diberikan. Untuk nama \texttt{users}, generator menggunakan konvensi contoh fitur pengguna yang meliputi entitas, kontrak dan implementasi \textit{repository}, \textit{use case}, serta HTTP handler. Pembentukan nama tunggal dan jamak tidak ditebak untuk semua kosakata: rancangan generator perlu menerima nama entitas secara eksplisit jika tidak mengikuti pola yang didukung, atau memakai token dari templat bawaan yang jelas.
 
 Proses CLI terdiri atas validasi masukan, penentuan daftar berkas tujuan, pemeriksaan konflik, dan penulisan templat. Nama proyek atau modul tidak boleh berupa path absolut maupun mengandung segmen yang keluar dari direktori tujuan. Jika nama tidak valid, direktori tujuan tidak sesuai, atau berkas target sudah ada, operasi ditolak sebelum penulisan dimulai. Rancangan awal tidak menyediakan penimpaan otomatis atas berkas pengguna.
 
@@ -651,12 +656,12 @@ Pemindai \textit{routing} membaca berkas JavaScript pada direktori \texttt{contr
 \toprule
 \textbf{Berkas relatif terhadap controllers} & \textbf{Method} & \textbf{Path} \tabularnewline
 \midrule
-\texttt{users/get.js} & GET & \texttt{/users} \tabularnewline
-\texttt{users/post.js} & POST & \texttt{/users} \tabularnewline
-\texttt{users/[id]/get.js} & GET & \texttt{/users/:id} \tabularnewline
-\texttt{users/[id]/patch.js} & PATCH & \texttt{/users/:id} \tabularnewline
-\texttt{users/[id]/delete.js} & DELETE & \texttt{/users/:id} \tabularnewline
-\texttt{users/search/get.js} & GET & \texttt{/users/search} \tabularnewline
+\texttt{users/\allowbreak get.js} & GET & \texttt{/users} \tabularnewline
+\texttt{users/\allowbreak post.js} & POST & \texttt{/users} \tabularnewline
+\texttt{users/\allowbreak [id]/\allowbreak get.js} & GET & \texttt{/\allowbreak users/\allowbreak :id} \tabularnewline
+\texttt{users/\allowbreak [id]/\allowbreak patch.js} & PATCH & \texttt{/\allowbreak users/\allowbreak :id} \tabularnewline
+\texttt{users/\allowbreak [id]/\allowbreak delete.js} & DELETE & \texttt{/\allowbreak users/\allowbreak :id} \tabularnewline
+\texttt{users/\allowbreak search/\allowbreak get.js} & GET & \texttt{/\allowbreak users/\allowbreak search} \tabularnewline
 \bottomrule
 \end{tabularx}
 \caption{Contoh pemetaan berkas controller menjadi endpoint.}
@@ -666,12 +671,13 @@ Pemindai \textit{routing} membaca berkas JavaScript pada direktori \texttt{contr
 
 Tabel~\ref{tab:pemetaan_routing} menunjukkan bahwa direktori parameter tidak menentukan method. Nama parameter harus valid dan tidak berulang pada satu path. Direktori kosong, bentuk kurung yang tidak lengkap, serta nama method yang tidak didukung dilaporkan sebagai kesalahan apabila berada pada area handler yang dipindai. Berkas pendukung ditempatkan di luar direktori handler untuk menghindari penafsiran yang ambigu.
 
-Sebelum registrasi, path dinormalisasi dan pasangan method serta pola segmennya diperiksa. Nama parameter tidak membedakan pola: \texttt{GET /users/:id} berkonflik dengan \texttt{GET /users/:userId}, sedangkan method yang berbeda dapat memakai pola path yang sama. Pada posisi segmen yang sama, path statis didahulukan dari path dinamis; urutan pembacaan filesystem tidak dijadikan dasar prioritas. Parameter opsional, \textit{wildcard}, dan pola khusus ekspresi reguler tidak termasuk rancangan awal.
+Sebelum registrasi, path dinormalisasi dan pasangan method serta pola segmennya diperiksa. Nama parameter tidak membedakan pola: \texttt{GET /\allowbreak users/\allowbreak :id} berkonflik dengan \texttt{GET /\allowbreak users/\allowbreak :userId}, sedangkan method yang berbeda dapat memakai pola path yang sama. Pada posisi segmen yang sama, path statis didahulukan dari path dinamis; urutan pembacaan filesystem tidak dijadikan dasar prioritas. Parameter opsional, \textit{wildcard}, dan pola khusus ekspresi reguler tidak termasuk rancangan awal.
 
-Setiap berkas handler harus mengekspor daftar \texttt{dependencies} dan fungsi \textit{factory} bawaan. Hasil pemanggilan fungsi tersebut harus berupa HTTP handler yang dapat didaftarkan pada Express.js. Ketiadaan ekspor atau hasil yang tidak sesuai menghentikan inisialisasi. Kebijakan \texttt{HEAD} dan \texttt{OPTIONS} yang dihasilkan secara implisit oleh Express.js tidak dihitung sebagai endpoint eksplisit hasil pemindaian; pengujian harus membedakan perilaku Express.js dari registrasi framework.
+Setiap berkas handler harus mengekspor daftar \texttt{depen\-dencies} dan fungsi \textit{factory} bawaan. Hasil pemanggilan fungsi tersebut harus berupa HTTP handler yang dapat didaftarkan pada Express.js. Ketiadaan ekspor atau hasil yang tidak sesuai menghentikan inisialisasi. Kebijakan \texttt{HEAD} dan \texttt{OPTIONS} yang dihasilkan secara implisit oleh Express.js tidak dihitung sebagai endpoint eksplisit hasil pemindaian; pengujian harus membedakan perilaku Express.js dari registrasi framework.
 
 \subsection{Modul Convention-Based Dependency Injection}
-Setiap penyedia mendeklarasikan token kebutuhan melalui ekspor array \texttt{dependencies}. Fungsi bawaan menerima objek yang berisi dependensi tersebut dan menghasilkan layanan atau fungsi proses. Contoh deklarasi \textit{use case} adalah:
+Setiap penyedia mendeklarasikan token kebutuhan melalui ekspor array \texttt{depen\-dencies}. Fungsi bawaan menerima objek yang berisi dependensi tersebut dan menghasilkan layanan atau fungsi proses. Contoh deklarasi \textit{use case} adalah:
+\begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
 export const dependencies = ["userRepository"];
@@ -683,16 +689,18 @@ export default function createUser({ userRepository }) {
 }
 \end{verbatim}
 \end{singlespace}
+\end{samepage}
 Contoh ini hanya memperlihatkan penyambungan dependensi. Validasi dan aturan entitas tetap perlu diimplementasikan sesuai kebutuhan; pemanggilan \texttt{save} saja tidak membuktikan penerapan aturan bisnis yang lengkap.
 
-Kontrak penyimpanan pada \texttt{application/ports} dirancang menyatakan daftar metode yang wajib tersedia, misalnya ekspor \texttt{requiredMethods} bernilai \texttt{["save", "findById"]}, disertai JSDoc untuk masukan dan keluaran. Sesudah penyedia dibentuk, setiap metode yang diwajibkan diperiksa sebagai fungsi. Pemeriksaan ini tidak menguji perilaku, bentuk seluruh nilai kembalian, ataupun kebenaran transaksi database. Kesesuaian perilaku kontrak perlu diperiksa melalui pengujian.
+Kontrak penyimpanan pada \texttt{application/\allowbreak ports} dirancang menyatakan daftar metode yang wajib tersedia, misalnya ekspor \texttt{requiredMethods} bernilai \texttt{["save", "findById"]}, disertai JSDoc untuk masukan dan keluaran. Sesudah penyedia dibentuk, setiap metode yang diwajibkan diperiksa sebagai fungsi. Pemeriksaan ini tidak menguji perilaku, bentuk seluruh nilai kembalian, ataupun kebenaran transaksi database. Kesesuaian perilaku kontrak perlu diperiksa melalui pengujian.
 
 Resolver menyusun graf dependensi dari registri penyedia. Penyedia tanpa dependensi dibentuk terlebih dahulu, diikuti penyedia yang kebutuhannya telah tersedia. Nama ganda, token yang tidak ditemukan, bentuk deklarasi tidak valid, dan siklus menyebabkan kegagalan. Untuk siklus, diagnostik dirancang menunjukkan rantai token yang terlibat agar perbaikannya dapat ditelusuri. Penyedia yang valid disimpan sebagai objek bersama selama masa hidup aplikasi, bukan dibentuk ulang untuk setiap \textit{request}.
 
 Penggantian penyedia dilakukan pada \textit{composition root} melalui peta token yang eksplisit. Sebagai contoh, token \texttt{userRepository} dapat diarahkan ke \textit{fake repository} selama pengujian. Penggantian hanya memilih satu penyedia efektif dan tetap melalui pemeriksaan kontrak. Penyedia bawaan yang digantikan tidak diinisialisasi, sehingga koneksi database yang tidak digunakan tidak dibuka. Kunci penggantian yang tidak dikenal dilaporkan sebagai kesalahan, bukan diabaikan.
 
 \subsection{Integrasi Alur dan Penanganan Kesalahan}
-Contoh integrasi menggunakan \texttt{POST /users} dan \texttt{createUser} yang diperkenalkan pada Bagian 3.2. HTTP handler menerima fungsi \textit{use case}, memilih masukan yang dibutuhkan, lalu membentuk respons. Usulan bentuk modul pada \texttt{controllers/users/post.js} adalah:
+Contoh integrasi menggunakan \texttt{POST /\allowbreak users} dan \texttt{createUser} yang diperkenalkan pada Bagian 3.2. HTTP handler menerima fungsi \textit{use case}, memilih masukan yang dibutuhkan, lalu membentuk respons. Usulan bentuk modul pada \texttt{controllers/\allowbreak users/\allowbreak post.js} adalah:
+\begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
 export const dependencies = ["createUser"];
@@ -709,6 +717,7 @@ export default function createController({ createUser }) {
 }
 \end{verbatim}
 \end{singlespace}
+\end{samepage}
 Pada rancangan aplikasi, proses bisnis memvalidasi masukan melalui aturan domain dan menggunakan kontrak penyimpanan. Implementasi \textit{repository} mengembalikan hasil sebagai data aplikasi, bukan objek respons HTTP. Handler menerjemahkan keberhasilan menjadi status \texttt{201} pada contoh pembuatan pengguna; status tersebut tidak menjadi aturan tunggal bagi seluruh operasi. Kesalahan yang diteruskan melalui \texttt{next(error)} ditangani oleh \textit{middleware} terpusat.
 
 Kesalahan domain atau aplikasi membawa informasi jenis kesalahan tanpa bergantung pada Express.js. Lapisan HTTP memetakan informasi tersebut ke respons, misalnya masukan tidak valid, data tidak ditemukan, atau konflik, sesuai kebijakan aplikasi. Kesalahan internal yang tidak dikenali menghasilkan respons umum tanpa mengungkap kredensial, rincian koneksi, atau \textit{stack trace} kepada klien. Pencatatan rinci dilakukan pada sisi server sesuai konfigurasi aplikasi.
