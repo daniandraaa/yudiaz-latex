@@ -600,9 +600,6 @@ Proyek dibentuk dengan direktori utama \texttt{src}. Struktur contoh berikut mem
 \begin{samepage}
 \begin{singlespace}
 \begin{verbatim}
-.env
-.env.example
-.gitignore
 src/
   app.js
   domain/
@@ -622,19 +619,11 @@ src/
         patch.js
         delete.js
   infrastructure/
-    database/
-      connection.js
     repositories/
       user-repository.js
 \end{verbatim}
 \end{singlespace}
 \end{samepage}
-
-Berkas \texttt{connection.js} pada direktori database di lapisan infrastruktur mengelola pembuatan koneksi atau \textit{connection pool} sesuai driver yang digunakan. Konfigurasi pengembangan lokal ditempatkan pada \texttt{.env} di akar proyek dan dimuat secara eksplisit saat inisialisasi; pada lingkungan lain, nilainya dapat disediakan melalui variabel lingkungan. Berkas \texttt{.env.example} hanya memuat contoh nama konfigurasi tanpa kredensial asli. Berkas \texttt{.gitignore} mengecualikan \texttt{.env} agar kredensial tidak ikut disimpan dalam repositori. Kredensial tidak ditulis langsung pada \textit{source code} atau templat generator.
-
-Pada \texttt{src/app.js}, aplikasi memuat konfigurasi, menyiapkan koneksi, lalu memberikannya kepada implementasi \textit{repository} melalui penyusunan eksplisit. Repository yang telah terbentuk dapat digunakan sebagai pengganti penyedia bawaan melalui token yang sama. Modul koneksi tidak dipindai sebagai penyedia otomatis dan tidak membuka koneksi hanya karena berkasnya diimpor. Dengan demikian, \textit{use case} tetap hanya mengetahui kontrak repository, bukan driver, koneksi, atau kredensial database.
-
-Koneksi atau pool disiapkan sekali saat aplikasi dimulai, bukan dibuat ulang pada setiap \textit{request}. Untuk driver berbasis pool, koneksi kerja dipinjam dan dikembalikan sesuai mekanisme driver. Kegagalan penyiapan koneksi yang diwajibkan aplikasi menghentikan inisialisasi sebelum server menerima koneksi HTTP. Saat penghentian aplikasi, server berhenti menerima request baru, pekerjaan yang sedang berjalan diberi kesempatan selesai sesuai kebijakan aplikasi, lalu sumber daya database ditutup. Jika inisialisasi gagal setelah sumber daya dibuka, sumber daya tersebut juga perlu dibersihkan. Siklus hidup ini dikelola pada titik penyusunan aplikasi, tanpa menjadikan teknologi database tertentu sebagai bagian dari aturan bisnis.
 
 Nama berkas modul menggunakan huruf kecil dengan pemisah tanda hubung (\textit{kebab-case}). Pada direktori penyedia, nama tersebut dikonversi menjadi \textit{camelCase} untuk membentuk token. Berkas \texttt{create-user.js}, misalnya, menghasilkan token \texttt{createUser}. Identitas HTTP handler tidak mengikuti nama berkas method saja, karena beberapa direktori dapat memiliki \texttt{get.js}; identitas internalnya menggunakan path relatif berkas agar tidak saling menimpa.
 
