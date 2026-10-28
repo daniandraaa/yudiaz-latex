@@ -812,7 +812,7 @@ R07 & Memeriksa registrasi HEAD dan OPTIONS secara eksplisit. & Hasil \textit{sc
 \end{table}
 \FloatBarrier
 
-Pengujian \textit{routing} menggunakan \textit{request} HTTP dan penanda respons yang membedakan setiap handler. Daftar registrasi juga diperiksa agar perilaku bawaan Express.js tidak dianggap sebagai keberhasilan \textit{scanner}. Setiap kasus konflik dijalankan pada proses terpisah dan memastikan aplikasi tidak menerima \textit{request} setelah inisialisasi dinyatakan gagal.
+Pengujian \textit{routing} dilakukan dengan mengirim \textit{request} HTTP dan memeriksa apakah handler yang sesuai dijalankan. Setiap handler diberi respons pembeda agar kesalahan pemilihan endpoint dapat diketahui. Daftar endpoint yang didaftarkan uGUIDED.js juga diperiksa untuk membedakannya dari perilaku bawaan Express.js. Pada skenario konflik, aplikasi dijalankan dalam proses Node.js tersendiri. Pengujian memastikan konflik menghasilkan pesan kesalahan dan menghentikan inisialisasi sebelum server menerima \textit{request}.
 
 \begin{table}[!htbp]
 \centering\singlespacing\small
