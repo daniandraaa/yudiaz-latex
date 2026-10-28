@@ -70,6 +70,7 @@
 
 % Konfigurasi Hyperref
 \hypersetup{
+    hypertexnames=false,
     colorlinks=true,
     linkcolor=black,
     citecolor=black,
@@ -740,6 +741,144 @@ Konfigurasi database pada pengembangan lokal dapat dimuat dari \texttt{.env} di 
 Koneksi atau \textit{connection pool} disiapkan sekali saat aplikasi dimulai, bukan dibuat ulang pada setiap request. Peminjaman koneksi dari pool untuk operasi tertentu mengikuti mekanisme driver. Kegagalan penyiapan sumber daya yang diwajibkan aplikasi mencegah server mulai menerima koneksi HTTP. Jika inisialisasi gagal setelah koneksi terbentuk, sumber daya yang sudah dibuka dibersihkan. Saat aplikasi dihentikan, server berhenti menerima request baru, pekerjaan berjalan ditangani sesuai kebijakan penghentian aplikasi, lalu sumber daya database ditutup. Siklus hidup ini dikelola pada composition root, bukan di dalam use case.
 
 Berbeda dari kesalahan saat menjalankan proses bisnis, kegagalan konfigurasi menghentikan inisialisasi sebelum server menerima koneksi. Pesan diagnostik menyertakan tahap, token atau path berkas terkait, serta alasan kegagalan. Pemisahan ini menjadi dasar skenario pengujian CLI, pemetaan endpoint, resolver, dan penanganan respons pada bagian evaluasi berikutnya. Seluruh contoh tetap diposisikan sebagai spesifikasi rancangan yang perlu dibuktikan melalui implementasi dan pengujian.
+
+\clearpage
+\section{Perancangan Skenario Pengujian dan Evaluasi}
+\label{sec:pengujian_evaluasi}
+Evaluasi dirancang untuk memeriksa kesesuaian fungsi uGUIDED.js dengan spesifikasi, pembagian tanggung jawab arsitektur, dan persepsi kemudahan penggunaan. Ketiganya diperiksa secara terpisah karena keberhasilan fungsi tidak otomatis menunjukkan kesesuaian arsitektur, sedangkan penilaian pengguna tidak menggantikan pemeriksaan teknis. Bagian ini memuat rencana pelaksanaan dan kriteria pemeriksaan, bukan hasil pengujian. Jumlah peserta, identitas ahli, dan jadwal pelaksanaan akan ditetapkan sebelum pengumpulan data dengan mempertimbangkan ketersediaan serta persetujuan pihak yang terlibat.
+
+\subsection{Tahapan Pengembangan dan Keluaran ADDIE}
+Pengembangan mengikuti model ADDIE yang telah dijelaskan pada Bab 2 \cite{branch2009addie}. Pada tahap \textit{Analysis}, kegiatan difokuskan pada identifikasi pencampuran tanggung jawab kode, kebutuhan pengembang, dan batas otomatisasi yang diperlukan. Keluarannya berupa daftar kebutuhan serta batasan sistem yang menjadi acuan desain.
+
+Tahap \textit{Design} menghasilkan struktur lapisan, konvensi direktori, spesifikasi CLI, aturan \textit{routing}, mekanisme \textit{dependency injection}, dan skenario pengujian. Rancangan pada Bagian 3.1--3.3 digunakan sebagai acuan; perubahan spesifikasi selama pengembangan dicatat agar pengujian tetap menggunakan versi kebutuhan yang sama.
+
+Pada tahap \textit{Development}, modul diimplementasikan secara bertahap dan diperiksa melalui pengujian fungsi serta pemeriksaan arsitektur. Versi implementasi, templat, dokumentasi, dan perbaikan kesalahan menjadi keluaran tahap ini. Validasi ahli dilakukan terhadap versi yang dapat diperiksa sebelum digunakan dalam evaluasi pengguna.
+
+Tahap \textit{Implementation} meliputi penggunaan versi yang telah diperiksa untuk menyelesaikan tugas pengembangan terarah. Peserta menerima lingkungan kerja dan panduan awal yang sama. Pada tahap \textit{Evaluation}, hasil pengujian, masukan ahli, dan kuesioner pengguna dianalisis untuk mengidentifikasi bagian yang perlu diperbaiki. Evaluasi juga berlangsung pada tahap sebelumnya; revisi yang mengubah perilaku sistem harus diikuti pengujian ulang terhadap fungsi terkait.
+
+\subsection{Rancangan Validasi Ahli}
+Validasi melibatkan ahli yang memiliki pengalaman dalam rekayasa perangkat lunak, arsitektur aplikasi, dan pengembangan \textit{back-end}. Pemilihan dilakukan berdasarkan kesesuaian pengalaman dengan aspek yang diperiksa, bukan semata-mata jabatan. Ahli menerima rancangan, \textit{source code} versi yang dinilai, contoh aplikasi, dan panduan penggunaan yang relevan.
+
+Lembar penilaian memuat aspek berikut:
+\begin{enumerate}
+\item kesesuaian pembagian tanggung jawab domain, application, \textit{controllers}, dan infrastructure;
+\item arah dependensi serta penempatan \textit{repository interface} pada lapisan aplikasi;
+\item ketepatan konvensi direktori, pemetaan endpoint, dan deklarasi dependensi;
+\item kejelasan pemeriksaan kesalahan dan batas pemeriksaan yang dilakukan \textit{container};
+\item kemudahan memahami contoh, pesan diagnostik, dan dokumentasi.
+\end{enumerate}
+Setiap aspek diberi penilaian kualitatif berupa sesuai, perlu revisi, atau tidak sesuai, disertai alasan dan usulan perbaikan. Ringkasan disajikan per aspek, bukan sebagai persentase kelayakan dengan batas yang belum memiliki dasar. Jika terdapat lebih dari satu ahli, perbedaan pendapat dicatat dan ditindaklanjuti melalui klarifikasi. Setiap temuan ditautkan ke perubahan rancangan atau alasan tidak menerapkan saran. Temuan yang menyebabkan fungsi utama tidak dapat dijalankan atau arah dependensi menyimpang dari rancangan diselesaikan sebelum evaluasi pengguna.
+
+\subsection{Rancangan Black-Box Testing}
+Pengujian dilakukan dengan memberikan masukan yang valid maupun tidak valid, kemudian membandingkan perilaku yang diamati dengan keluaran yang diharapkan. Setiap kasus dicatat menggunakan identitas kasus, kebutuhan terkait, kondisi awal, langkah, masukan, keluaran yang diharapkan, keluaran aktual, status, dan bukti. Status lulus hanya diberikan jika seluruh keluaran yang ditentukan terpenuhi; kasus yang belum dijalankan ditandai belum diuji.
+
+\begin{table}[!htbp]
+\centering\singlespacing\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{ID} & \textbf{Skenario CLI} & \textbf{Keluaran yang diharapkan} \\
+\midrule
+C01 & Membuat proyek dengan nama valid pada lokasi kosong. & Struktur, package.json, dan app.js terbentuk sesuai templat. \\
+C02 & Membentuk modul dengan nama yang didukung. & Berkas tiap lapisan dan deklarasi dependensi sesuai konvensi. \\
+C03 & Memberikan nama tidak valid, path absolut, atau segmen keluar direktori. & Operasi ditolak tanpa menulis berkas di luar tujuan. \\
+C04 & Menjalankan generator ketika salah satu berkas target sudah ada. & Operasi ditolak sebelum penulisan; berkas lama tetap utuh. \\
+C05 & Mensimulasikan kegagalan tulis pada direktori uji terisolasi. & Kesalahan dan berkas yang telah dibuat dilaporkan; berkas lama tidak dihapus. \\
+\bottomrule
+\end{tabularx}
+\caption{Rancangan pengujian modul CLI.}
+\label{tab:uji_cli}
+\end{table}
+\FloatBarrier
+
+Pemeriksaan CLI mencakup keberadaan dan isi berkas, bukan hanya pesan keberhasilan. Untuk skenario kegagalan tulis, kondisi gangguan dibuat pada direktori khusus pengujian agar tidak merusak proyek pengguna. Perbandingan isi berkas sebelum dan sesudah operasi digunakan untuk memeriksa bahwa berkas lama tidak berubah.
+
+\begin{table}[!htbp]
+\centering\singlespacing\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{ID} & \textbf{Skenario \textit{routing}} & \textbf{Keluaran yang diharapkan} \\
+\midrule
+R01 & Mengakses berkas get.js dan post.js pada folder users. & GET dan POST /users menjalankan handler masing-masing. \\
+R02 & Mengakses parameter pada users/[id]/get.js. & Nilai parameter diterima handler pada GET /users/:id. \\
+R03 & Menyediakan /users/search bersama /users/:id. & Path search menjalankan handler statis, bukan handler parameter. \\
+R04 & Menyediakan /users/:id dan /users/:userId dengan method sama. & Konflik terdeteksi dan inisialisasi dihentikan. \\
+R05 & Menyediakan method berbeda untuk pola path yang sama. & Keduanya terdaftar tanpa dianggap konflik. \\
+R06 & Memberikan nama method, parameter, atau ekspor handler tidak valid. & Inisialisasi ditolak dengan lokasi dan penyebab kesalahan. \\
+R07 & Memeriksa registrasi HEAD dan OPTIONS secara eksplisit. & Hasil \textit{scanner} dibedakan dari perilaku implisit Express.js. \\
+\bottomrule
+\end{tabularx}
+\caption{Rancangan pengujian file-system \textit{routing}.}
+\label{tab:uji_routing}
+\end{table}
+\FloatBarrier
+
+Pengujian \textit{routing} menggunakan \textit{request} HTTP dan penanda respons yang membedakan setiap handler. Daftar registrasi juga diperiksa agar perilaku bawaan Express.js tidak dianggap sebagai keberhasilan \textit{scanner}. Setiap kasus konflik dijalankan pada proses terpisah dan memastikan aplikasi tidak menerima \textit{request} setelah inisialisasi dinyatakan gagal.
+
+\begin{table}[!htbp]
+\centering\singlespacing\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{ID} & \textbf{Skenario dependensi} & \textbf{Keluaran yang diharapkan} \\
+\midrule
+D01 & Menyediakan deklarasi dan \textit{provider} yang valid. & Objek tersusun dan use case menerima \textit{provider} yang sesuai. \\
+D02 & Menghilangkan token atau menduplikasi \textit{provider} bawaan. & Inisialisasi ditolak dengan token yang bermasalah. \\
+D03 & Membentuk \textit{circular dependency}. & Inisialisasi ditolak dan rantai token dilaporkan. \\
+D04 & Memberikan deklarasi dependencies tidak valid atau metode wajib bukan fungsi. & Kesalahan terdeteksi sebelum aplikasi menerima \textit{request}. \\
+D05 & Menempatkan interface dan implementasi dengan nama berkas sama. & Hanya implementasi didaftarkan sebagai \textit{provider}; interface menjadi metadata. \\
+D06 & Mengganti repository dengan \textit{fake repository} melalui token yang valid. & Pengganti digunakan; \textit{factory} \textit{provider} bawaan tidak dijalankan. \\
+D07 & Memberikan token penggantian yang tidak dikenal. & Konfigurasi ditolak, bukan diabaikan. \\
+D08 & Meminta \textit{controller} dari use case melalui \textit{container}. & Hubungan lapisan yang tidak diizinkan ditolak. \\
+\bottomrule
+\end{tabularx}
+\caption{Rancangan pengujian \textit{dependency injection}.}
+\label{tab:uji_dependensi}
+\end{table}
+\FloatBarrier
+
+Pengujian integrasi melengkapi kasus pada Tabel~\ref{tab:uji_cli}--\ref{tab:uji_dependensi}. Skenario meliputi keberhasilan POST /users, penerusan kesalahan asinkron ke \textit{error-handling middleware}, dan respons kesalahan yang tidak membocorkan kredensial atau \textit{stack trace}. Untuk aplikasi contoh berbasis database, pengujian juga memeriksa kegagalan koneksi sebelum server berjalan, pembersihan sumber daya ketika inisialisasi gagal, dan penutupan koneksi saat aplikasi dihentikan. Driver serta lingkungan uji dicatat saat implementasi ditentukan; hasil aplikasi contoh tidak digeneralisasi untuk seluruh driver.
+
+Jumlah kasus lulus, gagal, dan belum diuji dilaporkan terpisah. Target penerimaan fungsional adalah seluruh kasus wajib yang sesuai spesifikasi versi uji lulus setelah perbaikan. Target ini merupakan kriteria rencana, bukan hasil yang telah dicapai. Kegagalan dicatat sebagai temuan, diperbaiki, lalu diuji ulang beserta fungsi terkait untuk memeriksa \textit{regression bugs}.
+
+\subsection{Pemeriksaan Kesesuaian Arsitektur}
+Pemeriksaan arsitektur mengacu pada pemisahan aturan bisnis dari detail HTTP dan penyimpanan \cite{martin2017clean}. Bukti disusun melalui inspeksi \textit{source code} dan percobaan penggantian komponen, dengan fokus sebagai berikut:
+\begin{enumerate}
+\item \textbf{Arah dependensi.} Periksa bahwa domain tidak mengimpor Express.js atau driver database, dan use case tidak mengimpor implementasi repository. Tinjau import langsung secara terpisah dari deklarasi yang diperiksa \textit{container}.
+\item \textbf{Penggantian repository.} Jalankan use case yang sama dengan implementasi awal dan implementasi pengganti yang memenuhi interface. Perubahan dibatasi pada implementasi serta \textit{composition root}; \textit{source code} use case tidak diubah. Gunakan kasus data dan ekspektasi yang sama untuk memeriksa perilaku yang dijanjikan interface.
+\item \textbf{Unit testing terisolasi.} Panggil use case dengan \textit{fake repository} tanpa menjalankan server HTTP atau membuka database nyata. Periksa hasil, pemanggilan metode repository, dan perilaku ketika penyimpanan gagal.
+\item \textbf{Batas HTTP.} Periksa bahwa req dan res tidak diteruskan ke domain atau use case. Pemetaan status serta respons HTTP tetap berada pada \textit{controller} atau \textit{middleware}.
+\item \textbf{Objek bersama.} Periksa bahwa \textit{provider} yang digunakan bersama tidak menyimpan \textit{state} khusus pengguna atau \textit{request}. Jalankan operasi dengan masukan berbeda untuk memeriksa kebocoran \textit{state} pada aplikasi contoh.
+\end{enumerate}
+Setiap temuan dicatat dengan lokasi modul, bukti, aturan yang diperiksa, dan tindak lanjut. Pemeriksaan metode wajib pada \textit{repository interface} tidak dianggap cukup untuk membuktikan kesesuaian perilaku; pengujian dengan ekspektasi yang sama digunakan sebagai pelengkap. Hasil pemeriksaan hanya mendukung kesesuaian kasus dan versi yang ditinjau. Pemeriksaan ini tidak membuktikan bahwa \textit{container} dapat mencegah seluruh pelanggaran import atau menjamin kualitas arsitektur semua aplikasi yang dibangun dengan uGUIDED.js.
+
+\subsection{Evaluasi Usability Menggunakan SUS}
+Evaluasi pengguna menggunakan System Usability Scale (SUS) untuk mengukur persepsi \textit{usability} setelah pengalaman penggunaan langsung \cite{brooke1996sus}. Peserta dipilih secara purposif dengan kriteria memiliki pemahaman dasar JavaScript dan HTTP serta pernah membuat atau mempelajari aplikasi Express.js. Pengembang yang belum berpengalaman menerapkan Clean Architecture menjadi sasaran yang relevan. Peserta tidak dibatasi pada mahasiswa magang atau satu organisasi. Pengalaman awal dicatat untuk membantu membaca hasil, bukan diasumsikan sama bagi seluruh peserta.
+
+Peserta memperoleh penjelasan tujuan, persetujuan partisipasi, panduan singkat, dan proyek uji tanpa data sensitif. Tugas disusun sebagai berikut:
+\begin{enumerate}
+\item membuat proyek dan membentuk modul menggunakan CLI;
+\item melengkapi proses sederhana untuk menyimpan atau mencari pengguna melalui \textit{repository interface};
+\item menjalankan endpoint statis dan berparameter, lalu memeriksa responsnya;
+\item memperbaiki satu konfigurasi dependensi atau \textit{routing} yang sengaja dibuat tidak valid;
+\item mengganti repository dengan implementasi dalam memori yang disediakan melalui \textit{composition root}.
+\end{enumerate}
+Versi perangkat lunak, instruksi, data uji, dan ketentuan bantuan dibuat konsisten. Penyelesaian tugas, kesalahan, dan bantuan yang diberikan dicatat sebagai konteks observasi, bukan langsung ditafsirkan sebagai peningkatan produktivitas. Peserta yang tidak menyelesaikan tugas tetap dicatat; kegagalan tidak dihapus hanya untuk memperbaiki hasil. Kuesioner diberikan setelah sesi, dengan penjelasan bahwa penilaian didasarkan pada versi dan tugas yang baru digunakan.
+
+Instrumen memuat sepuluh butir SUS dengan respons Likert 1--5. Versi bahasa yang digunakan, sumbernya, dan penyesuaian istilah didokumentasikan sebelum pelaksanaan. Jika dilakukan penerjemahan, kesetaraan makna dan keterbacaan diperiksa terlebih dahulu; perubahan substansi butir tidak diperlakukan sebagai SUS standar tanpa penjelasan. Identitas peserta dipisahkan dari data respons dan hasil dilaporkan menggunakan kode anonim.
+
+Untuk peserta ke-$i$, skor respons butir ke-$j$ dinyatakan sebagai $x_{ij}$. Kontribusi butir ganjil adalah $x_{ij}-1$, sedangkan kontribusi butir genap adalah $5-x_{ij}$. Skor dihitung dengan:
+\begin{equation}
+S_i=2{,}5\left[\sum_{j\in\{1,3,5,7,9\}}(x_{ij}-1)
++\sum_{j\in\{2,4,6,8,10\}}(5-x_{ij})\right].
+\label{eq:sus_score}
+\end{equation}
+Skor berada pada rentang 0--100, tetapi bukan persentase keberhasilan. Respons yang tidak lengkap diminta untuk diperiksa kembali selama peserta masih bersedia; jika tetap tidak lengkap, respons tidak diberi skor SUS dan jumlahnya dilaporkan. Tidak dilakukan pengisian jawaban secara asumtif.
+
+Hasil disajikan sebagai jumlah respons lengkap, skor per peserta secara anonim, rerata, median, dan rentang skor. Interpretasi mempertimbangkan pengalaman awal, kesulitan tugas, bantuan, dan komentar peserta. Bagian ini tidak menetapkan ambang lulus 68 tanpa sumber pembanding yang sesuai. Jika kategori atau \textit{benchmark} digunakan pada laporan hasil, sumber dan dasar penerapannya harus dinyatakan. Skor SUS digunakan untuk membahas persepsi \textit{usability}, bukan sebagai bukti langsung peningkatan \textit{maintainability}, kepatuhan arsitektur, atau penghematan waktu.
+
+\subsection{Analisis Temuan dan Tindak Lanjut}
+Temuan dikelompokkan menjadi kegagalan fungsi, ketidaksesuaian arsitektur, dan kesulitan penggunaan. Setiap temuan ditautkan pada kasus uji atau sumber masukan, komponen terkait, prioritas perbaikan, dan hasil pemeriksaan ulang. Kegagalan yang menyebabkan aplikasi tidak dapat diinisialisasi secara benar, berkas pengguna berubah tanpa izin, atau detail sensitif terungkap diprioritaskan sebelum penggunaan lebih lanjut.
+
+Kesimpulan evaluasi menggabungkan bukti teknis dan pengalaman peserta tanpa menyamakan ukuran yang berbeda. Tanpa kelompok pembanding dan pengukuran yang memadai, penelitian tidak menyimpulkan bahwa uGUIDED.js lebih produktif daripada pengembangan manual atau framework lain. Keterbatasan jumlah peserta, pemilihan purposif, lingkup aplikasi contoh, dan pengalaman peneliti dalam mendampingi penggunaan dilaporkan. Keluaran akhir evaluasi berupa ringkasan kesesuaian spesifikasi, daftar keterbatasan, dan rekomendasi pengembangan berdasarkan bukti yang diperoleh.
 
 % ==============================================================================
 % DAFTAR PUSTAKA (Format IEEE Sesuai Panduan Buku PA Rev05 PENS)
