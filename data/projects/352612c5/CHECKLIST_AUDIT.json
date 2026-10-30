@@ -1,0 +1,368 @@
+{
+  "total_actual_criteria": 51,
+  "note": "Source numbering duplicates 11. Audit IDs 11a and 11b retain both; printed numbers end at 50.",
+  "counts": {
+    "conflict": 19,
+    "implemented": 8,
+    "manual_needed": 24
+  },
+  "criteria": [
+    {
+      "id": "1",
+      "original_number": "1",
+      "criterion_and_source_explanation": "Format kertas A4, margin kiri 4 cm, kanan-atas-bawah 3 cm. Berlaku untuk seluruh halaman, termasuk lampiran. Periksa lewat menu pengaturan halaman (Page Setup).",
+      "status": "conflict",
+      "implementation_or_action": "PDF reference is 596 x 842 bp (rounded A4); landscape p26 has 3 cm left and 4 cm top per DOCX, whereas checklist says 4 cm left throughout. Preserved DOCX/visual layout."
+    },
+    {
+      "id": "2",
+      "original_number": "2",
+      "criterion_and_source_explanation": "Menggunakan font Times New Roman, spasi 1,5, dan spasi antar after/before paragraf 8 pt. Paragraf rata kiri-kanan (justify).",
+      "status": "conflict",
+      "implementation_or_action": "DOCX Normal specifies 1.5 line and after 8 pt inherited, not before AND after 8 pt; source visual preserved."
+    },
+    {
+      "id": "3",
+      "original_number": "3",
+      "criterion_and_source_explanation": "Font, ukuran, dan warna teks sudah seragam di seluruh dokumen.",
+      "status": "conflict",
+      "implementation_or_action": "Original intentionally uses several font families/sizes in cover, math and lists. Original preserved, no claim all text uniform."
+    },
+    {
+      "id": "4",
+      "original_number": "4",
+      "criterion_and_source_explanation": "Pastikan tidak ada jarak yang besar (space) antara kalimat terakhir dengan footer untuk halaman yang bukan halaman terakhir pada satu bab/bagian. Transisi antar bab minimal terisi ½ halaman. Space biasanya muncul karena gambar atau tabel dipindah ke halaman berikutnya. Atur ulang posisi gambar/tabel, atau pindahkan paragraf lain untuk mengisi ruang kosong tersebut.",
+      "status": "conflict",
+      "implementation_or_action": "Original sparse p17, p25 and numbered blank p30 preserved; cannot meet fill target without altering source."
+    },
+    {
+      "id": "5",
+      "original_number": "5",
+      "criterion_and_source_explanation": "Judul bab/subbab tidak berada sendiri di dasar halaman. Salah: judul subbab ada di baris terakhir halaman, sedangkan paragrafnya baru mulai di halaman berikutnya. Benar: judul pindah ke halaman berikutnya bersama paragraf pertamanya.",
+      "status": "conflict",
+      "implementation_or_action": "Original DAFTAR LAMPIRAN heading stranded p8 with entries p9; preserved, documented."
+    },
+    {
+      "id": "6",
+      "original_number": "6",
+      "criterion_and_source_explanation": "Penomoran halaman sesuai template dan posisinya konsisten berada di tengah dan bawah halaman. Ukuran font 10pt. Anga Romawi kecil (i, ii, iii) untuk bagian awal (abstrak, daftar isi) dan angka Arab (1, 2, 3) untuk bagian isi. Halaman 1 mulai dari Bab 1.",
+      "status": "conflict",
+      "implementation_or_action": "DOCX section properties specify Roman front matter but supplied PDF displays Arabic 2–9; fidelity edition preserves PDF."
+    },
+    {
+      "id": "7",
+      "original_number": "7",
+      "criterion_and_source_explanation": "Daftar isi, daftar gambar, dan daftar tabel sudah diperbarui. Perbarui (update field) atau kompilasi ulang sebelum dikumpulkan. Periksa bahwa judul dan nomor halamannya sama dengan isi dokumen, tidak ada bagian yang error.",
+      "status": "conflict",
+      "implementation_or_action": "Original cached TOC mentions absent abstracts and Chapters IV–VI; many page references stale. Preserved as example, NOT updated live."
+    },
+    {
+      "id": "8",
+      "original_number": "8",
+      "criterion_and_source_explanation": "Awal paragraf ditulis tanpa indentasi. Awal paragraf rapat ke margin kiri",
+      "status": "implemented",
+      "implementation_or_action": "Editable source retains no first-line indentation in body and exact original baseline positions."
+    },
+    {
+      "id": "9",
+      "original_number": "9",
+      "criterion_and_source_explanation": "Satu paragraf terdiri atas minimal 3 kalimat. Hindari paragraf hanya berisi satu kalimat. Gabungkan dengan paragraf sebelumnya atau kembangkan dengan penjelasan dan contoh.",
+      "status": "conflict",
+      "implementation_or_action": "Template instructions say min two sentences, checklist says three; final manuscript should follow stricter three, source wording preserved."
+    },
+    {
+      "id": "10",
+      "original_number": "10",
+      "criterion_and_source_explanation": "Satu subbab terdiri atas minimal 2 paragraf. Hindari subbab hanya berisi satu paragraf",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "11a",
+      "original_number": "11",
+      "criterion_and_source_explanation": "Setiap paragraf membahas satu gagasan utama. Kalimat pertama memperkenalkan gagasan, kalimat berikutnya menjelaskannya. Jika muncul gagasan baru, pindahkan ke paragraf baru.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "11b",
+      "original_number": "11",
+      "criterion_and_source_explanation": "Penomoran dan penulisan judul bab/subbab berjenjang, sesuai template, dan tidak ada subbab tunggal. Salah: ada subbab II.1 tetapi tidak ada II.2. Benar: jika ada II.1.1 maka harus ada II.1.2, atau subbab tersebut dilebur ke induknya.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "12",
+      "original_number": "12",
+      "criterion_and_source_explanation": "Daftar berbutir/bernomor ditulis konsisten dan sesuai kaidah. Kalimat pengantar diakhiri titik dua. Butir berurutan memakai angka atau huruf.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "13",
+      "original_number": "13",
+      "criterion_and_source_explanation": "Penulisan judul gambar di bawah gambar, penomoran sesuai template (menggunakan strip) dan sentence case. Font size 12 pt. Gambar II-1 Metode penelitian yang diusulkan (sentence case) Salah: Gambar II-1 Metode Penelitian Yang Diusulkan (title case).",
+      "status": "conflict",
+      "implementation_or_action": "Original duplicate Gambar I-1 and source caption case inconsistencies retained."
+    },
+    {
+      "id": "14",
+      "original_number": "14",
+      "criterion_and_source_explanation": "Penulisan judul tabel di atas tabel, penomoran sesuai template (menggunakan strip) dan sentence case. Font size 12pt. Tabel IV-2 Hasil pengujian akurasi model",
+      "status": "conflict",
+      "implementation_or_action": "Original example capitalization retained rather than silently changing source wording."
+    },
+    {
+      "id": "15",
+      "original_number": "15",
+      "criterion_and_source_explanation": "Judul gambar/tabel tidak terpisah halaman dari gambar/tabel yang dijelaskannya.",
+      "status": "implemented",
+      "implementation_or_action": "Image/caption positions preserve paired page placements in original."
+    },
+    {
+      "id": "16",
+      "original_number": "16",
+      "criterion_and_source_explanation": "Tidak ada tabel yang terpotong oleh halaman. (Jika tabel lebih panjang dari satu halaman, maka row header diulang.) Untuk tabel panjang, aktifkan pengulangan baris judul (repeat header rows). Pada tabel yang terpotong, nomor dan judul tidak perlu diulang.",
+      "status": "implemented",
+      "implementation_or_action": "Original tables remain on their original single pages, including landscape p26; no split rows."
+    },
+    {
+      "id": "17",
+      "original_number": "17",
+      "criterion_and_source_explanation": "Sumber gambar dicantumkan. Gambar II-3 Arsitektur jaringan yang digunakan Sumber: Pramesti dkk. (2024)",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "18",
+      "original_number": "18",
+      "criterion_and_source_explanation": "Seluruh gambar, tabel, dan persamaan dirujuk di dalam teks dengan nomornya. Benar: Hasil pengujian ditunjukkan pada Tabel IV-2. Salah: Hasil pengujian dapat dilihat pada tabel di bawah ini. (posisi tabel bisa bergeser)",
+      "status": "conflict",
+      "implementation_or_action": "Original figure I-2 reference does not match duplicate Gambar I-1; some TOC figures refer absent chapters."
+    },
+    {
+      "id": "19",
+      "original_number": "19",
+      "criterion_and_source_explanation": "Tidak ada rujukan yang rusak, misalnya tanda \"??\" atau pesan kesalahan rujukan. Salah: \"seperti terlihat pada Gambar ??\" atau \"Error! Reference source not found.\"",
+      "status": "implemented",
+      "implementation_or_action": "Real compile verifies no undefined references or ??; static source examples may still have semantic numbering conflicts covered separately."
+    },
+    {
+      "id": "20",
+      "original_number": "20",
+      "criterion_and_source_explanation": "Gambar dan tabel tidak melebihi margin, diletakkan di tengah, dan teks di dalamnya terbaca. Gambar tidak pecah saat diperbesar. Perbesar gambar hingga tulisan di dalamnya terbaca saat dicetak. Gunakan gambar beresolusi cukup (tidak pecah).",
+      "status": "implemented",
+      "implementation_or_action": "Original figures/paths and image resolution preserved without upscaling/redrawing; native readability remains limited by supplied examples."
+    },
+    {
+      "id": "21",
+      "original_number": "21",
+      "criterion_and_source_explanation": "Grafik memiliki label sumbu, satuan, dan legenda.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "22",
+      "original_number": "22",
+      "criterion_and_source_explanation": "Persamaan dan rumus sudah diberi nomor. Nomor di sisi kanan persamaan, misalnya (II-1). Rujuk dalam teks dengan \"Persamaan (II-1) merupakan persamaan untuk menghitung….\".",
+      "status": "implemented",
+      "implementation_or_action": "Original numbered example equations II-1 and II-2 preserved with CambriaMath glyphs."
+    },
+    {
+      "id": "23",
+      "original_number": "23",
+      "criterion_and_source_explanation": "Simbol pada persamaan dijelaskan setelah persamaan, dan penulisannya dalam teks sama dengan di persamaan. Benar: ... dengan n adalah jumlah data dan x adalah nilai pengamatan. Salah: ... dimana n adalah jumlah data.",
+      "status": "implemented",
+      "implementation_or_action": "Original x/y/z explanation blocks preserved; student must replace example variable meanings."
+    },
+    {
+      "id": "24",
+      "original_number": "24",
+      "criterion_and_source_explanation": "Teks dalam tabel dibuat padat dengan ukuran font 11 dan spasi single, tanpa tambahan spasi sebelum dan sesudah paragraf. Ukuran teks di dalam tabel lebih kecil yaitu 11pt dan spasi 1.",
+      "status": "implemented",
+      "implementation_or_action": "Original table font sizes/baselines retained from DOCX/PDF; any future table should use supplied writing-style.tex helper."
+    },
+    {
+      "id": "25",
+      "original_number": "25",
+      "criterion_and_source_explanation": "Tidak menyimpan gambar setelah gambar. Dua buah gambar harus diselingi dengan paragraf penjelas (kecuali pada lampiran)",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "26",
+      "original_number": "26",
+      "criterion_and_source_explanation": "Penulisan sumber referensi/kutipan memakai format \\citet jika di awal kalimat, dan \\citep jika di akhir kalimat. Awal kalimat (citet): Pramesti (2021) menyatakan bahwa ... Akhir kalimat (citep): .. terbukti dapat meningkatkan akurasi model (Pramesti, 2021).",
+      "status": "conflict",
+      "implementation_or_action": "Reference edition preserves literal source citations. Semantic draft supports editing but no populated automated bibliography."
+    },
+    {
+      "id": "27",
+      "original_number": "27",
+      "criterion_and_source_explanation": "Penulisan daftar pustaka sudah konsisten. Seluruh entri memakai gaya yang sama (urutan unsur, tanda baca, penulisan nama penulis, huruf kapital judul).",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "28",
+      "original_number": "28",
+      "criterion_and_source_explanation": "Entri daftar pustaka lengkap dan diurutkan sesuai gaya yang dipakai. Minimal memuat: penulis, tahun, judul, nama jurnal/prosiding/penerbit, volume, nomor, halaman, dan DOI/URL bila ada.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "29",
+      "original_number": "29",
+      "criterion_and_source_explanation": "Seluruh referensi yang dikutip sudah dicantumkan dalam daftar pustaka, dan sebaliknya. Pastikan tidak ada sitasi yang tidak ada di daftar pustaka, dan tidak ada entri pustaka yang tidak pernah dikutip.",
+      "status": "conflict",
+      "implementation_or_action": "Original example state-of-art citations lack corresponding bibliography entries; no fabricated sources added."
+    },
+    {
+      "id": "30",
+      "original_number": "30",
+      "criterion_and_source_explanation": "Referensi utama berasal dari sumber yang dapat dipertanggungjawabkan dan mutakhir. Utamakan jurnal dan prosiding dalam 5–10 tahun terakhir. Hindari blog, Wikipedia, dan sumber tanpa penulis jelas sebagai rujukan utama.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "31",
+      "original_number": "31",
+      "criterion_and_source_explanation": "Kutipan dituliskan dengan kalimat sendiri (parafrase). Kutipan langsung diberi tanda petik dan sumbernya.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "32",
+      "original_number": "32",
+      "criterion_and_source_explanation": "Sitasi referensi lebih dari dua penulis menggunakan dkk (untuk dokumen TA Bahasa Indonesia), bukan et.al.",
+      "status": "conflict",
+      "implementation_or_action": "Some English tutorial terminology retained verbatim; final author must use dkk."
+    },
+    {
+      "id": "33",
+      "original_number": "33",
+      "criterion_and_source_explanation": "Tidak ada typo. Gunakan fitur pemeriksa ejaan di word, lalu baca ulang seluruh tulisan.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "34",
+      "original_number": "34",
+      "criterion_and_source_explanation": "Seluruh istilah asing ditulis italic. Hasil preprocessing digunakan sebagai masukan classifier. Teks di-edit kembali. Tidak perlu italic: nama orang, institusi, produk/perangkat lunak (Python, TensorFlow), dan singkatan (CNN, GPU).",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "35",
+      "original_number": "35",
+      "criterion_and_source_explanation": "Istilah asing yang sudah memiliki padanan baku dan lazim dipakai, sudah memakai padanan tersebut. Contoh: unduh (bukan download), unggah (bukan upload), berkas (bukan file), perangkat lunak (bukan software).",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "36",
+      "original_number": "36",
+      "criterion_and_source_explanation": "Satu konsep ditulis dengan satu istilah yang sama di seluruh dokumen. Salah: berganti-ganti \"citra\", \"gambar\", dan \"foto\" untuk hal yang sama. Benar: pilih \"citra\", lalu pakai terus secara konsisten.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "37",
+      "original_number": "37",
+      "criterion_and_source_explanation": "Seluruh kata yang dipakai adalah kata baku sesuai Kamus Besar Bahasa Indonesia (KBBI). Tidak baku → baku: analisa → analisis; aktifitas → aktivitas; resiko → risiko; hipotesa → hipotesis; praktek → praktik; obyek → objek; tehnik → teknik; nampak → tampak; merubah → mengubah; mempengaruhi → memengaruhi; mengkonversi → mengonversi; dikarenakan → karena.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "38",
+      "original_number": "38",
+      "criterion_and_source_explanation": "Penulisan angka desimal sudah memakai koma (untuk teks berbahasa Indonesia). Akurasi performa mencapai 0,345 Salah: 0.345",
+      "status": "conflict",
+      "implementation_or_action": "Original example table decimals use dots (22.8% etc), retained."
+    },
+    {
+      "id": "39",
+      "original_number": "39",
+      "criterion_and_source_explanation": "Penulisan angka ribuan sudah memakai titik. dihasilkan 39.256.478 piksel dalam proses re-sampling Salah: 39,256,478",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "40",
+      "original_number": "40",
+      "criterion_and_source_explanation": "Kalimat tidak diawali dengan angka. Salah: 200 citra digunakan sebagai data uji. Benar: Sebanyak 200 citra digunakan sebagai data uji.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "41",
+      "original_number": "41",
+      "criterion_and_source_explanation": "Angka dan satuan ditulis dengan spasi, persen dan rentang ditulis konsisten. 5 cm; 16 GB; 224 × 224 piksel; 85,3%; tahun 2020–2024. Salah: 5cm; 16GB; 85,3 %.",
+      "status": "conflict",
+      "implementation_or_action": "Original example durations 14.5s etc omit spaces, retained."
+    },
+    {
+      "id": "42",
+      "original_number": "42",
+      "criterion_and_source_explanation": "Kata depan dipisah dengan kata yang mengikutinya. Benar: Data disimpan di dalam basis data dan dikirim ke server. Salah: Data disimpan didalam basis data dan dikirim keserver. Pengecualian (serangkai): kepada, daripada.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "43",
+      "original_number": "43",
+      "criterion_and_source_explanation": "Awalan disambung dengan kata yang mengikutinya. Benar: Data dibagi menjadi dua kelompok. Salah: Data di bagi menjadi dua kelompok. Awalan + istilah asing: pakai tanda hubung dan italic, misalnya citra di-resize menjadi 224 × 224 piksel.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "44",
+      "original_number": "44",
+      "criterion_and_source_explanation": "Setiap kalimat sudah diakhiri dengan tanda baca yang sesuai. Tidak ada spasi sebelum tanda baca, dan ada satu spasi sesudahnya. Tidak ada spasi di dalam tanda kurung. Salah: akurasi meningkat , sedangkan presisi menurun. Benar: akurasi meningkat, sedangkan presisi menurun.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "45",
+      "original_number": "45",
+      "criterion_and_source_explanation": "Kaidah penulisan huruf kapital sudah diikuti. Kapital untuk awal kalimat, nama orang, institusi, tempat, bulan/hari, dan nama produk. Istilah umum di tengah kalimat tidak dikapitalkan. Benar: Penelitian dilakukan di Palembang pada bulan Oktober. Salah: Hasil Pengujian Menunjukkan Bahwa Model Memiliki Akurasi Tinggi.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "46",
+      "original_number": "46",
+      "criterion_and_source_explanation": "Setiap singkatan sudah dituliskan kepanjangannya ketika pertama kali singkatan tersebut dipakai. Benar: Convolutional Neural Network (CNN) digunakan untuk ... Selanjutnya, CNN dilatih dengan ... Salah: CNN digunakan untuk ... (tanpa kepanjangan pada penyebutan pertama). Singkatan yang dipakai juga dicantumkan pada daftar singkatan.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "47",
+      "original_number": "47",
+      "criterion_and_source_explanation": "Setiap kalimat lengkap (ada subjek dan predikat) dan tidak diawali kata hubung antarklausa. Jangan memulai kalimat dengan \"Sehingga\", \"Sedangkan\", \"Yang\", \"Dan\", atau \"Atau\". Salah: Sehingga akurasi meningkat. Benar: ..., sehingga akurasi meningkat.",
+      "status": "manual_needed",
+      "implementation_or_action": "Source instructions and examples preserved verbatim. Daffa must review and fulfill this criterion in actual research writing; a blank/example template cannot establish substantive compliance."
+    },
+    {
+      "id": "48",
+      "original_number": "48",
+      "criterion_and_source_explanation": "Abstrak (Indonesia dan Inggris) memuat latar belakang singkat, metode, hasil, dan kesimpulan, disertai kata kunci yang diurutkan berdasarkan abjad.",
+      "status": "conflict",
+      "implementation_or_action": "ABSTRAK/ABSTRACT exist in cached TOC only; actual pages absent in original DOCX/PDF. No invented abstracts added."
+    },
+    {
+      "id": "49",
+      "original_number": "49",
+      "criterion_and_source_explanation": "Lampiran diberi nomor dan judul, serta dirujuk di dalam teks. Benar: Daftar pertanyaan wawancara dapat dilihat pada Lampiran 1 (hyperlink ke lampiran 1).",
+      "status": "conflict",
+      "implementation_or_action": "Original lettered Appendix A–C and Roman AI appendix titles preserved; checklist numeric example not forced."
+    },
+    {
+      "id": "50",
+      "original_number": "50",
+      "criterion_and_source_explanation": "Daftar singkatan, daftar istilah diurutkan berdasarkan abjad.",
+      "status": "conflict",
+      "implementation_or_action": "Original glossary sample order AI, Scrum, Istilah is not alphabetical. Kept exact sample."
+    }
+  ]
+}

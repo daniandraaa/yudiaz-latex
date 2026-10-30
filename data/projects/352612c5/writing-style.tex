@@ -1,0 +1,9 @@
+% Optional reflowing authoring helpers; NOT loaded by fidelity main.tex.
+% Load in a new authoring edition after geometry/fontspec, never silently alter source replica.
+\usepackage{setspace,needspace,caption,natbib,longtable}
+\setlength{\parindent}{0pt}\setlength{\parskip}{8pt}\onehalfspacing
+\captionsetup{font=normalsize,justification=centering}
+\renewcommand{\figurename}{Gambar}\renewcommand{\tablename}{Tabel}
+\newcommand{\TAHeading}[1]{\Needspace{5\baselineskip}\subsection{#1}}
+\newenvironment{TATable}{\begingroup\singlespacing\fontsize{11}{13}\selectfont\setlength{\parskip}{0pt}}{\endgroup}
+% natbib supports \citet and \citep; actual bibliographic records must be supplied/verified.
