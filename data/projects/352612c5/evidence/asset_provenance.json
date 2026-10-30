@@ -1,0 +1,111 @@
+{
+  "images": [
+    {
+      "file": "image2.png",
+      "bytes": 49234,
+      "sha256": "10cf5a37c7a54c25a062ce9092cd757b64f36fb47e18961c05ff30c9a1e85f57",
+      "source_zip_member": "word/media/image2.png"
+    },
+    {
+      "file": "image3.png",
+      "bytes": 131454,
+      "sha256": "1a29be9c9c79a5235134b18b3e9abf56f749b783dd543adc8578e7b090783d6a",
+      "source_zip_member": "word/media/image3.png"
+    },
+    {
+      "file": "image7.jpeg",
+      "bytes": 103894,
+      "sha256": "b0907c4e14686e570c90e93ba7e5cc468ed491beb6d3285e1d8d0f57e4f30eba",
+      "source_zip_member": "word/media/image7.jpeg"
+    },
+    {
+      "file": "image5.png",
+      "bytes": 67891,
+      "sha256": "6401cb30a8f41667081f129795147f88e04a06f3944702376aefaf85de9777de",
+      "source_zip_member": "word/media/image5.png"
+    },
+    {
+      "file": "image4.png",
+      "bytes": 2698801,
+      "sha256": "4900110e5c04283d24d59ac882c5723470e07233088c9167f9ac1ab5a4c4fcf1",
+      "source_zip_member": "word/media/image4.png"
+    },
+    {
+      "file": "image6.jpg",
+      "bytes": 7597,
+      "sha256": "b9cb6f870bc147ed45f5841f83ab621af66216ad4d31b867c0a630cc41a2251d",
+      "source_zip_member": "word/media/image6.jpg"
+    },
+    {
+      "file": "image1.jpg",
+      "bytes": 14497,
+      "sha256": "f4b45e0b9d02a7cb89e599d97bd1aa3ec5b79e8ecfd4261e7dd9ca1f7c17673b",
+      "source_zip_member": "word/media/image1.jpg"
+    }
+  ],
+  "placements": [
+    {
+      "paragraph_index": 8,
+      "relationship": "rId11",
+      "target": "media/image1.jpg",
+      "extent_emu": {
+        "cx": "1405160",
+        "cy": "2038350"
+      }
+    },
+    {
+      "paragraph_index": 174,
+      "relationship": "rId21",
+      "target": "media/image2.png",
+      "extent_emu": {
+        "cx": "4521200",
+        "cy": "2330492"
+      }
+    },
+    {
+      "paragraph_index": 187,
+      "relationship": "rId22",
+      "target": "media/image3.png",
+      "extent_emu": {
+        "cx": "5039995",
+        "cy": "3402965"
+      }
+    },
+    {
+      "paragraph_index": 245,
+      "relationship": "rId26",
+      "target": "media/image4.png",
+      "extent_emu": {
+        "cx": "5101477",
+        "cy": "2476500"
+      }
+    },
+    {
+      "paragraph_index": 251,
+      "relationship": "rId27",
+      "target": "media/image5.png",
+      "extent_emu": {
+        "cx": "4587638",
+        "cy": "3368332"
+      }
+    },
+    {
+      "paragraph_index": 381,
+      "relationship": "rId28",
+      "target": "media/image6.jpg",
+      "extent_emu": {
+        "cx": "1819275",
+        "cy": "1809750"
+      }
+    },
+    {
+      "paragraph_index": 413,
+      "relationship": "rId29",
+      "target": "media/image7.jpeg",
+      "extent_emu": {
+        "cx": "5039995",
+        "cy": "2677795"
+      }
+    }
+  ]
+}
