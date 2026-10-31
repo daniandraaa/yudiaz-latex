@@ -126,6 +126,32 @@ AdamW (weight decay $10^{-4}$), cosine decay to $10^{-6}$, and gradient clipping
 \label{sec:eval}
 Five fixed stratified folds on the 230 development patients were evaluated with seeds 42--44, giving 15 paired fits per model. These fits share patients and folds and are not independent. We therefore report uncertainty at two levels. Fit-level paired differences use the corrected resampled $t$ statistic of Nadeau and Bengio~\cite{nadeau2003}. For patient-level uncertainty, the three seed predictions of each out-of-fold patient are averaged to give one probability per patient (230 in total). A class-stratified bootstrap over patients (5000 resamples) then gives intervals for the CNN-RF difference. Two selections make the CNN CV estimates optimistic: the epoch of each fit and the configuration G04 were both chosen on the scored folds. The RF involves neither. For the epoch, we add a fixed-epoch analysis from the stored per-epoch validation logs, without retraining: for each fold, the epoch count is the median selected epoch of the fits in the other four folds, the rule used for the final models, and the fold score is read at that epoch. Unless marked as fixed-epoch, CNN CV values use the selected epoch. All ten configurations are reported for transparency, and the hold-out, which played no role in any selection, provides the unbiased comparison. Hold-out ensemble differences use the same patient bootstrap and an exact McNemar test~\cite{mcnemar1947}. The hold-out had been inspected in earlier exploratory work and is secondary evidence, not an untouched test set.
 
+\begin{figure*}[!t]
+\centering
+\begin{minipage}[t]{0.60\textwidth}
+\centering
+{\small\textbf{(a) Overview page}}\\[2pt]
+\includegraphics[width=\linewidth]{web_overview_browser.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.37\textwidth}
+\centering
+{\small\textbf{(b) CNN and Random Forest page}}\\[2pt]
+\includegraphics[width=\linewidth]{web_comparison_browser.png}
+\end{minipage}\\[6pt]
+\begin{minipage}[t]{0.66\textwidth}
+\centering
+{\small\textbf{(c) Received 12-lead ECG after transfer (ECG-231)}}\\[2pt]
+\includegraphics[width=\linewidth]{web_signal.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.237\textwidth}
+\centering
+{\small\textbf{(d) Localization output}}\\[2pt]
+\includegraphics[width=\linewidth]{web_result.png}
+\end{minipage}
+\caption{The web application opened in a browser. (a) Overview with data source, transfer control, and localization result. (b) CNN and Random Forest page with development CV metrics (230 patients, 15 fold/seed fits, CNN epoch selected on the validation fold), and out-of-fold confusion matrices. (c)--(d) Hold-out record ECG-231 (5.38~s, 12 leads, 2000~Hz) replayed at acquisition pace and its RVOT output.}
+\label{fig:browser}
+\end{figure*}
+
 \subsection{Web and IoT Deployment}
 The service uses a Python HTTP server, PyTorch CNN inference, a scikit-learn RF comparator, and a browser dashboard served by the same host (Fig.~\ref{fig:browser}). Outside the loopback interface the server refuses to start without a bearer token, which every request must then carry. A client opens a session that declares sampling rate, lead order, amplitude unit, and expected length. It then sends sequenced JSON chunks (at most 8000 time points each) with sample offsets. Identical retransmissions are accepted once; gaps, conflicts, and inconsistent offsets are rejected. Finalization checks completeness before preprocessing and inference. CNN checkpoints and the scaler are verified against SHA-256 hashes. The CNN processes windows in fixed batches of 8 (Section~\ref{sec:latency}).
 
@@ -174,31 +200,6 @@ V2 transition ratio & 0.500 & 0.824 & 0.612 & 0.825\\\bottomrule
 
 \emph{Stability.} With the selected epoch, the CNN is also more stable across data partitions. Its fold-mean macro-F1 stays within 0.860--0.926, whereas RF ranges from 0.674 to 0.896. Across the 15 fits, the lowest macro-F1 is 0.822 for the CNN and 0.642 for RF. The lowest LVOT sensitivity is 0.667 for the CNN and 0.417 for RF (SD 0.078 versus 0.174). Within a fold, changing only the seed shifts macro-F1 by 0.026 on average for the CNN and 0.045 for RF. On the hold-out, the reverse holds across seeds: individual CNNs vary more (macro-F1 SD 0.038) than individual forests (0.019), which stay at an LVOT sensitivity of 0.500 for every seed. This seed sensitivity motivates the five-model CNN ensemble (Section~\ref{sec:holdout}).
 
-\begin{figure*}[!t]
-\centering
-\begin{minipage}[t]{0.60\textwidth}
-\centering
-{\small\textbf{(a) Overview page}}\\[2pt]
-\includegraphics[width=\linewidth]{web_overview_browser.png}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.37\textwidth}
-\centering
-{\small\textbf{(b) CNN and Random Forest page}}\\[2pt]
-\includegraphics[width=\linewidth]{web_comparison_browser.png}
-\end{minipage}\\[6pt]
-\begin{minipage}[t]{0.66\textwidth}
-\centering
-{\small\textbf{(c) Received 12-lead ECG after transfer (ECG-231)}}\\[2pt]
-\includegraphics[width=\linewidth]{web_signal.png}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.237\textwidth}
-\centering
-{\small\textbf{(d) Localization output}}\\[2pt]
-\includegraphics[width=\linewidth]{web_result.png}
-\end{minipage}
-\caption{The web application opened in a browser. (a) Overview with data source, transfer control, and localization result. (b) CNN and Random Forest page with development CV metrics (230 patients, 15 fold/seed fits, CNN epoch selected on the validation fold), and out-of-fold confusion matrices. (c)--(d) Hold-out record ECG-231 (5.38~s, 12 leads, 2000~Hz) replayed at acquisition pace and its RVOT output.}
-\label{fig:browser}
-\end{figure*}
 \begin{table}[t]
 \caption{Historical Hold-Out, Five-Model Ensembles}
 \label{tab:holdout}\centering\footnotesize
