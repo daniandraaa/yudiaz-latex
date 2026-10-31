@@ -44,15 +44,6 @@ This paper addresses localization and deployment together. Its contributions are
 \end{itemize}
 The system performs post-acquisition localization of complete records. Experiments use real public-dataset recordings injected at the gateway; live physical-device acquisition is outside the evaluated scope.
 
-\section{Related Work}
-Conventional criteria express relationships among precordial morphologies: the transition zone, the V2 transition ratio~\cite{betensky2011}, and the V2S/V3R index~\cite{yoshida2014}. Zheng \emph{et al.} released the 334-patient database used here~\cite{zheng2020} and classified left/right origin with engineered features and machine learning~\cite{zheng2021}. Their representation differs from our 132-feature RF, which is therefore a local comparator with stated settings rather than a reproduction of their classifier.
-
-Deep networks learn ECG representations directly for rhythm classification~\cite{hannun2019} and 12-lead diagnosis~\cite{ribeiro2020}, and have recently been applied to origin localization. Nakasone \emph{et al.} classified ventricular arrhythmia origins in 80 ablation patients with a visualized CNN~\cite{nakasone2022}. A multicenter model combining ResNet50 with a Transformer reached external accuracy 0.84 and F1 0.77 when PVC and sinus-rhythm beats were combined, and 0.74 and 0.68 with PVC morphology alone~\cite{nakasone2024}. Miyamae \emph{et al.} reported hold-out accuracy 92.1\% and F1 0.91 for PVCs with a V3 or V4 transition using paired PVC and intrinsic QRS inputs~\cite{miyamae2026}. Cohorts, inputs, and class definitions differ from ours, so these values give context rather than a ranking. On the IoT side, prior systems addressed signal-quality-aware ECG telemetry~\cite{satija2017} and arrhythmia detection on wearable devices~\cite{azariadi2016}, and Ardian and Mandala~\cite{ardian2025} coupled a Transformer-based beat classifier with a web application. The present work differs in output (record-level anatomical origin rather than beat class) and in evaluation: we verify decision preservation through the gateway and characterise latency tails with repeated measurements, rather than reporting offline accuracy alone.
-
-\section{Methodology}
-\subsection{System Overview}
-Fig.~\ref{fig:system} shows the three parts of the system: acquisition, a gateway and inference server, and a browser client. A complete 12-lead record enters the HTTP gateway, receives canonical preprocessing on the server, and is classified by the CNN ensemble; the RF comparator is timed separately, and the browser shows both outputs with stage timing. A 12-lead ECG recorder is the intended source; in the experiments, real public-dataset recordings are replayed into the gateway in its place.
-
 \begin{figure*}[t]
 \centering
 \definecolor{figedge}{RGB}{69,70,111}
@@ -80,6 +71,16 @@ Fig.~\ref{fig:system} shows the three parts of the system: acquisition, a gatewa
 \caption{System architecture. Left: acquisition; center: gateway and inference server; right: client. A 12-lead ECG record reaches the IoT gateway, is preprocessed on the server, and is classified by the five-model 1D CNN ensemble; the Random Forest comparator receives the same raw record. Both outputs are shown on the web dashboard. In this study the recorder input is emulated by replaying public-dataset recordings into the gateway.}
 \label{fig:system}
 \end{figure*}
+
+\section{Related Work}
+Conventional criteria express relationships among precordial morphologies: the transition zone, the V2 transition ratio~\cite{betensky2011}, and the V2S/V3R index~\cite{yoshida2014}. Zheng \emph{et al.} released the 334-patient database used here~\cite{zheng2020} and classified left/right origin with engineered features and machine learning~\cite{zheng2021}. Their representation differs from our 132-feature RF, which is therefore a local comparator with stated settings rather than a reproduction of their classifier.
+
+Deep networks learn ECG representations directly for rhythm classification~\cite{hannun2019} and 12-lead diagnosis~\cite{ribeiro2020}, and have recently been applied to origin localization. Nakasone \emph{et al.} classified ventricular arrhythmia origins in 80 ablation patients with a visualized CNN~\cite{nakasone2022}. A multicenter model combining ResNet50 with a Transformer reached external accuracy 0.84 and F1 0.77 when PVC and sinus-rhythm beats were combined, and 0.74 and 0.68 with PVC morphology alone~\cite{nakasone2024}. Miyamae \emph{et al.} reported hold-out accuracy 92.1\% and F1 0.91 for PVCs with a V3 or V4 transition using paired PVC and intrinsic QRS inputs~\cite{miyamae2026}. Cohorts, inputs, and class definitions differ from ours, so these values give context rather than a ranking. On the IoT side, prior systems addressed signal-quality-aware ECG telemetry~\cite{satija2017} and arrhythmia detection on wearable devices~\cite{azariadi2016}, and Ardian and Mandala~\cite{ardian2025} coupled a Transformer-based beat classifier with a web application. The present work differs in output (record-level anatomical origin rather than beat class) and in evaluation: we verify decision preservation through the gateway and characterise latency tails with repeated measurements, rather than reporting offline accuracy alone.
+
+\section{Methodology}
+\subsection{System Overview}
+Fig.~\ref{fig:system} shows the three parts of the system: acquisition, a gateway and inference server, and a browser client. A complete 12-lead record enters the HTTP gateway, receives canonical preprocessing on the server, and is classified by the CNN ensemble; the RF comparator is timed separately, and the browser shows both outputs with stage timing. A 12-lead ECG recorder is the intended source; in the experiments, real public-dataset recordings are replayed into the gateway in its place.
+
 
 \subsection{Dataset, Cohort Definition, and Class Imbalance}
 The Ningbo resource contains 334 subjects recorded at 2000~Hz~\cite{zheng2020}. This study uses a cohort frozen in earlier work on the same models: five Summit records and 40 records without a \texttt{Sublocation} entry were excluded. All 334 subjects have a coarse left/right label, so the 40 exclusions are a cohort-definition choice, not missing outcomes. The frozen cohort was retained so that the fold assignment, historical hold-out, and deployed model artifacts remain identical across all analyses reported here; it also allows per-sublocation error analysis. Because the excluded records still have binary labels, their omission may make the cohort less representative; we discuss this in Section~\ref{sec:limits}.
@@ -173,37 +174,6 @@ V2 transition ratio & 0.500 & 0.824 & 0.612 & 0.825\\\bottomrule
 
 \emph{Stability.} With the selected epoch, the CNN is also more stable across data partitions. Its fold-mean macro-F1 stays within 0.860--0.926, whereas RF ranges from 0.674 to 0.896. Across the 15 fits, the lowest macro-F1 is 0.822 for the CNN and 0.642 for RF. The lowest LVOT sensitivity is 0.667 for the CNN and 0.417 for RF (SD 0.078 versus 0.174). Within a fold, changing only the seed shifts macro-F1 by 0.026 on average for the CNN and 0.045 for RF. On the hold-out, the reverse holds across seeds: individual CNNs vary more (macro-F1 SD 0.038) than individual forests (0.019), which stay at an LVOT sensitivity of 0.500 for every seed. This seed sensitivity motivates the five-model CNN ensemble (Section~\ref{sec:holdout}).
 
-\subsection{Historical Hold-Out}
-\label{sec:holdout}
-Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the deployed ensembles on 59 patients. Because neither the epoch count nor any other setting was chosen on these patients, this is the least biased CNN-RF comparison in the study. The CNN correctly classifies 12 of 14 LVOT and 39 of 45 RVOT cases; RF classifies 7 LVOT and 41 RVOT cases correctly. The CNN gains in LVOT sensitivity (0.857 versus 0.500) at the cost of two RVOT cases. The AUC difference is 0.200 (95\% CI 0.067 to 0.349). The macro-F1 difference is 0.108 (95\% CI $-0.026$ to 0.257; McNemar $p=0.55$). With 14 LVOT patients and a previously inspected hold-out, this is supporting rather than confirmatory evidence. Individual CNNs reach a mean macro-F1 of 0.793 (SD 0.038) and AUC of 0.916; the five-model ensemble raises these to 0.828 and 0.941 and removes the seed-to-seed spread from the deployed decision. The cost is five times the parameters (854,570) and five forward passes, which take a median of 33.5~ms per record in total (Section~\ref{sec:latency}). The single-model hold-out macro-F1 (0.793) agrees with the fixed-epoch CV estimate (0.800), as expected for models trained with a fixed epoch count, and the ensemble (0.828) lies between the fixed-epoch and selected-epoch CV values.
-
-\begin{table}[t]
-\caption{Historical Hold-Out, Five-Model Ensembles}
-\label{tab:holdout}\centering\footnotesize
-\renewcommand{\arraystretch}{1.1}
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{@{}lccc@{}}\toprule
-Metric & 1D CNN & Random Forest & Difference\\\midrule
-Macro-F1 & \textbf{0.828} & 0.721 & +0.108\\
-ROC AUC & \textbf{0.941} & 0.741 & +0.200\\
-Accuracy & \textbf{0.864} & 0.814 & +0.051\\
-Balanced accuracy & \textbf{0.862} & 0.706 & +0.156\\
-LVOT sensitivity & \textbf{0.857} & 0.500 & +0.357\\
-RVOT sensitivity & 0.867 & \textbf{0.911} & $-$0.044\\\bottomrule
-\end{tabular}\\[3pt]
-\parbox{\columnwidth}{\scriptsize 59 patients (14 LVOT). Difference: CNN minus RF.}
-\end{table}
-\begin{figure}[t]\centering
-\includegraphics[width=\columnwidth]{holdout_confusion.pdf}
-\caption{Historical hold-out confusion matrices with within-row percentages.}
-\label{fig:cm}
-\end{figure}
-
-\subsection{Gateway Consistency and Application}
-All 59 no-delay replays completed (record durations 5.1--25.0~s, median 12.9~s). Gateway and offline class predictions agree for 59/59 records for both models. The maximum absolute probability difference is $2.5\times10^{-7}$ for the CNN and zero for RF. All five acquisition-paced replays also preserve both predictions. This 100\% agreement measures implementation consistency: the gateway reproduces the validated model. Diagnostic accuracy remains that of Table~\ref{tab:holdout}. During paced replay, the median chunk round trip was 10.2~ms and the largest within-record chunk P95 was 51.6~ms, well below the 500~ms of signal each chunk represents. The transfer path therefore keeps pace with acquisition over loopback; a physical network adds latency that was not measured. Eleven automated tests exercise the real server and frozen models. They cover valid transfer, duplicate chunks, gap and conflict rejection, incomplete records, incompatible rate/lead/unit declarations, prediction parity, and result export; all pass.
-
-Fig.~\ref{fig:browser} shows the application as opened in a web browser. The overview page provides record selection or CSV upload, transfer speed, and the localization result. The comparison page presents the CNN and RF development CV metrics and out-of-fold confusion matrices. Fig.~\ref{fig:browser}(c)--(d) shows the dashboard for hold-out record ECG-231: the received 12 leads, completed transfer status, and an RVOT output (CNN probability 98.0\%, RF 82.2\%). The heart graphic is a schematic orientation cue, not a patient-specific map.
-
 \begin{figure*}[!t]
 \centering
 \begin{minipage}[t]{0.60\textwidth}
@@ -229,6 +199,31 @@ Fig.~\ref{fig:browser} shows the application as opened in a web browser. The ove
 \caption{The web application opened in a browser. (a) Overview with data source, transfer control, and localization result. (b) CNN and Random Forest page with development CV metrics (230 patients, 15 fold/seed fits, CNN epoch selected on the validation fold), and out-of-fold confusion matrices. (c)--(d) Hold-out record ECG-231 (5.38~s, 12 leads, 2000~Hz) replayed at acquisition pace and its RVOT output.}
 \label{fig:browser}
 \end{figure*}
+\begin{table}[t]
+\caption{Historical Hold-Out, Five-Model Ensembles}
+\label{tab:holdout}\centering\footnotesize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}lccc@{}}\toprule
+Metric & 1D CNN & Random Forest & Difference\\\midrule
+Macro-F1 & \textbf{0.828} & 0.721 & +0.108\\
+ROC AUC & \textbf{0.941} & 0.741 & +0.200\\
+Accuracy & \textbf{0.864} & 0.814 & +0.051\\
+Balanced accuracy & \textbf{0.862} & 0.706 & +0.156\\
+LVOT sensitivity & \textbf{0.857} & 0.500 & +0.357\\
+RVOT sensitivity & 0.867 & \textbf{0.911} & $-$0.044\\\bottomrule
+\end{tabular}\\[3pt]
+\parbox{\columnwidth}{\scriptsize 59 patients (14 LVOT). Difference: CNN minus RF.}
+\end{table}
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{holdout_confusion.pdf}
+\caption{Historical hold-out confusion matrices with within-row percentages.}
+\label{fig:cm}
+\end{figure}
+
+\subsection{Historical Hold-Out}
+\label{sec:holdout}
+Table~\ref{tab:holdout} and Fig.~\ref{fig:cm} summarize the deployed ensembles on 59 patients. Because neither the epoch count nor any other setting was chosen on these patients, this is the least biased CNN-RF comparison in the study. The CNN correctly classifies 12 of 14 LVOT and 39 of 45 RVOT cases; RF classifies 7 LVOT and 41 RVOT cases correctly. The CNN gains in LVOT sensitivity (0.857 versus 0.500) at the cost of two RVOT cases. The AUC difference is 0.200 (95\% CI 0.067 to 0.349). The macro-F1 difference is 0.108 (95\% CI $-0.026$ to 0.257; McNemar $p=0.55$). With 14 LVOT patients and a previously inspected hold-out, this is supporting rather than confirmatory evidence. Individual CNNs reach a mean macro-F1 of 0.793 (SD 0.038) and AUC of 0.916; the five-model ensemble raises these to 0.828 and 0.941 and removes the seed-to-seed spread from the deployed decision. The cost is five times the parameters (854,570) and five forward passes, which take a median of 33.5~ms per record in total (Section~\ref{sec:latency}). The single-model hold-out macro-F1 (0.793) agrees with the fixed-epoch CV estimate (0.800), as expected for models trained with a fixed epoch count, and the ensemble (0.828) lies between the fixed-epoch and selected-epoch CV values.
 
 
 \begin{figure}[t]\centering
@@ -236,6 +231,14 @@ Fig.~\ref{fig:browser} shows the application as opened in a web browser. The ove
 \caption{Cumulative distribution of per-record pipeline time (590 trials, four CNN threads). Dotted: CNN with 16-window batches before the fix; solid: CNN with the deployed 8-window batches and RF. The dashed line marks the 95th percentile.}
 \label{fig:latency}
 \end{figure}
+
+\subsection{Gateway Consistency and Application}
+All 59 no-delay replays completed (record durations 5.1--25.0~s, median 12.9~s). Gateway and offline class predictions agree for 59/59 records for both models. The maximum absolute probability difference is $2.5\times10^{-7}$ for the CNN and zero for RF. All five acquisition-paced replays also preserve both predictions. This 100\% agreement measures implementation consistency: the gateway reproduces the validated model. Diagnostic accuracy remains that of Table~\ref{tab:holdout}. During paced replay, the median chunk round trip was 10.2~ms and the largest within-record chunk P95 was 51.6~ms, well below the 500~ms of signal each chunk represents. The transfer path therefore keeps pace with acquisition over loopback; a physical network adds latency that was not measured. Eleven automated tests exercise the real server and frozen models. They cover valid transfer, duplicate chunks, gap and conflict rejection, incomplete records, incompatible rate/lead/unit declarations, prediction parity, and result export; all pass.
+
+Fig.~\ref{fig:browser} shows the application as opened in a web browser. The overview page provides record selection or CSV upload, transfer speed, and the localization result. The comparison page presents the CNN and RF development CV metrics and out-of-fold confusion matrices. Fig.~\ref{fig:browser}(c)--(d) shows the dashboard for hold-out record ECG-231: the received 12 leads, completed transfer status, and an RVOT output (CNN probability 98.0\%, RF 82.2\%). The heart graphic is a schematic orientation cue, not a patient-specific map.
+
+
+
 
 \subsection{Processing Latency}
 \label{sec:latency}
